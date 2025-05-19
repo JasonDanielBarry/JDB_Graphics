@@ -43,7 +43,8 @@ uses
   GraphicGridClass in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicGridClass.pas',
   GraphicLinePlotClass in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicLinePlotClass.pas',
   GraphicMousePointTrackerClass in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicMousePointTrackerClass.pas',
-  GraphicScatterPlotClass in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicScatterPlotClass.pas';
+  GraphicScatterPlotClass in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicScatterPlotClass.pas',
+  GraphPlotTypes in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphPlotTypes.pas';
 
 { keep comment here to protect the following conditional from being removed by the IDE when adding a unit }
 {$IFNDEF TESTINSIGHT}

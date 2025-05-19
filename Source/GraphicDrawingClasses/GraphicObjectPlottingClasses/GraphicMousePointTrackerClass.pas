@@ -10,7 +10,7 @@ interface
         LinearAlgebraTypes, VectorMethods,
         GeometryTypes, GeomBox,
         GraphicDrawingTypes,
-        GraphXYTypes,
+        GraphPlotTypes,
         DrawingAxisConversionClass,
         GraphicObjectBaseClass,
         GraphicTextClass,
@@ -43,7 +43,7 @@ interface
                                                                             const axisConverterIn   : TDrawingAxisConverter ) : TGeomPoint;
             public
                 //constructor
-                    constructor create(const graphPlotIn : TGraphXYPlot);
+                    constructor create(const graphPlotIn : TGraphPlotData);
                 //destructor
                     destructor destroy(); override;
                 //draw to canvas
@@ -179,7 +179,7 @@ implementation
 
     //public
         //constructor
-            constructor TGraphicMousePointTracker.create(const graphPlotIn : TGraphXYPlot);
+            constructor TGraphicMousePointTracker.create(const graphPlotIn : TGraphPlotData);
                 begin
                     inherited create();
 

@@ -123,6 +123,7 @@
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicLinePlotClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicMousePointTrackerClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicScatterPlotClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphPlotTypes.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -149,7 +150,7 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="5">
-                <DeployFile LocalName="Win32\Debug\JDB_Graphics.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\BuildOutput\JDB_Graphics.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>JDB_Graphics.exe</RemoteName>
                         <Overwrite>true</Overwrite>
