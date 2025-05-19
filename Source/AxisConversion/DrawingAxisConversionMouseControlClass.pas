@@ -90,7 +90,7 @@ implementation
                     mouse_dL,           mouse_dT            : integer;
                     newRegionCentreX,   newRegionCentreY    : double;
                 begin
-                    if ( NOT(mousePanningIsActive) ) then
+                    if NOT( mousePanningIsActive ) then
                         exit();
 
                     //calculate how much the mouse moves from the point where the middle mouse button is pressed down
