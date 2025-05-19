@@ -2,3 +2,6 @@
 ..\JDB_Graphics\Source\AxisConversion;
 ..\JDB_Graphics\Source\GraphicDrawer;
 ..\JDB_Graphics\Source\GraphicDrawingClasses;
+..\JDB_Graphics\Source\GraphicDrawingClasses\GraphicObjectFoundationalShapeClasses;
+..\JDB_Graphics\Source\GraphicDrawingClasses\GraphicObjectGroupClasses;
+..\JDB_Graphics\Source\GraphicDrawingClasses\GraphicObjectPlottingClasses;

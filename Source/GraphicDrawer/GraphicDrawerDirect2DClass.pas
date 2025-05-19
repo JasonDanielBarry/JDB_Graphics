@@ -1,4 +1,4 @@
-unit Direct2DGraphicDrawingClass;
+unit GraphicDrawerDirect2DClass;
 
 interface
 
@@ -14,7 +14,7 @@ interface
             GeometryBaseClass;
 
     type
-        TDirect2DGraphicDrawer = class(TGraphicDrawerAxisConversionInterface)
+        TGraphicDrawerDirect2D = class(TGraphicDrawerAxisConversionInterface)
             public
                 //constructor
                     constructor create(); override;
@@ -23,36 +23,52 @@ interface
                 //draw all geometry
                     procedure drawAll(  const canvasWidthIn, canvasHeightIn : integer;
                                         const drawingBackgroundColourIn     : TColor;
-                                        var D2DCanvasInOut                  : TDirect2DCanvas );
+                                        const canvasIn                      : TCanvas   );
         end;
 
 implementation
 
     //public
         //constructor
-            constructor TDirect2DGraphicDrawer.create();
+            constructor TGraphicDrawerDirect2D.create();
                 begin
                     inherited create();
                 end;
 
         //destructor
-            destructor TDirect2DGraphicDrawer.destroy();
+            destructor TGraphicDrawerDirect2D.destroy();
                 begin
                     inherited destroy();
                 end;
 
         //draw all geometry
-            procedure TDirect2DGraphicDrawer.drawAll(   const canvasWidthIn, canvasHeightIn : integer;
+            procedure TGraphicDrawerDirect2D.drawAll(   const canvasWidthIn, canvasHeightIn : integer;
                                                         const drawingBackgroundColourIn     : TColor;
-                                                        var D2DCanvasInOut                  : TDirect2DCanvas   );
+                                                        const canvasIn                      : TCanvas   );
+                var
+                    D2DCanvas : TDirect2DCanvas;
                 begin
-                    //draw all geometry
+                    //create D2D canvas
+                        D2DCanvas := TDirect2DCanvas.Create( canvasIn, Rect(0, 0, canvasWidthIn, canvasHeightIn) );
+
+                        D2DCanvas.RenderTarget.SetAntialiasMode( TD2D1AntiAliasMode.D2D1_ANTIALIAS_MODE_PER_PRIMITIVE );
+
+                        D2DCanvas.RenderTarget.SetTextAntialiasMode( TD2D1TextAntiAliasMode.D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE );
+
+                    //draw to the D2D canvas
+                        D2DCanvas.BeginDraw();
+
                         inherited drawAll(
                                             canvasWidthIn,
                                             canvasHeightIn,
                                             drawingBackgroundColourIn,
-                                            D2DCanvasInOut
+                                            D2DCanvas
                                          );
+
+
+                        D2DCanvas.EndDraw();
+
+                    FreeAndNil( D2DCanvas );
                 end;
 
 end.
