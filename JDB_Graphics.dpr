@@ -44,7 +44,6 @@ uses
   GraphicLinePlotClass in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicLinePlotClass.pas',
   GraphicMousePointTrackerClass in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicMousePointTrackerClass.pas',
   GraphicScatterPlotClass in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicScatterPlotClass.pas',
-  GraphPlotTypes in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphPlotTypes.pas',
   GraphicDrawer2DPaintBoxClass in 'Source\GraphicDrawer\GraphicDrawer2DPaintBoxClass.pas';
 
 { keep comment here to protect the following conditional from being removed by the IDE when adding a unit }

@@ -10,7 +10,6 @@ interface
         LinearAlgebraTypes, VectorMethods,
         GeometryTypes, GeomBox,
         GraphicDrawingTypes,
-        GraphPlotTypes,
         DrawingAxisConversionClass,
         GraphicObjectBaseClass,
         GraphicTextClass,
@@ -20,7 +19,7 @@ interface
         TGraphicMousePointTracker = class(TGraphicObject)
             private
                 var
-                    graphPlotType       : EGraphPlotType;
+                    contiuousTracking   : boolean;
                     lineInterpolator    : TInterpolator;
                     graphicPointText    : TGraphicText;
                     graphicPointEllipse : TGraphicEllipse;
@@ -36,14 +35,15 @@ interface
                     //continuous line
                         //use vector projection to find the closest interpolated point
                             function findClosestInterpolatedPoint(const mousePointLTIn, lowerClosestPointIn, closestPointLTIn, upperClosestPointLTIn : TPointF) : TPointF;
-                        function determineLinePlotPointClosestToMouse(  const mousePointIn      : TGeomPoint;
-                                                                        const axisConverterIn   : TDrawingAxisConverter ) : TGeomPoint;
+                        function determineContinuousPlotPointClosestToMouse(const mousePointIn      : TGeomPoint;
+                                                                            const axisConverterIn   : TDrawingAxisConverter) : TGeomPoint;
                     //scatter plot
-                        function determineScatterPlotPointClosestToMouse(   const mousePointIn      : TGeomPoint;
+                        function determineDiscretePlotPointClosestToMouse(  const mousePointIn      : TGeomPoint;
                                                                             const axisConverterIn   : TDrawingAxisConverter ) : TGeomPoint;
             public
                 //constructor
-                    constructor create(const graphPlotIn : TGraphPlotData);
+                    constructor create( const continuousTrackingIn  : boolean;
+                                        const arrDataPointsIn       : TArray<TGeomPoint>    );
                 //destructor
                     destructor destroy(); override;
                 //draw to canvas
@@ -137,8 +137,8 @@ implementation
                             result := closestPointOut;
                         end;
 
-                function TGraphicMousePointTracker.determineLinePlotPointClosestToMouse(const mousePointIn      : TGeomPoint;
-                                                                                        const axisConverterIn   : TDrawingAxisConverter) : TGeomPoint;
+                function TGraphicMousePointTracker.determineContinuousPlotPointClosestToMouse(  const mousePointIn      : TGeomPoint;
+                                                                                                const axisConverterIn   : TDrawingAxisConverter ) : TGeomPoint;
                     var
                         arrLen,
                         closestPointIndex           : integer;
@@ -166,7 +166,7 @@ implementation
                     end;
 
             //scatter plot
-                function TGraphicMousePointTracker.determineScatterPlotPointClosestToMouse( const mousePointIn      : TGeomPoint;
+                function TGraphicMousePointTracker.determineDiscretePlotPointClosestToMouse( const mousePointIn      : TGeomPoint;
                                                                                             const axisConverterIn   : TDrawingAxisConverter ) : TGeomPoint;
                     var
                         closestPointIndex   : integer;
@@ -179,7 +179,8 @@ implementation
 
     //public
         //constructor
-            constructor TGraphicMousePointTracker.create(const graphPlotIn : TGraphPlotData);
+            constructor TGraphicMousePointTracker.create(   const continuousTrackingIn  : boolean;
+                                                            const arrDataPointsIn       : TArray<TGeomPoint>    );
                 const
                     POINT_SIZE : integer = 9;
                 begin
@@ -187,9 +188,10 @@ implementation
 
                     lineInterpolator := TInterpolator.create();
 
-                    graphPlotType := graphPlotIn.graphPlotType;
+                    contiuousTracking := continuousTrackingIn;
 
-                    TGeomPoint.copyPoints( graphPlotIn.arrDataPoints, arrPlotPointsXY );
+
+                    TGeomPoint.copyPoints( arrDataPointsIn, arrPlotPointsXY );
 
                     graphicPointText    := TGraphicText.create( True, 9, 0, '', TAlignment.taLeftJustify, TTextLayout.tlCenter, clWindowText, [], TGeomPoint.create( 0, 0 ) );
                     graphicPointEllipse := TGraphicEllipse.create( True, 1, POINT_SIZE, POINT_SIZE, clWindowText, clWindowText, TPenStyle.psSolid, TGeomPoint.create( 0, 0 ) );
@@ -216,25 +218,25 @@ implementation
                 begin
                     mousePointXY := axisConverterIn.getMouseCoordinatesXY();
 
-                    case ( graphPlotType ) of
-                        EGraphPlotType.gpScatter:
-                            closestPointXY := determineScatterPlotPointClosestToMouse( mousePointXY, axisConverterIn );
+                    //find closest point
+                        if ( contiuousTracking ) then
+                            closestPointXY := determineContinuousPlotPointClosestToMouse( mousePointXY, axisConverterIn )
+                        else
+                            closestPointXY := determineDiscretePlotPointClosestToMouse( mousePointXY, axisConverterIn );
 
-                        EGraphPlotType.gpLine, EGraphPlotType.gpFuntion:
-                            closestPointXY := determineLinePlotPointClosestToMouse( mousePointXY, axisConverterIn );
-                    end;
+                    //draw the tracking point
+                        graphicPointEllipse.setCentrePoint( closestPointXY.x, closestPointXY.y );
 
-                    graphicPointEllipse.setCentrePoint( closestPointXY.x, closestPointXY.y );
+                        graphicPointEllipse.drawToCanvas( axisConverterIn, canvasInOut );
 
-                    graphicPointEllipse.drawToCanvas( axisConverterIn, canvasInOut );
+                    //write the point coordinates
+                        graphicPointText.setHandlePoint( closestPointXY.x + axisConverterIn.dL_To_dX(4), closestPointXY.y );
 
-                    graphicPointText.setHandlePoint( closestPointXY.x + axisConverterIn.dL_To_dX(4), closestPointXY.y );
+                        coordText := '(' + FloatToStrF(closestPointXY.x, ffFixed, 5, 3) + ', ' + FloatToStrF(closestPointXY.y, ffFixed, 5, 3) + ')';
 
-                    coordText := '(' + FloatToStrF(closestPointXY.x, ffFixed, 5, 3) + ', ' + FloatToStrF(closestPointXY.y, ffFixed, 5, 3) + ')';
+                        graphicPointText.setTextString( coordText );
 
-                    graphicPointText.setTextString( coordText );
-
-                    graphicPointText.drawToCanvas( axisConverterIn, canvasInOut );
+                        graphicPointText.drawToCanvas( axisConverterIn, canvasInOut );
                 end;
 
         //bounding box
