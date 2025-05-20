@@ -180,6 +180,8 @@ implementation
     //public
         //constructor
             constructor TGraphicMousePointTracker.create(const graphPlotIn : TGraphPlotData);
+                const
+                    POINT_SIZE : integer = 9;
                 begin
                     inherited create();
 
@@ -190,7 +192,7 @@ implementation
                     TGeomPoint.copyPoints( graphPlotIn.arrDataPoints, arrPlotPointsXY );
 
                     graphicPointText    := TGraphicText.create( True, 9, 0, '', TAlignment.taLeftJustify, TTextLayout.tlCenter, clWindowText, [], TGeomPoint.create( 0, 0 ) );
-                    graphicPointEllipse := TGraphicEllipse.create( True, 1, 8, 8, clWindowText, clWindowText, TPenStyle.psSolid, TGeomPoint.create( 0, 0 ) );
+                    graphicPointEllipse := TGraphicEllipse.create( True, 1, POINT_SIZE, POINT_SIZE, clWindowText, clWindowText, TPenStyle.psSolid, TGeomPoint.create( 0, 0 ) );
                     graphicPointEllipse.setObjectScaleType( EScaleType.scCanvas );
                 end;
 

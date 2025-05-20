@@ -22,7 +22,6 @@ interface
                     destructor destroy(); override;
                 //draw all geometry
                     procedure drawAll(  const canvasWidthIn, canvasHeightIn : integer;
-                                        const drawingBackgroundColourIn     : TColor;
                                         const canvasIn                      : TCanvas   );
         end;
 
@@ -43,7 +42,6 @@ implementation
 
         //draw all geometry
             procedure TGraphicDrawerDirect2D.drawAll(   const canvasWidthIn, canvasHeightIn : integer;
-                                                        const drawingBackgroundColourIn     : TColor;
                                                         const canvasIn                      : TCanvas   );
                 var
                     D2DCanvas : TDirect2DCanvas;
@@ -61,7 +59,6 @@ implementation
                         inherited drawAll(
                                             canvasWidthIn,
                                             canvasHeightIn,
-                                            drawingBackgroundColourIn,
                                             D2DCanvas
                                          );
 

@@ -7,7 +7,6 @@ interface
         Winapi.Windows, Winapi.Messages,
         System.SysUtils, System.Classes,
         Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ExtCtrls, Vcl.Themes,
-
         GraphicGridClass,
         GraphicObjectListBaseClass, GraphicDrawerDirect2DClass
         ;
@@ -20,15 +19,12 @@ interface
                 var
                     mustRedrawGraphic       : boolean;
                     gridVisibilitySettings  : TGridVisibilitySettings;
-                    graphicBackgroundColour : TColor;
                     currentGraphicBuffer    : TBitmap;
                     D2DGraphicDrawer        : TGraphicDrawerDirect2D;
                 //events
                     procedure PaintBoxDrawer2DPaint(Sender: TObject);
                     procedure PaintBoxGraphicMouseEnter(Sender: TObject);
                     procedure PaintBoxGraphicMouseLeave(Sender: TObject);
-                //background colour
-                    procedure setGraphicBackgroundColour();
                 //mouse cursor
                     procedure setMouseCursor(const messageIn : TMessage);
                 //update buffer
@@ -76,13 +72,6 @@ implementation
                     D2DGraphicDrawer.deactivateMouseControl();
                 end;
 
-        //background colour
-            procedure TPaintBox.setGraphicBackgroundColour();
-                begin
-                    //set the background colour according to the application theme
-                        graphicBackgroundColour := TStyleManager.ActiveStyle.GetStyleColor( TStyleColor.scGenericBackground );
-                end;
-
         //mouse cursor
             procedure TPaintBox.setMouseCursor(const messageIn : TMessage);
                 begin
@@ -122,7 +111,6 @@ implementation
                         D2DGraphicDrawer.drawAll(
                                                     canvasWidth,
                                                     canvasHeight,
-                                                    graphicBackgroundColour,
                                                     currentGraphicBuffer.Canvas
                                                 );
 
@@ -149,7 +137,7 @@ implementation
                         self.OnMouseLeave   := PaintBoxGraphicMouseLeave;
 
                     //for design time to ensure the colour is not black on the form builder
-                        setGraphicBackgroundColour();
+                        D2DGraphicDrawer.updateBackgroundColour();
 
                     //grid is not visible by default
                         setGridEnabled( False );
@@ -186,7 +174,7 @@ implementation
 
             procedure TPaintBox.updateBackgroundColour(const callingControlIn : TWinControl);
                 begin
-                    setGraphicBackgroundColour();
+                    D2DGraphicDrawer.updateBackgroundColour();
                     postRedrawGraphicMessage( callingControlIn );
                 end;
 
@@ -194,7 +182,7 @@ implementation
                                                 const graphicObjectListIn   : TGraphicObjectListBase);
                 begin
                     //set background to match theme
-                        setGraphicBackgroundColour();
+                        D2DGraphicDrawer.updateBackgroundColour();
 
                     //reset the stored graphics
                         D2DGraphicDrawer.clearGraphicObjects();

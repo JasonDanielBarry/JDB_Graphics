@@ -15,10 +15,10 @@ interface
                 var
                     mouseControlIsActive,
                     mousePanningIsActive,
-                    mousePointTrackingIsActive  : boolean;
+                    mustRedrawOnMouseMoveIsActive   : boolean;
                     currentMousePosition,
-                    mousePanningOrigin          : TPoint;
-                    regionPanningOrigin         : TGeomPoint;
+                    mousePanningOrigin              : TPoint;
+                    regionPanningOrigin             : TGeomPoint;
                 //modifiers
                     procedure setMousePositionLT(const newMousePositionIn : TPoint);
                 //activate/deactivate mouse panning
@@ -37,13 +37,13 @@ interface
                     destructor destroy(); override;
                 //accessors
                     property MouseControlActive : boolean read mouseControlIsActive;
-                    property MousePointTrackingActive : boolean read mousePointTrackingIsActive;
+                    property RedrawOnMouseMoveActive : boolean read mustRedrawOnMouseMoveIsActive;
                     function getMouseCoordinatesXY() : TGeomPoint;
                 //activate/deactivate mouse control
                     procedure activateMouseControl();
                     procedure deactivateMouseControl();
                 //activate/deactivate mouse point tracking
-                    procedure setMousePointTrackingActive(const isActiveIn : boolean);
+                    procedure setRedrawOnMouseMoveActive(const isActiveIn : boolean);
                 //process windows messages
                     function windowsMessageRequiredRedraw(  const messageIn             : Tmessage;
                                                             const newMousePositionIn    : TPoint) : boolean;
@@ -168,9 +168,9 @@ implementation
                 end;
 
         //activate/deactivate mouse point tracking
-            procedure TDrawingAxisMouseControlConverter.setMousePointTrackingActive(const isActiveIn : boolean);
+            procedure TDrawingAxisMouseControlConverter.setRedrawOnMouseMoveActive(const isActiveIn : boolean);
                 begin
-                    mousePointTrackingIsActive := isActiveIn;
+                    mustRedrawOnMouseMoveIsActive := isActiveIn;
                 end;
 
         //process windows messages
@@ -212,7 +212,7 @@ implementation
 
                                 panRegionWithMouse();
 
-                                result := mousePanningIsActive OR mousePointTrackingIsActive; // panRegionWithMouse only occurs if mouse panning is active
+                                result := mousePanningIsActive OR mustRedrawOnMouseMoveIsActive; // panRegionWithMouse only occurs if mouse panning is active
                             end;
                     end;
                 end;

@@ -27,7 +27,6 @@ interface
             protected
                 //draw all geometry
                     procedure drawAll(  const canvasWidthIn, canvasHeightIn : integer;
-                                        const drawingBackgroundColourIn     : TColor;
                                         var D2DCanvasInOut                  : TDirect2DCanvas);
             public
                 //constructor
@@ -64,11 +63,9 @@ implementation
         //drawing procedures
             //draw all geometry
                 procedure TGraphicDrawerLayers.drawAll( const canvasWidthIn, canvasHeightIn : integer;
-                                                        const drawingBackgroundColourIn     : TColor;
                                                         var D2DCanvasInOut                  : TDirect2DCanvas);
                     begin
                         inherited drawAll(  canvasWidthIn, canvasHeightIn,
-                                            drawingBackgroundColourIn,
                                             D2DCanvasInOut                  );
 
                         //draw the grid

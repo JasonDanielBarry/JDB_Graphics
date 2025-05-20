@@ -44,7 +44,7 @@ interface
                     procedure activateMouseControl();
                     procedure deactivateMouseControl();
                     function getMouseControlActive() : boolean;
-                    procedure setMousePointTrackingActive(const isActiveIn : boolean);
+                    procedure setRedrawOnMouseMoveActive(const isActiveIn : boolean);
                 //process windows messages
                     function windowsMessageRequiredRedraw(  const messageIn             : Tmessage;
                                                             const newMousePositionIn    : TPoint    ) : boolean;
@@ -185,9 +185,9 @@ implementation
                     result := axisConverter.MouseControlActive;
                 end;
 
-            procedure TGraphicDrawerAxisConversionInterface.setMousePointTrackingActive(const isActiveIn : boolean);
+            procedure TGraphicDrawerAxisConversionInterface.setRedrawOnMouseMoveActive(const isActiveIn : boolean);
                 begin
-                    axisConverter.setMousePointTrackingActive( isActiveIn );
+                    axisConverter.setRedrawOnMouseMoveActive( isActiveIn );
                 end;
 
         //process windows messages
