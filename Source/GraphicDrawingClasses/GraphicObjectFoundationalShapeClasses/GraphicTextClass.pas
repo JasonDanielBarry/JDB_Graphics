@@ -5,7 +5,7 @@ interface
     uses
         Winapi.D2D1,
         system.SysUtils, system.Types, system.Classes,
-        Vcl.Direct2D, vcl.Graphics, vcl.Themes, vcl.StdCtrls,
+        Vcl.Direct2D, vcl.Graphics, vcl.Themes,
         GeometryTypes,
         GeomBox,
         GraphicDrawingTypes,
@@ -21,8 +21,8 @@ interface
                     textSize            : integer;
                     textRotationAngle   : double;
                     textString          : string;
-                    textAlignment       : TAlignment;
-                    textLayout          : TTextLayout;
+                    textHorAlignment    : TAlignment;
+                    textVertAlignment   : TVerticalAlignment;
                     textColour          : TColor;
                     textFontStyles      : TFontStyles;
                     textHandlePointXY   : TGeomPoint;
@@ -42,18 +42,18 @@ interface
                                         const   textSizeIn          : integer;
                                         const   textRotationAngleIn : double;
                                         const   textStringIn        : string;
-                                        const   textAlignmentIn     : TAlignment;
-                                        const   textLayoutIn        : TTextLayout;
+                                        const   textHorAlignmentIn  : TAlignment;
+                                        const   textVertAlignmentIn : TVerticalAlignment;
                                         const   textColourIn        : TColor;
                                         const   textFontStylesIn    : TFontStyles;
-                                        const   textHandlePointIn   : TGeomPoint    );
+                                        const   textHandlePointIn   : TGeomPoint        );
                 //destructor
                     destructor destroy(); override;
                 //modifiers
                     procedure setTextString(const newTextIn : string);
                     procedure setHandlePoint(   const xIn, yIn : double);
-                    procedure setAlignmentAndLayout(const alignmentIn   : TAlignment;
-                                                    const layoutIn      : TTextLayout);
+                    procedure setAlignmentAndLayout(const horAlignmentIn    : TAlignment;
+                                                    const vertAlignmentIn   : TVerticalAlignment);
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
                                             var canvasInOut         : TDirect2DCanvas       ); override;
@@ -83,7 +83,7 @@ implementation
                     textExtentOut := canvasInOut.TextExtent( textString );
 
                     //x - translation
-                        case ( textAlignment ) of
+                        case ( textHorAlignment ) of
                             TAlignment.taLeftJustify:
                                 xTranslationOut := 0;
 
@@ -95,14 +95,14 @@ implementation
                         end;
 
                     //y - translation
-                        case ( textLayout ) of
-                            TTextLayout.tlTop:
+                        case ( textVertAlignment ) of
+                            TVerticalAlignment.taAlignTop:
                                 yTranslationOut := 0;
 
-                            TTextLayout.tlCenter:
+                            TVerticalAlignment.taVerticalCenter:
                                 yTranslationOut := textExtentOut.Height / 2;
 
-                            TTextLayout.tlBottom:
+                            TVerticalAlignment.taAlignBottom:
                                 yTranslationOut := textExtentOut.Height;
                         end;
                 end;
@@ -131,11 +131,11 @@ implementation
                                             const   textSizeIn          : integer;
                                             const   textRotationAngleIn : double;
                                             const   textStringIn        : string;
-                                            const   textAlignmentIn     : TAlignment;
-                                            const   textLayoutIn        : TTextLayout;
+                                            const   textHorAlignmentIn  : TAlignment;
+                                            const   textVertAlignmentIn : TVerticalAlignment;
                                             const   textColourIn        : TColor;
                                             const   textFontStylesIn    : TFontStyles;
-                                            const   textHandlePointIn   : TGeomPoint    );
+                                            const   textHandlePointIn   : TGeomPoint        );
                 begin
                     inherited create();
 
@@ -143,8 +143,8 @@ implementation
                     textSize            := textSizeIn;
                     textRotationAngle   := textRotationAngleIn;
                     textString          := textStringIn;
-                    textAlignment       := textAlignmentIn;
-                    textLayout          := textLayoutIn;
+                    textHorAlignment    := textHorAlignmentIn;
+                    textVertAlignment   := textVertAlignmentIn;
                     textColour          := textColourIn;
                     textFontStyles      := textFontStylesIn;
                     textHandlePointXY   := textHandlePointIn;
@@ -167,11 +167,11 @@ implementation
                     textHandlePointXY.setPoint( xIn, yIn );
                 end;
 
-            procedure TGraphicText.setAlignmentAndLayout(   const alignmentIn   : TAlignment;
-                                                            const layoutIn      : TTextLayout   );
+            procedure TGraphicText.setAlignmentAndLayout(   const horAlignmentIn    : TAlignment;
+                                                            const vertAlignmentIn   : TVerticalAlignment    );
                 begin
-                    textAlignment   := alignmentIn;
-                    textLayout      := layoutIn;
+                    textHorAlignment    := horAlignmentIn;
+                    textVertAlignment   := vertAlignmentIn;
                 end;
 
         //draw to canvas
