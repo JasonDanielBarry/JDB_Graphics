@@ -131,7 +131,7 @@ implementation
                             geometryBoundary.setYDimension(1e-2);
                     //--------------------------------------------------------------
 
-                    geometryBoundaryCentre.copyPoint( geometryBoundary.getCentrePoint() );
+                    geometryBoundaryCentre.copyPoint( geometryBoundary.calculateCentrePoint() );
                 end;
 
             procedure TDrawingAxisZoomingConverter.resetDrawingRegionToGeometryBoundary();
@@ -179,7 +179,7 @@ implementation
 
                     zoomIn(
                                 zoomPercentageIn,
-                                drawingRegion.getCentrePoint()
+                                drawingRegion.calculateCentrePoint()
                           );
                 end;
 
@@ -206,7 +206,7 @@ implementation
 
                     zoomOut(
                                 zoomPercentageIn,
-                                drawingRegion.getCentrePoint()
+                                drawingRegion.calculateCentrePoint()
                            );
                 end;
 

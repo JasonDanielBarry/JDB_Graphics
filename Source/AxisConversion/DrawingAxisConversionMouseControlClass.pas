@@ -76,7 +76,7 @@ implementation
 
                     //origin points for panning region
                         mousePanningOrigin  := currentMousePosition;
-                        regionPanningOrigin := drawingRegion.getCentrePoint();
+                        regionPanningOrigin := drawingRegion.calculateCentrePoint();
                 end;
 
             procedure TDrawingAxisMouseControlConverter.deactivateMousePanning();

@@ -53,7 +53,7 @@ implementation
                     ellipseOut      : TD2D1Ellipse;
                 begin
                     //calculate the ellipse centre point
-                        centrePointF := axisConverterIn.XY_to_LT( ellipseBox.getCentrePoint() );
+                        centrePointF := axisConverterIn.XY_to_LT( ellipseBox.calculateCentrePoint() );
 
                         ellipseOut.point.x := centrePointF.X;
                         ellipseOut.point.y := centrePointF.y;
