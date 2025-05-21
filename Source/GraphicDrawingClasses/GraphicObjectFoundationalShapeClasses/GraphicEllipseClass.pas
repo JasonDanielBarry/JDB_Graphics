@@ -4,7 +4,7 @@ interface
 
     uses
         Winapi.D2D1,
-        system.SysUtils, system.Types,
+        system.SysUtils, system.Types, System.Classes,
         Vcl.Direct2D, vcl.Graphics,
         GeometryTypes,
         GeomBox,
@@ -16,30 +16,31 @@ interface
     type
         TGraphicEllipse = class(TGraphicObject)
             private
-                var
-                    ellipseBox : TGeomBox;
                 //convert geom box to ellipse
                     function convertGeomBoxToEllipse(   const geomBoxIn         : TGeomBox;
                                                         const axisConverterIn   : TDrawingAxisConverter ) : TD2D1Ellipse;
+                //draw to canvas
+                    procedure drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
+                                                    var canvasInOut         : TDirect2DCanvas       ); override;
             public
                 //constructor
-                    constructor create( const   filledIn        : boolean;
-                                        const   lineThicknessIn : integer;
+                    constructor create( const   filledIn                : boolean;
+                                        const   lineThicknessIn         : integer;
                                                 ellipseWidthIn,
-                                                ellipseHeightIn : double;
+                                                ellipseHeightIn,
+                                                rotationAngleIn         : double;
+                                        const   scaleTypeIn             : EScaleType;
+                                        const   horizontalAlignmentIn   : TAlignment;
+                                        const   verticalAlignmentIn     : TVerticalAlignment;
                                         const   fillColourIn,
-                                                lineColourIn    : TColor;
-                                        const   lineStyleIn     : TPenStyle;
-                                        const   centrePointIn   : TGeomPoint    );
+                                                lineColourIn            : TColor;
+                                        const   lineStyleIn             : TPenStyle;
+                                        const   handlePointXYIn         : TGeomPoint        );
                 //destructor
                     destructor destroy(); override;
                 //modifiers
                     procedure setCentrePoint(const xIn, yIn : double);
-                //draw to canvas
-                    procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DCanvas       ); override;
-                //bounding box
-                    function determineBoundingBox() : TGeomBox; override;
+
         end;
 
 implementation
@@ -49,58 +50,79 @@ implementation
             function TGraphicEllipse.convertGeomBoxToEllipse(   const geomBoxIn         : TGeomBox;
                                                                 const axisConverterIn   : TDrawingAxisConverter ) : TD2D1Ellipse;
                 var
-                    centrePointF    : TPointF;
+                    handlePointLT   : TPointF;
                     ellipseOut      : TD2D1Ellipse;
                 begin
-                    //calculate the ellipse centre point
-                        centrePointF := axisConverterIn.XY_to_LT( ellipseBox.calculateCentrePoint() );
+                    //calculate the ellipse handle point
+                        handlePointLT := axisConverterIn.XY_to_LT( graphicBox.calculateCentrePoint() );
 
-                        ellipseOut.point.x := centrePointF.X;
-                        ellipseOut.point.y := centrePointF.y;
+                        ellipseOut.point.x := handlePointLT.X;
+                        ellipseOut.point.y := handlePointLT.y;
 
                     //calculate the ellipse dimensions
                         case ( objectScaleType ) of
                             EScaleType.scDrawing:
                                 begin
-                                    ellipseOut.radiusX := 0.5 * axisConverterIn.dX_To_dL( ellipseBox.calculateXDimension() );
-                                    ellipseOut.radiusY := 0.5 * axisConverterIn.dY_To_dT( ellipseBox.calculateYDimension() );
+                                    ellipseOut.radiusX := 0.5 * axisConverterIn.dX_To_dL( graphicBox.calculateXDimension() );
+                                    ellipseOut.radiusY := 0.5 * axisConverterIn.dY_To_dT( graphicBox.calculateYDimension() );
                                 end;
 
                             EScaleType.scCanvas:
                                 begin
-                                    ellipseOut.radiusX := 0.5 * ellipseBox.calculateXDimension();
-                                    ellipseOut.radiusY := 0.5 * ellipseBox.calculateYDimension();
+                                    ellipseOut.radiusX := 0.5 * graphicBox.calculateXDimension();
+                                    ellipseOut.radiusY := 0.5 * graphicBox.calculateYDimension();
                                 end;
                         end;
 
                     result := ellipseOut;
                 end;
 
+        //draw to canvas
+            procedure TGraphicEllipse.drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
+                                                            var canvasInOut         : TDirect2DCanvas       );
+                var
+                    drawingEllipse : TD2D1Ellipse;
+                begin
+                    //get the drawing ellipse
+                        drawingEllipse := convertGeomBoxToEllipse( graphicBox, axisConverterIn );
+
+                    //draw fill
+                        if ( filled ) then
+                            canvasInOut.FillEllipse( drawingEllipse );
+
+                    //draw line
+                        canvasInOut.DrawEllipse( drawingEllipse );
+                end;
+
     //public
         //constructor
-            constructor TGraphicEllipse.create( const   filledIn        : boolean;
-                                                const   lineThicknessIn : integer;
+            constructor TGraphicEllipse.create( const   filledIn                : boolean;
+                                                const   lineThicknessIn         : integer;
                                                         ellipseWidthIn,
-                                                        ellipseHeightIn : double;
+                                                        ellipseHeightIn,
+                                                        rotationAngleIn         : double;
+                                                const   scaleTypeIn             : EScaleType;
+                                                const   horizontalAlignmentIn   : TAlignment;
+                                                const   verticalAlignmentIn     : TVerticalAlignment;
                                                 const   fillColourIn,
-                                                        lineColourIn    : TColor;
-                                                const   lineStyleIn     : TPenStyle;
-                                                const   centrePointIn   : TGeomPoint    );
+                                                        lineColourIn            : TColor;
+                                                const   lineStyleIn             : TPenStyle;
+                                                const   handlePointXYIn           : TGeomPoint        );
                 var
                     localMinPoint, localMaxPoint : TGeomPoint;
                 begin
                     inherited create(   filledIn,
                                         lineThicknessIn,
+                                        rotationAngleIn,
+                                        scaleTypeIn,
+                                        horizontalAlignmentIn,
+                                        verticalAlignmentIn,
                                         fillColourIn,
                                         lineColourIn,
-                                        lineStyleIn         );
+                                        lineStyleIn,
+                                        handlePointXYIn         );
 
-                    localMinPoint := TGeomPoint.create(0, 0);
-                    localMaxPoint := TGeomPoint.create(ellipseWidthIn, ellipseHeightIn);
-
-                    ellipseBox := TGeomBox.create( localMinPoint, localMaxPoint );
-
-                    ellipseBox.setCentrePoint( centrePointIn );
+                    dimensionAndPositionGraphicBox( ellipseWidthIn, ellipseHeightIn );
                 end;
 
         //destructor
@@ -112,31 +134,7 @@ implementation
         //modifiers
             procedure TGraphicEllipse.setCentrePoint(const xIn, yIn : double);
                 begin
-                    ellipseBox.setCentrePoint( xIn, yIn );
-                end;
-
-        //draw to canvas
-            procedure TGraphicEllipse.drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                                    var canvasInOut         : TDirect2DCanvas       );
-                var
-                    drawingEllipse : TD2D1Ellipse;
-                begin
-                    //get the drawing ellipse
-                        drawingEllipse := convertGeomBoxToEllipse( ellipseBox, axisConverterIn );
-
-                    //draw fill
-                        if ( setFillProperties(canvasInOut) ) then
-                            canvasInOut.FillEllipse( drawingEllipse );
-
-                    //draw line
-                        setLineProperties( canvasInOut );
-                        canvasInOut.DrawEllipse( drawingEllipse );
-                end;
-
-        //bounding box
-            function TGraphicEllipse.determineBoundingBox() : TGeomBox;
-                begin
-                    result := ellipseBox;
+                    graphicBox.setCentrePoint( xIn, yIn );
                 end;
 
 end.

@@ -11,53 +11,34 @@ interface
             GraphicGeometryClass,
             DrawingAxisConversionClass,
             GeometryTypes,
-            GeometryBaseClass
+            GeometryBaseClass,
+            GeomPolygonClass
             ;
 
     type
         TGraphicPolygon = class(TGraphicGeometry)
-            //constructor
-                constructor create( const   filledIn        : boolean;
-                                    const   lineThicknessIn : integer;
-                                    const   fillColourIn,
-                                            lineColourIn    : TColor;
-                                    const   lineStyleIn     : TPenStyle;
-                                    const   geometryIn      : TGeomBase );
-            //destructor
-                destructor destroy(); override;
-            //draw to canvas
-                procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                        var canvasInOut         : TDirect2DCanvas       ); override;
+            private
+                //draw to canvas
+                    procedure drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
+                                                    var canvasInOut         : TDirect2DCanvas       ); override;
+            public
+                //constructor
+                    constructor create( const   filledIn        : boolean;
+                                        const   lineThicknessIn : integer;
+                                        const   fillColourIn,
+                                                lineColourIn    : TColor;
+                                        const   lineStyleIn     : TPenStyle;
+                                        const   geometryIn      : TGeomPolygon );
+                //destructor
+                    destructor destroy(); override;
         end;
 
 implementation
 
-    //public
-        //constructor
-            constructor TGraphicPolygon.create( const   filledIn        : boolean;
-                                                const   lineThicknessIn : integer;
-                                                const   fillColourIn,
-                                                        lineColourIn    : TColor;
-                                                const   lineStyleIn     : TPenStyle;
-                                                const   geometryIn      : TGeomBase );
-                begin
-                    inherited create(   filledIn,
-                                        lineThicknessIn,
-                                        fillColourIn,
-                                        lineColourIn,
-                                        lineStyleIn,
-                                        geometryIn.getDrawingPoints()   );
-                end;
-
-        //destructor
-            destructor TGraphicPolygon.destroy();
-                begin
-                    inherited destroy();
-                end;
-
+    //private
         //draw to canvas
-            procedure TGraphicPolygon.drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                                    var canvasInOut         : TDirect2DCanvas       );
+            procedure TGraphicPolygon.drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
+                                                            var canvasInOut         : TDirect2DCanvas       );
                 var
                     pathGeometry : ID2D1PathGeometry;
                 begin
@@ -71,12 +52,34 @@ implementation
                                                                 );
 
                     //draw fill
-                        if ( setFillProperties( canvasInOut ) ) then
+                        if ( filled ) then
                             canvasInOut.FillGeometry( pathGeometry );
 
                     //draw line
-                        setLineProperties( canvasInOut );
                         canvasInOut.DrawGeometry( pathGeometry );
+                end;
+
+    //public
+        //constructor
+            constructor TGraphicPolygon.create( const   filledIn        : boolean;
+                                                const   lineThicknessIn : integer;
+                                                const   fillColourIn,
+                                                        lineColourIn    : TColor;
+                                                const   lineStyleIn     : TPenStyle;
+                                                const   geometryIn      : TGeomPolygon );
+                begin
+                    inherited create(   filledIn,
+                                        lineThicknessIn,
+                                        fillColourIn,
+                                        lineColourIn,
+                                        lineStyleIn,
+                                        geometryIn.getDrawingPoints()   );
+                end;
+
+        //destructor
+            destructor TGraphicPolygon.destroy();
+                begin
+                    inherited destroy();
                 end;
 
 end.

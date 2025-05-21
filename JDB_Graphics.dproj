@@ -123,7 +123,6 @@
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectGroupClasses\GraphicArrowGroupClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectGroupClasses\GraphicObjectGroupClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicGridClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicLinePlotClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicMousePointTrackerClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicScatterPlotClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawer2DPaintBoxClass.pas"/>

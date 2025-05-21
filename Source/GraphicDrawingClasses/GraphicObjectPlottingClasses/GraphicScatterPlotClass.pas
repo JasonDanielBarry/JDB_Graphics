@@ -16,9 +16,6 @@ interface
 
     type
         TGraphicScatterPlot = class(TGraphicObjectGroup)
-            private
-                var
-                    boundingBox : TGeomBox;
             public
                 //constructor
                     constructor create( const   pointSizeIn     : integer;
@@ -26,8 +23,6 @@ interface
                                         const   arrPlotPointsIn : TArray<TGeomPoint> );
                 //destructor
                     destructor destroy(); override;
-                //bounding box
-                    function determineBoundingBox() : TGeomBox; override;
         end;
 
 
@@ -63,20 +58,12 @@ implementation
 
                             addGraphicObjectToGroup( graphicPlotPoint );
                         end;
-
-                    boundingBox := TGeomBox.determineBoundingBox( arrPlotPointsIn );
                 end;
 
         //destructor
             destructor TGraphicScatterPlot.destroy();
                 begin
                     inherited destroy();
-                end;
-
-        //bounding box
-            function TGraphicScatterPlot.determineBoundingBox() : TGeomBox;
-                begin
-                    result := boundingBox;
                 end;
 
 end.

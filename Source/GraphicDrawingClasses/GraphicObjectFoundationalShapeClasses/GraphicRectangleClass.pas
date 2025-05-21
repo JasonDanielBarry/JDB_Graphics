@@ -4,7 +4,7 @@ interface
 
     uses
         Winapi.D2D1,
-        system.SysUtils, system.Types,
+        system.SysUtils, system.Types, system.Classes,
         Vcl.Direct2D, vcl.Graphics,
         GeometryTypes,
         GeomBox,
@@ -23,24 +23,27 @@ interface
                     function convertGeomBoxToD2DRect(   const cornerRadiusIn    : double;
                                                         const geomBoxIn         : TGeomBox;
                                                         const axisConverterIn   : TDrawingAxisConverter ) : TD2D1RoundedRect;
+                //draw to canvas
+                    procedure drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
+                                                    var canvasInOut         : TDirect2DCanvas       ); override;
             public
                 //constructor
                     constructor create( const   filledIn                : boolean;
                                         const   lineThicknessIn         : integer;
                                         const   rectangleCornerRadiusIn,
                                                 rectangleWidthIn,
-                                                rectangleHeightIn       : double;
+                                                rectangleHeightIn,
+                                                rotationIn              : double;
+                                        const   scaleTypeIn             : EScaleType;
+                                        const   horizontalAlignmentIn   : TAlignment;
+                                        const   verticalAlignmentIn     : TVerticalAlignment;
                                         const   fillColourIn,
                                                 lineColourIn            : TColor;
                                         const   lineStyleIn             : TPenStyle;
-                                        const   bottomLeftPointIn       : TGeomPoint    );
+                                        const   handlePointXYIn         : TGeomPoint        );
                 //destructor
                     destructor destroy(); override;
-                //draw to canvas
-                    procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DCanvas       ); override;
-                //bounding box
-                    function determineBoundingBox() : TGeomBox; override;
+
         end;
 
 implementation
@@ -71,58 +74,58 @@ implementation
                     result := rectOut;
                 end;
 
-    //public
-        //constructor
-            constructor TGraphicRectangle.create(   const   filledIn                : boolean;
-                                                    const   lineThicknessIn         : integer;
-                                                    const   rectangleCornerRadiusIn,
-                                                            rectangleWidthIn,
-                                                            rectangleHeightIn       : double;
-                                                    const   fillColourIn,
-                                                            lineColourIn            : TColor;
-                                                    const   lineStyleIn             : TPenStyle;
-                                                    const   bottomLeftPointIn       : TGeomPoint    );
-                begin
-                    inherited create(   filledIn,
-                                        lineThicknessIn,
-                                        fillColourIn,
-                                        lineColourIn,
-                                        lineStyleIn     );
-
-                    cornerRadius := rectangleCornerRadiusIn;
-
-                    rectangleBox := TGeomBox.newBox( rectangleWidthIn, rectangleHeightIn );
-
-                    rectangleBox.shiftBox( bottomLeftPointIn.x, bottomLeftPointIn.y );
-                end;
-
-        //destructor
-            destructor TGraphicRectangle.destroy();
-                begin
-                    inherited destroy();
-                end;
-
         //draw to canvas
-            procedure TGraphicRectangle.drawToCanvas(   const axisConverterIn   : TDrawingAxisConverter;
-                                                        var canvasInOut         : TDirect2DCanvas       );
+            procedure TGraphicRectangle.drawGraphicToCanvas(const axisConverterIn   : TDrawingAxisConverter;
+                                                            var canvasInOut         : TDirect2DCanvas       );
                 var
                     drawingRect : TD2D1RoundedRect;
                 begin
                     drawingRect := convertGeomBoxToD2DRect( cornerRadius, rectangleBox, axisConverterIn );
 
                     //draw rectangle fill
-                        if ( setFillProperties( canvasInOut ) ) then
+                        if ( filled ) then
                             canvasInOut.FillRoundedRectangle( drawingRect );
 
                     //draw rectangle line
-                        setLineProperties( canvasInOut );
                         canvasInOut.DrawRoundedRectangle( drawingRect );
                 end;
 
-        //bounding box
-            function TGraphicRectangle.determineBoundingBox() : TGeomBox;
+    //public
+        //constructor
+            constructor TGraphicRectangle.create(   const   filledIn                : boolean;
+                                                    const   lineThicknessIn         : integer;
+                                                    const   rectangleCornerRadiusIn,
+                                                            rectangleWidthIn,
+                                                            rectangleHeightIn,
+                                                            rotationIn              : double;
+                                                    const   scaleTypeIn             : EScaleType;
+                                                    const   horizontalAlignmentIn   : TAlignment;
+                                                    const   verticalAlignmentIn     : TVerticalAlignment;
+                                                    const   fillColourIn,
+                                                            lineColourIn            : TColor;
+                                                    const   lineStyleIn             : TPenStyle;
+                                                    const   handlePointXYIn         : TGeomPoint        );
                 begin
-                    result := rectangleBox;
+                    inherited create(   filledIn,
+                                        lineThicknessIn,
+                                        rotationIn,
+                                        scaleTypeIn,
+                                        horizontalAlignmentIn,
+                                        verticalAlignmentIn,
+                                        fillColourIn,
+                                        lineColourIn,
+                                        lineStyleIn,
+                                        handlePointXYIn         );
+
+                    cornerRadius := rectangleCornerRadiusIn;
+
+                    dimensionAndPositionGraphicBox( rectangleWidthIn, rectangleHeightIn );
+                end;
+
+        //destructor
+            destructor TGraphicRectangle.destroy();
+                begin
+                    inherited destroy();
                 end;
 
 end.

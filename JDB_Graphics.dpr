@@ -41,7 +41,6 @@ uses
   GraphicArrowGroupClass in 'Source\GraphicDrawingClasses\GraphicObjectGroupClasses\GraphicArrowGroupClass.pas',
   GraphicObjectGroupClass in 'Source\GraphicDrawingClasses\GraphicObjectGroupClasses\GraphicObjectGroupClass.pas',
   GraphicGridClass in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicGridClass.pas',
-  GraphicLinePlotClass in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicLinePlotClass.pas',
   GraphicMousePointTrackerClass in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicMousePointTrackerClass.pas',
   GraphicScatterPlotClass in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicScatterPlotClass.pas',
   GraphicDrawer2DPaintBoxClass in 'Source\GraphicDrawer\GraphicDrawer2DPaintBoxClass.pas';

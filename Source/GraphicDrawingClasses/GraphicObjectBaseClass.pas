@@ -4,9 +4,9 @@ interface
 
     uses
         Winapi.D2D1,
-        system.UITypes,
+        system.UITypes, system.Math, System.Classes, System.Types,
         Vcl.Direct2D, vcl.Graphics, vcl.Themes,
-        GeomBox,
+        GeometryTypes, GeomBox,
         GraphicDrawingTypes,
         DrawingAxisConversionClass
         ;
@@ -15,73 +15,155 @@ interface
         TGraphicObject = class
             private
                 var
-                    filled          : boolean;
-                    lineThickness   : integer;
+                    mustRotateCanvas    : boolean;
+                    lineThickness       : integer;
+                    rotationAngle       : double;
                     fillColour,
-                    lineColour      : TColor;
-                    lineStyle       : TPenStyle;
+                    lineColour          : TColor;
+                    lineStyle           : TPenStyle;
+                //set canvas properties for drawing
+                    procedure setFillProperties(var canvasInOut : TDirect2DCanvas); inline;
+                    procedure setLineProperties(var canvasInOut : TDirect2DCanvas); inline;
+                //rotate canvas
+                    procedure rotateCanvas( const axisConverterIn   : TDrawingAxisConverter;
+                                            var canvasInOut         : TDirect2DCanvas       ); inline;
+                    procedure resetCanvasRotation(var canvasInOut : TDirect2DCanvas); inline;
             protected
                 var
-                    objectScaleType : EScaleType;
-                //set canvas properties for drawing
-                    //fill
-                        function setFillProperties(var canvasInOut : TDirect2DCanvas) : boolean;
-                    //line
-                        procedure setLineProperties(var canvasInOut : TDirect2DCanvas);
+                    filled              : boolean;
+                    horizontalAlignment : TAlignment;
+                    verticalAlignment   : TVerticalAlignment;
+                    objectScaleType     : EScaleType;
+                    handlePointLT       : TPointF;
+                    handlePointXY       : TGeomPoint;
+                    graphicBox          : TGeomBox;
+                //position graphic box
+                    procedure dimensionAndPositionGraphicBox(const boxWidthIn, boxHeightIn : double); overload;
+                    procedure dimensionAndPositionGraphicBox(const arrPointsIn : TArray<TGeomPoint>); overload;
+                //draw graphic
+                    procedure drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
+                                                    var canvasInOut         : TDirect2DCanvas           ); virtual; abstract;
             public
                 //constructor
                     constructor create(); overload;
-                    constructor create( const   filledIn        : boolean;
-                                        const   lineThicknessIn : integer;
+                    constructor create( const   filledIn                : boolean;
+                                        const   lineThicknessIn         : integer;
+                                        const   rotationAngleIn         : double;
+                                        const   scaleTypeIn             : EScaleType;
+                                        const   horizontalAlignmentIn   : TAlignment;
+                                        const   verticalAlignmentIn     : TVerticalAlignment;
                                         const   fillColourIn,
-                                                lineColourIn    : TColor;
-                                        const   lineStyleIn     : TPenStyle;
-                                        const   scaleTypeIn     : EScaleType = EScaleType.scDrawing);overload;
+                                                lineColourIn            : TColor;
+                                        const   lineStyleIn             : TPenStyle;
+                                        const   handlePointXYIn         : TGeomPoint        ); overload;
                 //destructor
                     destructor destroy(); override;
                 //modifiers
-                    procedure setObjectScaleType(const scaleTypeIn : EScaleType);
+                    procedure setAlignment( const horAlignmentIn    : TAlignment;
+                                            const vertAlignmentIn   : TVerticalAlignment );
+                    procedure setHandlePoint(const xIn, yIn : double);
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DCanvas       ); overload; virtual; abstract;
+                                            var canvasInOut         : TDirect2DCanvas       );
                     class procedure drawAllToCanvas(const arrGraphicObjectsIn   : TArray<TGraphicObject>;
                                                     const axisConverterIn       : TDrawingAxisConverter;
-                                                    var canvasInOut             : TDirect2DCanvas       ); inline; static;
+                                                    var canvasInOut             : TDirect2DCanvas       ); static;
                 //bounding box
-                    function determineBoundingBox() : TGeomBox; overload; virtual; abstract;
+                    function determineBoundingBox() : TGeomBox; overload; virtual;
                     class function determineBoundingBox(const arrGraphicObjectsIn : TArray<TGraphicObject>) : TGeomBox; overload; static;
         end;
 
 implementation
 
     //private
-        //
+        //set canvas properties for drawing
+            procedure TGraphicObject.setFillProperties(var canvasInOut : TDirect2DCanvas);
+                begin
+                    //hollow object
+                        if NOT(filled) then
+                            begin
+                                canvasInOut.Brush.Style := TBrushStyle.bsClear;
+                                exit();
+                            end;
+
+                    canvasInOut.Brush.Color := TStyleManager.ActiveStyle.GetSystemColor( fillColour );
+                    canvasInOut.Brush.Style := TBrushStyle.bsSolid;
+                end;
+
+            procedure TGraphicObject.setLineProperties(var canvasInOut : TDirect2DCanvas);
+                begin
+                    canvasInOut.Pen.Color := TStyleManager.ActiveStyle.GetSystemColor( lineColour );
+                    canvasInOut.Pen.Style := lineStyle;
+                    canvasInOut.Pen.Width := lineThickness;
+                end;
+
+        //rotate canvas
+            procedure TGraphicObject.rotateCanvas(  const axisConverterIn   : TDrawingAxisConverter;
+                                                    var canvasInOut         : TDirect2DCanvas       );
+                var
+                    transformMatrix : TD2DMatrix3x2F;
+                begin
+                    if NOT( mustRotateCanvas ) then
+                        exit();
+
+                    //calculate handle point on canvas
+                        handlePointLT := axisConverterIn.XY_to_LT( handlePointXY );
+
+                    //get transformation matrix:
+                    //positive angles result in anti-clockwise rotation of the canvas
+                    //which results in clockwise rotation of the drawing entities
+                        transformMatrix := TD2DMatrix3x2F.Rotation( -rotationAngle, handlePointLT.X, handlePointLT.Y );
+
+                    //rotate canvas
+                        canvasInOut.RenderTarget.SetTransform( transformMatrix );
+                end;
+
+            procedure TGraphicObject.resetCanvasRotation(var canvasInOut : TDirect2DCanvas);
+                begin
+                    canvasInOut.RenderTarget.SetTransform( TD2DMatrix3x2F.Identity );
+                end;
 
     //protected
-        //set canvas properties for drawing
-            //fill
-                function TGraphicObject.setFillProperties(var canvasInOut : TDirect2DCanvas) : boolean;
-                    begin
-                        result := filled;
+        //position graphic box
+            procedure TGraphicObject.dimensionAndPositionGraphicBox(const boxWidthIn, boxHeightIn : double);
+                var
+                    boxCentreX, boxCentreY : double;
+                begin
+                    //dimension the box
+                        graphicBox.setDimensions( boxWidthIn, boxHeightIn );
 
-                        //hollow object
-                            if ( NOT(filled) ) then
-                                begin
-                                    canvasInOut.Brush.Style := TBrushStyle.bsClear;
-                                    exit( False );
-                                end;
+                    //determine the horizontal centre of the box
+                        case (horizontalAlignment) of
+                            TAlignment.taLeftJustify:
+                                boxCentreX := handlePointXY.X + boxWidthIn / 2;
 
-                        canvasInOut.Brush.Color := TStyleManager.ActiveStyle.GetSystemColor( fillColour );
-                        canvasInOut.Brush.Style := TBrushStyle.bsSolid;
-                    end;
+                            TAlignment.taCenter:
+                                boxCentreX := handlePointXY.X;
 
-            //line
-                procedure TGraphicObject.setLineProperties(var canvasInOut : TDirect2DCanvas);
-                    begin
-                        canvasInOut.Pen.Color := TStyleManager.ActiveStyle.GetSystemColor( lineColour );
-                        canvasInOut.Pen.Style := lineStyle;
-                        canvasInOut.Pen.Width := lineThickness;
-                    end;
+                            TAlignment.taRightJustify:
+                                boxCentreX := handlePointXY.X - boxWidthIn / 2;
+                        end;
+
+                    //determine the vertical centre of the box
+                        case (verticalAlignment) of
+                            TVerticalAlignment.taAlignBottom:
+                                boxCentreY := handlePointXY.y + boxHeightIn / 2;
+
+                            TVerticalAlignment.taVerticalCenter:
+                                boxCentreY := handlePointXY.y;
+
+                            TVerticalAlignment.taAlignTop:
+                                boxCentreY := handlePointXY.y - boxHeightIn / 2;
+                        end;
+
+                    //shift the box to the centre values
+                        graphicBox.setCentrePoint( boxCentreX, boxCentreY );
+                end;
+
+            procedure TGraphicObject.dimensionAndPositionGraphicBox(const arrPointsIn : TArray<TGeomPoint>);
+                begin
+                    graphicBox := TGeomBox.determineBoundingBox( arrPointsIn );
+                end;
 
     //public
         //constructor
@@ -90,21 +172,34 @@ implementation
                     inherited create();
                 end;
 
-            constructor TGraphicObject.create(  const   filledIn        : boolean;
-                                                const   lineThicknessIn : integer;
+            constructor TGraphicObject.create(  const   filledIn                : boolean;
+                                                const   lineThicknessIn         : integer;
+                                                const   rotationAngleIn         : double;
+                                                const   scaleTypeIn             : EScaleType;
+                                                const   horizontalAlignmentIn   : TAlignment;
+                                                const   verticalAlignmentIn     : TVerticalAlignment;
                                                 const   fillColourIn,
-                                                        lineColourIn    : TColor;
-                                                const   lineStyleIn     : TPenStyle;
-                                                const   scaleTypeIn     : EScaleType = EScaleType.scDrawing);
+                                                        lineColourIn            : TColor;
+                                                const   lineStyleIn             : TPenStyle;
+                                                const   handlePointXYIn         : TGeomPoint        );
                 begin
                     inherited create();
 
-                    filled          := filledIn;
-                    lineThickness   := lineThicknessIn;
-                    fillColour      := fillColourIn;
-                    lineColour      := lineColourIn;
-                    lineStyle       := lineStyleIn;
-                    objectScaleType := scaleTypeIn;
+                    filled              := filledIn;
+                    lineThickness       := lineThicknessIn;
+                    rotationAngle       := rotationAngleIn;
+                    objectScaleType     := scaleTypeIn;
+                    horizontalAlignment := horizontalAlignmentIn;
+                    verticalAlignment   := verticalAlignmentIn;
+                    fillColour          := fillColourIn;
+                    lineColour          := lineColourIn;
+                    lineStyle           := lineStyleIn;
+                    handlePointXY.copyPoint( handlePointXYIn );
+
+                    mustRotateCanvas := NOT( IsZero( rotationAngleIn, 1e-3 ) );
+
+                    graphicBox.setDimensions( 0, 0 );
+                    graphicBox.setCentrePoint( handlePointXYIn );
                 end;
 
         //destructor
@@ -114,12 +209,42 @@ implementation
                 end;
 
         //modifiers
-            procedure TGraphicObject.setObjectScaleType(const scaleTypeIn : EScaleType);
+            procedure TGraphicObject.setAlignment(  const horAlignmentIn    : TAlignment;
+                                                    const vertAlignmentIn   : TVerticalAlignment );
                 begin
-                    objectScaleType := scaleTypeIn;
+                    horizontalAlignment := horAlignmentIn;
+                    verticalAlignment   := vertAlignmentIn;
+                end;
+
+            procedure TGraphicObject.setHandlePoint(const xIn, yIn : double);
+                begin
+                    handlePointXY.setPoint( xIn, yIn );
+
+                    dimensionAndPositionGraphicBox( graphicBox.calculateXDimension(), graphicBox.calculateYDimension() );
                 end;
 
         //draw to canvas
+            procedure TGraphicObject.drawToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
+                                                    var canvasInOut         : TDirect2DCanvas       );
+                begin
+                    //canvas rotation
+                        if ( mustRotateCanvas ) then
+                            rotateCanvas( axisConverterIn, canvasInOut );
+
+                    //fill properties
+                        setFillProperties( canvasInOut );
+
+                    //line properties
+                        setLineProperties( canvasInOut );
+
+                    //draw graphic object
+                        drawGraphicToCanvas( axisConverterIn, canvasInOut );
+
+                    //reset canvas rotation
+                        if ( mustRotateCanvas ) then
+                            resetCanvasRotation( canvasInOut );
+                end;
+
             class procedure TGraphicObject.drawAllToCanvas( const arrGraphicObjectsIn   : TArray<TGraphicObject>;
                                                             const axisConverterIn       : TDrawingAxisConverter;
                                                             var canvasInOut             : TDirect2DCanvas           );
@@ -133,6 +258,11 @@ implementation
                 end;
 
         //bounding box
+            function TGraphicObject.determineBoundingBox() : TGeomBox;
+                begin
+                    result := graphicBox;
+                end;
+
             class function TGraphicObject.determineBoundingBox(const arrGraphicObjectsIn : TArray<TGraphicObject>) : TGeomBox;
                 var
                     i, graphicObjectsCount  : integer;

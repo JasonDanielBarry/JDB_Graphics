@@ -4,7 +4,7 @@ interface
 
     uses
         //Delphi
-            system.SysUtils, system.types, system.UITypes, System.UIConsts,
+            system.SysUtils, system.types, system.UITypes, System.UIConsts, system.Classes,
             Winapi.D2D1, Vcl.Direct2D,
             vcl.Graphics,
         //custom
@@ -12,6 +12,7 @@ interface
             DrawingAxisConversionClass,
             GeometryTypes,
             GeomBox,
+            GraphicDrawingTypes,
             GeometryBaseClass
             ;
 
@@ -43,8 +44,6 @@ interface
                     //open
                         class function createOpenPathGeometry(  const geometryPointsIn  : TArray<TGeomPoint>;
                                                                 const axisConverterIn   : TDrawingAxisConverter ) : ID2D1PathGeometry; static;
-                //bounding box
-                    function determineBoundingBox() : TGeomBox; override;
         end;
 
 implementation
@@ -106,11 +105,18 @@ implementation
                 begin
                     inherited create(   filledIn,
                                         lineThicknessIn,
+                                        0,
+                                        EScaleType.scDrawing,
+                                        TAlignment.taCenter,
+                                        TVerticalAlignment.taVerticalCenter,
                                         fillColourIn,
                                         lineColourIn,
-                                        lineStyleIn         );
+                                        lineStyleIn,
+                                        TGeomPoint.create( 0, 0 )               );
 
                     TGeomPoint.copyPoints( geometryPointsIn, geometryPoints );
+
+                    graphicBox := TGeomBox.determineBoundingBox( geometryPoints );
                 end;
 
         //destructor
@@ -143,12 +149,6 @@ implementation
                                                         axisConverterIn
                                                     );
                     end;
-
-        //bounding box
-            function TGraphicGeometry.determineBoundingBox() : TGeomBox;
-                begin
-                    result := TGeomBox.determineBoundingBox( geometryPoints );
-                end;
 
 
 end.

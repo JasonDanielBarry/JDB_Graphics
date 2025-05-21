@@ -12,34 +12,55 @@ interface
             GraphicGeometryClass,
             DrawingAxisConversionClass,
             GeometryTypes,
-            GeometryBaseClass
+            GeometryBaseClass,
+            GeomLineClass
             ;
 
     type
         TGraphicLine = class(TGraphicGeometry)
-            //constructor
-                constructor create( const   lineThicknessIn : integer;
-                                    const   lineColourIn    : TColor;
-                                    const   lineStyleIn     : TPenStyle;
-                                    const   geometryIn      : TGeomBase );
-            //destructor
-                destructor destroy(); override;
-            //modifiers
-                procedure setStartPoint(const xIn, yIn : double);
-                procedure setEndPoint(const xIn, yIn : double);
-            //draw to canvas
-                procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                        var canvasInOut         : TDirect2DCanvas       ); override;
+            private
+                //draw to canvas
+                    procedure drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
+                                                    var canvasInOut         : TDirect2DCanvas       ); override;
+            public
+                //constructor
+                    constructor create( const   lineThicknessIn : integer;
+                                        const   lineColourIn    : TColor;
+                                        const   lineStyleIn     : TPenStyle;
+                                        const   geometryIn      : TGeomLine ); overload;
+                //destructor
+                    destructor destroy(); override;
+                //modifiers
+                    procedure setStartPoint(const xIn, yIn : double);
+                    procedure setEndPoint(const xIn, yIn : double);
         end;
 
 implementation
+
+    //private
+        //draw to canvas
+            procedure TGraphicLine.drawGraphicToCanvas( const axisConverterIn   : TDrawingAxisConverter;
+                                                        var canvasInOut         : TDirect2DCanvas       );
+                var
+                    pathGeometry : ID2D1PathGeometry;
+                begin
+                    if (length( geometryPoints ) < 2) then
+                        exit();
+
+                    pathGeometry := createOpenPathGeometry(
+                                                                geometryPoints,
+                                                                axisConverterIn
+                                                          );
+
+                    canvasInOut.DrawGeometry( pathGeometry );
+                end;
 
     //public
         //constructor
             constructor TGraphicLine.create(const   lineThicknessIn : integer;
                                             const   lineColourIn    : TColor;
                                             const   lineStyleIn     : TPenStyle;
-                                            const   geometryIn      : TGeomBase );
+                                            const   geometryIn      : TGeomLine );
                 begin
                     inherited create(   false,
                                         lineThicknessIn,
@@ -64,25 +85,6 @@ implementation
             procedure TGraphicLine.setEndPoint(const xIn, yIn : double);
                 begin
                     geometryPoints[1].setPoint( xIn, yIn );
-                end;
-
-        //draw to canvas
-            procedure TGraphicLine.drawToCanvas(const axisConverterIn   : TDrawingAxisConverter;
-                                                var canvasInOut         : TDirect2DCanvas       );
-                var
-                    pathGeometry : ID2D1PathGeometry;
-                begin
-                    if (length( geometryPoints ) < 2) then
-                        exit();
-
-                    pathGeometry := createOpenPathGeometry(
-                                                                geometryPoints,
-                                                                axisConverterIn
-                                                          );
-
-                    setLineProperties( canvasInOut );
-
-                    canvasInOut.DrawGeometry( pathGeometry );
                 end;
 
 end.

@@ -10,31 +10,53 @@ interface
         //custom
             GraphicGeometryClass,
             GeometryBaseClass,
+            GeomPolyLineClass,
             DrawingAxisConversionClass
+
             ;
 
     type
         TGraphicPolyline = class(TGraphicGeometry)
-            //constructor
-                constructor create( const   lineThicknessIn : integer;
-                                    const   lineColourIn    : TColor;
-                                    const   lineStyleIn     : TPenStyle;
-                                    const   geometryIn      : TGeomBase );
-            //destructor
-                destructor destroy(); override;
-            //draw to canvas
-                procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                        var canvasInOut         : TDirect2DCanvas       ); override;
+            private
+                //draw to canvas
+                    procedure drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
+                                                    var canvasInOut         : TDirect2DCanvas       ); override;
+            public
+                //constructor
+                    constructor create( const   lineThicknessIn : integer;
+                                        const   lineColourIn    : TColor;
+                                        const   lineStyleIn     : TPenStyle;
+                                        const   geometryIn      : TGeomPolyLine );
+                //destructor
+                    destructor destroy(); override;
         end;
 
 implementation
+
+    //private
+        //draw to canvas
+            procedure TGraphicPolyline.drawGraphicToCanvas( const axisConverterIn   : TDrawingAxisConverter;
+                                                            var canvasInOut         : TDirect2DCanvas       );
+                var
+                    pathGeometry : ID2D1PathGeometry;
+                begin
+                    if (length( geometryPoints ) < 2) then
+                        exit();
+
+                    pathGeometry := createOpenPathGeometry(
+                                                                geometryPoints,
+                                                                axisConverterIn
+                                                          );
+
+                    canvasInOut.DrawGeometry( pathGeometry );
+                end;
 
     //public
         //constructor
             constructor TGraphicPolyline.create(const   lineThicknessIn : integer;
                                                 const   lineColourIn    : TColor;
                                                 const   lineStyleIn     : TPenStyle;
-                                                const   geometryIn      : TGeomBase );
+                                                const   geometryIn      : TGeomPolyLine);
                 begin
                     inherited create(   false,
                                         lineThicknessIn,
@@ -48,25 +70,6 @@ implementation
             destructor TGraphicPolyline.destroy();
                 begin
                     inherited destroy();
-                end;
-
-        //draw to canvas
-            procedure TGraphicPolyline.drawToCanvas(const axisConverterIn   : TDrawingAxisConverter;
-                                                    var canvasInOut         : TDirect2DCanvas       );
-                var
-                    pathGeometry : ID2D1PathGeometry;
-                begin
-                    if (length( geometryPoints ) < 2) then
-                        exit();
-
-                    pathGeometry := createOpenPathGeometry(
-                                                                geometryPoints,
-                                                                axisConverterIn
-                                                          );
-
-                    setLineProperties( canvasInOut );
-
-                    canvasInOut.DrawGeometry( pathGeometry );
                 end;
 
 end.

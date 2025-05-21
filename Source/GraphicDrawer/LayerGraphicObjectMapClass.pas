@@ -37,7 +37,7 @@ interface
                     function determineActiveBoundingBox() : TGeomBox;
                 //draw active graphic objects
                     procedure drawActiveGraphicObjectsToCanvas( const axisConverter : TDrawingAxisConverter;
-                                                                var D2DCanvasInOut : TDirect2DCanvas        ); inline;
+                                                                var D2DCanvasInOut : TDirect2DCanvas        );
         end;
 
 implementation
