@@ -57,6 +57,10 @@ implementation
                         width, height   : double;
                         rectOut         : TD2D1RoundedRect;
                     begin
+                        //cache dimensions
+                            width   := graphicBox.calculateXDimension();
+                            height  := graphicBox.calculateYDimension();
+
                         //set radius
                             rectOut.radiusX := cornerRadius;
                             rectOut.radiusY := cornerRadius;
@@ -187,13 +191,7 @@ implementation
 
                     cornerRadius := rectangleCornerRadiusIn;
 
-                    case ( scaleTypeIn ) of
-                        EScaleType.scDrawing:
-                            dimensionAndPositionGraphicBox( rectangleWidthIn, rectangleHeightIn );
-
-                        EScaleType.scCanvas:
-                            dimensionAndPositionGraphicBox( 0, 0 );
-                    end;
+                    dimensionAndPositionGraphicBox( rectangleWidthIn, rectangleHeightIn );
                 end;
 
         //destructor

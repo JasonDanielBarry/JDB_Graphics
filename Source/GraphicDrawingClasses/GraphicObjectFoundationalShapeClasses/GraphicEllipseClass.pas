@@ -138,13 +138,7 @@ implementation
                                         lineStyleIn,
                                         handlePointXYIn         );
 
-                    case ( scaleTypeIn ) of
-                        EScaleType.scDrawing:
-                            dimensionAndPositionGraphicBox( ellipseWidthIn, ellipseHeightIn );
-
-                        EScaleType.scCanvas:
-                            dimensionAndPositionGraphicBox( 0, 0 );
-                    end;
+                    dimensionAndPositionGraphicBox( ellipseWidthIn, ellipseHeightIn );
                 end;
 
         //destructor
