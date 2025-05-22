@@ -42,7 +42,7 @@ interface
                     procedure dimensionAndPositionGraphicBox(const arrPointsIn : TArray<TGeomPoint>); overload;
                 //draw graphic
                     procedure drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
-                                                    var canvasInOut         : TDirect2DCanvas           ); virtual; abstract;
+                                                    var canvasInOut         : TDirect2DCanvas       ); virtual;
             public
                 //constructor
                     constructor create(); overload;
@@ -64,7 +64,7 @@ interface
                     procedure setHandlePoint(const xIn, yIn : double);
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DCanvas       );
+                                            var canvasInOut         : TDirect2DCanvas       ); virtual;
                     class procedure drawAllToCanvas(const arrGraphicObjectsIn   : TArray<TGraphicObject>;
                                                     const axisConverterIn       : TDrawingAxisConverter;
                                                     var canvasInOut             : TDirect2DCanvas       ); static;
@@ -163,6 +163,13 @@ implementation
             procedure TGraphicObject.dimensionAndPositionGraphicBox(const arrPointsIn : TArray<TGeomPoint>);
                 begin
                     graphicBox := TGeomBox.determineBoundingBox( arrPointsIn );
+                end;
+
+        //draw graphic
+            procedure TGraphicObject.drawGraphicToCanvas(   const axisConverterIn   : TDrawingAxisConverter;
+                                                            var canvasInOut         : TDirect2DCanvas           );
+                begin
+                    //nothing here
                 end;
 
     //public

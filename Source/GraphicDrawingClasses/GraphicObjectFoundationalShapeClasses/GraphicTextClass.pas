@@ -159,8 +159,8 @@ implementation
                                         1,
                                         textRotationAngleIn,
                                         scaleTypeIn,
-                                        horizontalAlignment,
-                                        verticalAlignment,
+                                        textHorAlignmentIn,
+                                        textVertAlignmentIn,
                                         clNone,
                                         clNone,
                                         TPenStyle.psSolid,
@@ -172,8 +172,7 @@ implementation
                     textColour          := textColourIn;
                     textFontStyles      := textFontStylesIn;
 
-                    graphicBox.setDimensions( 0, 0 );
-                    graphicBox.setCentrePoint( textHandlePointIn );
+                    dimensionAndPositionGraphicBox( 0, 0 );
                 end;
 
         //destructor

@@ -193,7 +193,8 @@ implementation
                                             const   lineStyleIn     : TPenStyle;
                                             const   handlePointXYIn : TGeomPoint );
                 begin
-                    inherited create(   filledIn,
+                    inherited create(
+                                        filledIn,
                                         lineThicknessIn,
                                         rotationAngleIn,
                                         EScaleType.scDrawing,
@@ -202,7 +203,8 @@ implementation
                                         fillColourIn,
                                         lineColourIn,
                                         lineStyleIn,
-                                        handlePointXYIn                     );
+                                        handlePointXYIn
+                                    );
 
                     //calculate start and end angles
                         startAngle  := normaliseAngle( startAngleIn );
@@ -234,7 +236,5 @@ implementation
 
                     result := NOT( SameValue( startAngleNorm, endAngleNorm, 1e-3 ) );
                 end;
-
-
 
 end.

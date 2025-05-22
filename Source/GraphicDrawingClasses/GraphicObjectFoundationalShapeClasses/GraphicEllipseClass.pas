@@ -38,9 +38,6 @@ interface
                                         const   handlePointXYIn         : TGeomPoint        );
                 //destructor
                     destructor destroy(); override;
-                //modifiers
-                    procedure setCentrePoint(const xIn, yIn : double);
-
         end;
 
 implementation
@@ -50,15 +47,10 @@ implementation
             function TGraphicEllipse.convertGeomBoxToEllipse(   const geomBoxIn         : TGeomBox;
                                                                 const axisConverterIn   : TDrawingAxisConverter ) : TD2D1Ellipse;
                 var
-                    handlePointLT   : TPointF;
+                    ellipseCentreX,
+                    ellipseCentreY  : double;
                     ellipseOut      : TD2D1Ellipse;
                 begin
-                    //calculate the ellipse handle point
-                        handlePointLT := axisConverterIn.XY_to_LT( graphicBox.calculateCentrePoint() );
-
-                        ellipseOut.point.x := handlePointLT.X;
-                        ellipseOut.point.y := handlePointLT.y;
-
                     //calculate the ellipse dimensions
                         case ( objectScaleType ) of
                             EScaleType.scDrawing:
@@ -73,6 +65,32 @@ implementation
                                     ellipseOut.radiusY := 0.5 * graphicBox.calculateYDimension();
                                 end;
                         end;
+
+                    //alignment
+                        case ( horizontalAlignment ) of
+                            TAlignment.taLeftJustify:
+                                ellipseCentreX := handlePointLT.X + ellipseOut.radiusX;
+
+                            TAlignment.taCenter:
+                                ellipseCentreX := handlePointLT.X;
+
+                            TAlignment.taRightJustify:
+                                ellipseCentreX := handlePointLT.X - ellipseOut.radiusX;
+                        end;
+
+                        case ( verticalAlignment ) of
+                            TVerticalAlignment.taAlignBottom:
+                                ellipseCentreY := handlePointLT.y + ellipseOut.radiusY;
+
+                            TVerticalAlignment.taVerticalCenter:
+                                ellipseCentreY := handlePointLT.y;
+
+                            TVerticalAlignment.taAlignTop:
+                                ellipseCentreY := handlePointLT.y - ellipseOut.radiusY;
+                        end;
+
+                        ellipseOut.point.x := ellipseCentreX;
+                        ellipseOut.point.y := ellipseCentreY;
 
                     result := ellipseOut;
                 end;
@@ -108,8 +126,6 @@ implementation
                                                         lineColourIn            : TColor;
                                                 const   lineStyleIn             : TPenStyle;
                                                 const   handlePointXYIn           : TGeomPoint        );
-                var
-                    localMinPoint, localMaxPoint : TGeomPoint;
                 begin
                     inherited create(   filledIn,
                                         lineThicknessIn,
@@ -122,19 +138,19 @@ implementation
                                         lineStyleIn,
                                         handlePointXYIn         );
 
-                    dimensionAndPositionGraphicBox( ellipseWidthIn, ellipseHeightIn );
+                    case ( scaleTypeIn ) of
+                        EScaleType.scDrawing:
+                            dimensionAndPositionGraphicBox( ellipseWidthIn, ellipseHeightIn );
+
+                        EScaleType.scCanvas:
+                            dimensionAndPositionGraphicBox( 0, 0 );
+                    end;
                 end;
 
         //destructor
             destructor TGraphicEllipse.destroy();
                 begin
                     inherited destroy();
-                end;
-
-        //modifiers
-            procedure TGraphicEllipse.setCentrePoint(const xIn, yIn : double);
-                begin
-                    graphicBox.setCentrePoint( xIn, yIn );
                 end;
 
 end.

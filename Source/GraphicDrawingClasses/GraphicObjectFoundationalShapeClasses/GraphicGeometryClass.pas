@@ -39,11 +39,14 @@ interface
                     destructor destroy(); override;
                 //create path geometry
                     //closed
-                        class function createClosedPathGeometry(const geometryPointsIn  : TArray<TGeomPoint>;
-                                                                const axisConverterIn   : TDrawingAxisConverter) : ID2D1PathGeometry; static;
+                        class procedure drawClosedPathGeometry( const filledIn          : boolean;
+                                                                const geometryPointsIn  : TArray<TGeomPoint>;
+                                                                const axisConverterIn   : TDrawingAxisConverter;
+                                                                var canvasInOut         : TDirect2DCanvas       ); static;
                     //open
-                        class function createOpenPathGeometry(  const geometryPointsIn  : TArray<TGeomPoint>;
-                                                                const axisConverterIn   : TDrawingAxisConverter ) : ID2D1PathGeometry; static;
+                        class procedure drawOpenPathGeometry(   const geometryPointsIn  : TArray<TGeomPoint>;
+                                                                const axisConverterIn   : TDrawingAxisConverter;
+                                                                var canvasInOut         : TDirect2DCanvas       ); static;
         end;
 
 implementation
@@ -127,27 +130,41 @@ implementation
 
         //create path geometry
             //closed
-                class function TGraphicGeometry.createClosedPathGeometry(   const geometryPointsIn  : TArray<TGeomPoint>;
-                                                                            const axisConverterIn   : TDrawingAxisConverter ) : ID2D1PathGeometry;
+                class procedure TGraphicGeometry.drawClosedPathGeometry(const filledIn          : boolean;
+                                                                        const geometryPointsIn  : TArray<TGeomPoint>;
+                                                                        const axisConverterIn   : TDrawingAxisConverter;
+                                                                        var canvasInOut         : TDirect2DCanvas       );
+                    var
+                        pathGeometry : ID2D1PathGeometry;
                     begin
-                        result := createPathGeometry(
-                                                        D2D1_FIGURE_BEGIN.D2D1_FIGURE_BEGIN_FILLED,
-                                                        D2D1_FIGURE_END.D2D1_FIGURE_END_CLOSED,
-                                                        geometryPointsIn,
-                                                        axisConverterIn
-                                                    );
+                        pathGeometry := createPathGeometry(
+                                                                D2D1_FIGURE_BEGIN.D2D1_FIGURE_BEGIN_FILLED,
+                                                                D2D1_FIGURE_END.D2D1_FIGURE_END_CLOSED,
+                                                                geometryPointsIn,
+                                                                axisConverterIn
+                                                          );
+
+                        if ( filledIn ) then
+                            canvasInOut.FillGeometry( pathGeometry );
+
+                        canvasInOut.DrawGeometry( pathGeometry );
                     end;
 
             //open
-                class function TGraphicGeometry.createOpenPathGeometry( const geometryPointsIn  : TArray<TGeomPoint>;
-                                                                        const axisConverterIn   : TDrawingAxisConverter ) : ID2D1PathGeometry;
+                class procedure TGraphicGeometry.drawOpenPathGeometry(  const geometryPointsIn  : TArray<TGeomPoint>;
+                                                                        const axisConverterIn   : TDrawingAxisConverter;
+                                                                        var canvasInOut         : TDirect2DCanvas       );
+                    var
+                        pathGeometry : ID2D1PathGeometry;
                     begin
-                        result := createPathGeometry(
-                                                        D2D1_FIGURE_BEGIN.D2D1_FIGURE_BEGIN_HOLLOW,
-                                                        D2D1_FIGURE_END.D2D1_FIGURE_END_OPEN,
-                                                        geometryPointsIn,
-                                                        axisConverterIn
-                                                    );
+                        pathGeometry := createPathGeometry(
+                                                                D2D1_FIGURE_BEGIN.D2D1_FIGURE_BEGIN_HOLLOW,
+                                                                D2D1_FIGURE_END.D2D1_FIGURE_END_OPEN,
+                                                                geometryPointsIn,
+                                                                axisConverterIn
+                                                          );
+
+                        canvasInOut.DrawGeometry( pathGeometry );
                     end;
 
 

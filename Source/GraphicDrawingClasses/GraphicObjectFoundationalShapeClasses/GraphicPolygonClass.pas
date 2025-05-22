@@ -39,24 +39,17 @@ implementation
         //draw to canvas
             procedure TGraphicPolygon.drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
                                                             var canvasInOut         : TDirect2DCanvas       );
-                var
-                    pathGeometry : ID2D1PathGeometry;
                 begin
                     if (length( geometryPoints ) < 3) then
                         exit();
 
                     //get path geometry
-                        pathGeometry := createClosedPathGeometry(
-                                                                    geometryPoints,
-                                                                    axisConverterIn
-                                                                );
-
-                    //draw fill
-                        if ( filled ) then
-                            canvasInOut.FillGeometry( pathGeometry );
-
-                    //draw line
-                        canvasInOut.DrawGeometry( pathGeometry );
+                        drawClosedPathGeometry(
+                                                    filled,
+                                                    geometryPoints,
+                                                    axisConverterIn,
+                                                    canvasInOut
+                                              );
                 end;
 
     //public

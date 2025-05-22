@@ -4,7 +4,7 @@ interface
 
     uses
         //Delphi
-            system.SysUtils, system.types, system.UITypes, System.UIConsts,
+            system.SysUtils, system.types, system.UITypes, System.UIConsts, System.Classes,
             Winapi.D2D1, Vcl.Direct2D,
             vcl.Graphics,
         //custom
@@ -48,13 +48,15 @@ implementation
                                                                             1,
                                                                             pointSizeIn,
                                                                             pointSizeIn,
+                                                                            0,
+                                                                            EScaleType.scCanvas,
+                                                                            TAlignment.taLeftJustify,
+                                                                            TVerticalAlignment.taVerticalCenter,
                                                                             pointColourIn,
                                                                             clWindowText,
                                                                             TPenStyle.psSolid,
                                                                             arrPlotPointsIn[i]
                                                                       );
-
-                            graphicPlotPoint.setObjectScaleType( EScaleType.scCanvas );
 
                             addGraphicObjectToGroup( graphicPlotPoint );
                         end;

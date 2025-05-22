@@ -18,11 +18,12 @@ interface
             private
                 var
                     cornerRadius : double;
-                    rectangleBox : TGeomBox;
                 //convert a TGeomBox to TD2D1Rectangle
-                    function convertGeomBoxToD2DRect(   const cornerRadiusIn    : double;
-                                                        const geomBoxIn         : TGeomBox;
-                                                        const axisConverterIn   : TDrawingAxisConverter ) : TD2D1RoundedRect;
+                    //canvas scale
+                        function convertGeomBoxToD2DRectCanvasScale(const axisConverterIn : TDrawingAxisConverter) : TD2D1RoundedRect;
+                    //drawing scale
+                        function convertGeomBoxToD2DRectDrawingScale(const axisConverterIn : TDrawingAxisConverter ) : TD2D1RoundedRect;
+                    function convertGeomBoxToD2DRect(const axisConverterIn : TDrawingAxisConverter) : TD2D1RoundedRect;
                 //draw to canvas
                     procedure drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
                                                     var canvasInOut         : TDirect2DCanvas       ); override;
@@ -50,26 +51,93 @@ implementation
 
     //private
         //convert a TGeomBox to TD2D1Rectangle
-            function TGraphicRectangle.convertGeomBoxToD2DRect( const cornerRadiusIn    : double;
-                                                                const geomBoxIn         : TGeomBox;
-                                                                const axisConverterIn   : TDrawingAxisConverter ) : TD2D1RoundedRect;
+            //canvas scale
+                function TGraphicRectangle.convertGeomBoxToD2DRectCanvasScale(const axisConverterIn : TDrawingAxisConverter) : TD2D1RoundedRect;
+                    var
+                        width, height   : double;
+                        rectOut         : TD2D1RoundedRect;
+                    begin
+                        //set radius
+                            rectOut.radiusX := cornerRadius;
+                            rectOut.radiusY := cornerRadius;
+
+                        //set rectangle bounds
+                            case ( horizontalAlignment ) of
+                                TAlignment.taLeftJustify:
+                                    begin
+                                        rectOut.rect.left   := handlePointLT.X;
+                                        rectOut.rect.right  := handlePointLT.X + width;
+                                    end;
+
+                                TAlignment.taCenter:
+                                    begin
+                                        rectOut.rect.left   := handlePointLT.X - width / 2;
+                                        rectOut.rect.right  := handlePointLT.X + width / 2;
+                                    end;
+
+                                TAlignment.taRightJustify:
+                                    begin
+                                        rectOut.rect.left   := handlePointLT.X - width;
+                                        rectOut.rect.right  := handlePointLT.X;
+                                    end;
+                            end;
+
+                            case ( verticalAlignment ) of
+                                TVerticalAlignment.taAlignBottom:
+                                    begin
+                                        rectOut.rect.bottom := handlePointLT.Y;
+                                        rectOut.rect.top    := handlePointLT.Y + height;
+                                    end;
+
+                                TVerticalAlignment.taVerticalCenter:
+                                    begin
+                                        rectOut.rect.bottom := handlePointLT.Y - height / 2;
+                                        rectOut.rect.top    := handlePointLT.Y + height / 2;
+                                    end;
+
+                                TVerticalAlignment.taAlignTop:
+                                    begin
+                                        rectOut.rect.bottom := handlePointLT.Y - height;
+                                        rectOut.rect.top    := handlePointLT.Y;
+                                    end;
+                            end;
+
+                        result := rectOut;
+                    end;
+
+            //drawing scale
+                function TGraphicRectangle.convertGeomBoxToD2DRectDrawingScale(const axisConverterIn : TDrawingAxisConverter) : TD2D1RoundedRect;
+                    var
+                        bottomLeft, topRight    : TPointF;
+                        rectOut                 : TD2D1RoundedRect;
+                    begin
+                        //set radius
+                            rectOut.radiusX := axisConverterIn.dX_To_dL( cornerRadius );
+                            rectOut.radiusY := axisConverterIn.dY_To_dT( cornerRadius );
+
+                        //get bottom-left and top-right points
+                            bottomLeft  := axisConverterIn.XY_to_LT( graphicBox.minPoint );
+                            topRight    := axisConverterIn.XY_to_LT( graphicBox.maxPoint );
+
+                        //set rectangle bounds
+                            rectOut.rect.left   := bottomLeft.X;
+                            rectOut.rect.bottom := bottomLeft.Y;
+                            rectOut.rect.right  := topRight.X;
+                            rectOut.rect.top    := topRight.Y;
+                    end;
+
+            function TGraphicRectangle.convertGeomBoxToD2DRect(const axisConverterIn : TDrawingAxisConverter) : TD2D1RoundedRect;
                 var
-                    bottomLeft, topRight    : TPointF;
-                    rectOut                 : TD2D1RoundedRect;
+
+                    rectOut : TD2D1RoundedRect;
                 begin
-                    //set radius
-                        rectOut.radiusX := axisConverterIn.dX_To_dL( cornerRadiusIn );
-                        rectOut.radiusY := axisConverterIn.dY_To_dT( cornerRadiusIn );
+                    case ( objectScaleType ) of
+                        EScaleType.scDrawing:
+                            rectOut := convertGeomBoxToD2DRectDrawingScale( axisConverterIn );
 
-                    //get bottom-left and top-right points
-                        bottomLeft  := axisConverterIn.XY_to_LT( geomBoxIn.minPoint );
-                        topRight    := axisConverterIn.XY_to_LT( geomBoxIn.maxPoint );
-
-                    //set rectangle bounds
-                        rectOut.rect.left   := bottomLeft.X;
-                        rectOut.rect.bottom := bottomLeft.Y;
-                        rectOut.rect.right  := topRight.X;
-                        rectOut.rect.top    := topRight.Y;
+                        EScaleType.scCanvas:
+                            rectOut := convertGeomBoxToD2DRectCanvasScale( axisConverterIn );
+                    end;
 
                     result := rectOut;
                 end;
@@ -80,7 +148,7 @@ implementation
                 var
                     drawingRect : TD2D1RoundedRect;
                 begin
-                    drawingRect := convertGeomBoxToD2DRect( cornerRadius, rectangleBox, axisConverterIn );
+                    drawingRect := convertGeomBoxToD2DRect( axisConverterIn );
 
                     //draw rectangle fill
                         if ( filled ) then
@@ -119,7 +187,13 @@ implementation
 
                     cornerRadius := rectangleCornerRadiusIn;
 
-                    dimensionAndPositionGraphicBox( rectangleWidthIn, rectangleHeightIn );
+                    case ( scaleTypeIn ) of
+                        EScaleType.scDrawing:
+                            dimensionAndPositionGraphicBox( rectangleWidthIn, rectangleHeightIn );
+
+                        EScaleType.scCanvas:
+                            dimensionAndPositionGraphicBox( 0, 0 );
+                    end;
                 end;
 
         //destructor

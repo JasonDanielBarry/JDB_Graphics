@@ -13,8 +13,10 @@ interface
             DrawingAxisConversionClass,
             GeometryTypes, GeomBox,
             GeomLineClass,
+            GraphicDrawingTypes,
             GraphicLineClass,
             GraphicTextClass
+
             ;
 
     type
@@ -536,17 +538,17 @@ implementation
 
                         if ( IsZero(abs(yOut), 1e-6 ) ) then
                             begin
-                                axisValueText.setAlignmentAndLayout( TAlignment.taCenter, TVerticalAlignment.taVerticalCenter );
+                                axisValueText.setAlignment( TAlignment.taCenter, TVerticalAlignment.taVerticalCenter );
                                 exit();
                             end;
 
                         if ( yOut < 0 ) then
                             begin
-                                axisValueText.setAlignmentAndLayout( TAlignment.taCenter, TVerticalAlignment.taAlignTop );
+                                axisValueText.setAlignment( TAlignment.taCenter, TVerticalAlignment.taAlignTop );
                                 exit();
                             end;
 
-                        axisValueText.setAlignmentAndLayout( TAlignment.taCenter, TVerticalAlignment.taAlignBottom );
+                        axisValueText.setAlignment( TAlignment.taCenter, TVerticalAlignment.taAlignBottom );
                     end;
 
                 procedure TGraphicGrid.drawXAxisLabel(  const   incrementIn,
@@ -592,17 +594,17 @@ implementation
 
                         if ( IsZero(abs(xOut), 1e-6 ) ) then
                             begin
-                                axisValueText.setAlignmentAndLayout( TAlignment.taCenter, TVerticalAlignment.taVerticalCenter );
+                                axisValueText.setAlignment( TAlignment.taCenter, TVerticalAlignment.taVerticalCenter );
                                 exit();
                             end;
 
                         if ( xOut < 0 ) then
                             begin
-                                axisValueText.setAlignmentAndLayout( TAlignment.taRightJustify, TVerticalAlignment.taVerticalCenter );
+                                axisValueText.setAlignment( TAlignment.taRightJustify, TVerticalAlignment.taVerticalCenter );
                                 exit();
                             end;
 
-                        axisValueText.setAlignmentAndLayout( TAlignment.taLeftJustify, TVerticalAlignment.taVerticalCenter );
+                        axisValueText.setAlignment( TAlignment.taLeftJustify, TVerticalAlignment.taVerticalCenter );
                     end;
 
                 procedure TGraphicGrid.drawYAxisLabel(  const   incrementIn,
@@ -647,7 +649,18 @@ implementation
                     inherited create();
 
                     createGridLines();
-                    axisValueText := TGraphicText.create( True, 9, 0, '', TAlignment.taLeftJustify, TVerticalAlignment.taAlignTop, TColors.SysWindowText, [], TGeomPoint.create(0, 0) );
+                    axisValueText := TGraphicText.create(
+                                                            True,
+                                                            9,
+                                                            0,
+                                                            '',
+                                                            EScaleType.scCanvas,
+                                                            TAlignment.taLeftJustify,
+                                                            TVerticalAlignment.taAlignTop,
+                                                            TColors.SysWindowText,
+                                                            [],
+                                                            TGeomPoint.create(0, 0)
+                                                        );
                 end;
 
         //destructor

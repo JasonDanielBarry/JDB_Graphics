@@ -37,18 +37,15 @@ implementation
         //draw to canvas
             procedure TGraphicPolyline.drawGraphicToCanvas( const axisConverterIn   : TDrawingAxisConverter;
                                                             var canvasInOut         : TDirect2DCanvas       );
-                var
-                    pathGeometry : ID2D1PathGeometry;
                 begin
                     if (length( geometryPoints ) < 2) then
                         exit();
 
-                    pathGeometry := createOpenPathGeometry(
-                                                                geometryPoints,
-                                                                axisConverterIn
-                                                          );
-
-                    canvasInOut.DrawGeometry( pathGeometry );
+                    drawOpenPathGeometry(
+                                            geometryPoints,
+                                            axisConverterIn,
+                                            canvasInOut
+                                        );
                 end;
 
     //public

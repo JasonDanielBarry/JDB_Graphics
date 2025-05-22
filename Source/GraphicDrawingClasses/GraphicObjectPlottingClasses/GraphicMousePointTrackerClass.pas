@@ -49,8 +49,6 @@ interface
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
                                             var canvasInOut         : TDirect2DCanvas       ); override;
-                //bounding box
-                    function determineBoundingBox() : TGeomBox; override;
         end;
 
 implementation
@@ -193,9 +191,35 @@ implementation
 
                     TGeomPoint.copyPoints( arrDataPointsIn, arrPlotPointsXY );
 
-                    graphicPointText    := TGraphicText.create( True, 9, 0, '', TAlignment.taLeftJustify, TVerticalAlignment.taVerticalCenter, clWindowText, [], TGeomPoint.create( 0, 0 ) );
-                    graphicPointEllipse := TGraphicEllipse.create( True, 1, POINT_SIZE, POINT_SIZE, clWindowText, clWindowText, TPenStyle.psSolid, TGeomPoint.create( 0, 0 ) );
-                    graphicPointEllipse.setObjectScaleType( EScaleType.scCanvas );
+                    graphicPointText    := TGraphicText.create(
+                                                                    True,
+                                                                    9,
+                                                                    0,
+                                                                    '',
+                                                                    EScaleType.scCanvas,
+                                                                    TAlignment.taLeftJustify,
+                                                                    TVerticalAlignment.taVerticalCenter,
+                                                                    clWindowText,
+                                                                    [],
+                                                                    TGeomPoint.create( 0, 0 )
+                                                              );
+
+                    graphicPointEllipse := TGraphicEllipse.create(
+                                                                    True,
+                                                                    1,
+                                                                    POINT_SIZE,
+                                                                    POINT_SIZE,
+                                                                    0,
+                                                                    EScaleType.scCanvas,
+                                                                    TAlignment.taCenter,
+                                                                    TVerticalAlignment.taVerticalCenter,
+                                                                    clWindowText,
+                                                                    clWindowText,
+                                                                    TPenStyle.psSolid,
+                                                                    TGeomPoint.create( 0, 0 )
+                                                                 );
+
+                    graphicBox := TGeomBox.determineBoundingBox( arrDataPointsIn );
                 end;
 
         //destructor
@@ -211,10 +235,9 @@ implementation
             procedure TGraphicMousePointTracker.drawToCanvas(   const axisConverterIn   : TDrawingAxisConverter;
                                                                 var canvasInOut         : TDirect2DCanvas       );
                 var
-                    closestPointIndex   : integer;
-                    coordText           : string;
+                    coordText       : string;
                     mousePointXY,
-                    closestPointXY      : TGeomPoint;
+                    closestPointXY  : TGeomPoint;
                 begin
                     mousePointXY := axisConverterIn.getMouseCoordinatesXY();
 
@@ -225,7 +248,7 @@ implementation
                             closestPointXY := determineDiscretePlotPointClosestToMouse( mousePointXY, axisConverterIn );
 
                     //draw the tracking point
-                        graphicPointEllipse.setCentrePoint( closestPointXY.x, closestPointXY.y );
+                        graphicPointEllipse.setHandlePoint( closestPointXY.x, closestPointXY.y );
 
                         graphicPointEllipse.drawToCanvas( axisConverterIn, canvasInOut );
 
@@ -237,12 +260,6 @@ implementation
                         graphicPointText.setTextString( coordText );
 
                         graphicPointText.drawToCanvas( axisConverterIn, canvasInOut );
-                end;
-
-        //bounding box
-            function TGraphicMousePointTracker.determineBoundingBox() : TGeomBox;
-                begin
-                    result := TGeomBox.determineBoundingBox( arrPlotPointsXY );
                 end;
 
 end.
