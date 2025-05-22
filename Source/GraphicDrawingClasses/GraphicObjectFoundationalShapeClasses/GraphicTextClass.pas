@@ -5,7 +5,7 @@ interface
     uses
         Winapi.D2D1,
         system.SysUtils, system.Types, system.Classes, System.Math,
-        Vcl.Direct2D, vcl.Graphics, vcl.Themes,
+        Vcl.Direct2D, vcl.Graphics, vcl.Themes, Vcl.ExtCtrls,
         GeometryTypes,
         GeomBox,
         GraphicDrawingTypes,
@@ -69,7 +69,7 @@ implementation
 
                                 EScaleType.scDrawing:
                                     begin
-                                        var drawingSize : integer := round( axisConverterIn.dY_To_dT( textSize ) );
+                                        var drawingSize : integer := abs(round( axisConverterIn.dY_To_dT( textSize ) ) );
 
                                         canvasInOut.Font.size := max(1, drawingSize );
                                     end;
