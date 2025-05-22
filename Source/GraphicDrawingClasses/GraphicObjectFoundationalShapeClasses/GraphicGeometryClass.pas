@@ -47,6 +47,8 @@ interface
                         class procedure drawOpenPathGeometry(   const geometryPointsIn  : TArray<TGeomPoint>;
                                                                 const axisConverterIn   : TDrawingAxisConverter;
                                                                 var canvasInOut         : TDirect2DCanvas       ); static;
+                //bounding box
+                    function determineBoundingBox() : TGeomBox; override;
         end;
 
 implementation
@@ -167,5 +169,10 @@ implementation
                         canvasInOut.DrawGeometry( pathGeometry );
                     end;
 
+        //bounding box
+            function TGraphicGeometry.determineBoundingBox() : TGeomBox;
+                begin
+                    result := TGeomBox.determineBoundingBox( geometryPoints );
+                end;
 
 end.

@@ -117,7 +117,7 @@ implementation
                     begin
                         //set radius
                             rectOut.radiusX := axisConverterIn.dX_To_dL( cornerRadius );
-                            rectOut.radiusY := axisConverterIn.dY_To_dT( cornerRadius );
+                            rectOut.radiusY := abs( axisConverterIn.dY_To_dT( cornerRadius ) );
 
                         //get bottom-left and top-right points
                             bottomLeft  := axisConverterIn.XY_to_LT( graphicBox.minPoint );
@@ -128,6 +128,8 @@ implementation
                             rectOut.rect.bottom := bottomLeft.Y;
                             rectOut.rect.right  := topRight.X;
                             rectOut.rect.top    := topRight.Y;
+
+                        result := rectOut;
                     end;
 
             function TGraphicRectangle.convertGeomBoxToD2DRect(const axisConverterIn : TDrawingAxisConverter) : TD2D1RoundedRect;

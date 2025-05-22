@@ -106,9 +106,6 @@ implementation
                     if NOT( mustRotateCanvas ) then
                         exit();
 
-                    //calculate handle point on canvas
-                        handlePointLT := axisConverterIn.XY_to_LT( handlePointXY );
-
                     //get transformation matrix:
                     //positive angles result in anti-clockwise rotation of the canvas
                     //which results in clockwise rotation of the drawing entities
@@ -234,6 +231,9 @@ implementation
             procedure TGraphicObject.drawToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
                                                     var canvasInOut         : TDirect2DCanvas       );
                 begin
+                    //calculate handle point on canvas
+                        handlePointLT := axisConverterIn.XY_to_LT( handlePointXY );
+
                     //canvas rotation
                         if ( mustRotateCanvas ) then
                             rotateCanvas( axisConverterIn, canvasInOut );
@@ -266,8 +266,24 @@ implementation
 
         //bounding box
             function TGraphicObject.determineBoundingBox() : TGeomBox;
+                var
+                    boundingBoxOut : TGeomBox;
                 begin
-                    result := graphicBox;
+                    case ( objectScaleType ) of
+                        EScaleType.scCanvas:
+                            boundingBoxOut := TGeomBox.determineBoundingBox( [ handlePointXY, handlePointXY ] );
+
+                        EScaleType.scDrawing:
+                            begin
+                                var boundingBoxPoints : TArray<TGeomPoint> := graphicBox.getCornerPoints2D();
+
+                                TGeomPoint.rotateArrPoints( rotationAngle, handlePointXY, boundingBoxPoints );
+
+                                boundingBoxOut := TGeomBox.determineBoundingBox( boundingBoxPoints );
+                            end;
+                    end;
+
+                    result := boundingBoxOut;
                 end;
 
             class function TGraphicObject.determineBoundingBox(const arrGraphicObjectsIn : TArray<TGraphicObject>) : TGeomBox;

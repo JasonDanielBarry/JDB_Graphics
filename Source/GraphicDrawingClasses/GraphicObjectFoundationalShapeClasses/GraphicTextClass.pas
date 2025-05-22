@@ -4,7 +4,7 @@ interface
 
     uses
         Winapi.D2D1,
-        system.SysUtils, system.Types, system.Classes,
+        system.SysUtils, system.Types, system.Classes, System.Math,
         Vcl.Direct2D, vcl.Graphics, vcl.Themes,
         GeometryTypes,
         GeomBox,
@@ -23,7 +23,8 @@ interface
                     textColour      : TColor;
                     textFontStyles  : TFontStyles;
                 //set font properties
-                    procedure setFontProperties(var canvasInOut : TDirect2DCanvas);
+                    procedure setFontProperties(const axisConverterIn   : TDrawingAxisConverter;
+                                                var canvasInOut         : TDirect2DCanvas       );
                 //calculate the translation of the text for the alignment settings
                     procedure calculateTextAlignmentTranslation(out xTranslationOut, yTranslationOut    : double;
                                                                 out textExtentOut                       : Tsize;
@@ -57,10 +58,23 @@ implementation
 
     //private
         //set font properties
-            procedure TGraphicText.setFontProperties(var canvasInOut : TDirect2DCanvas);
+            procedure TGraphicText.setFontProperties(   const axisConverterIn   : TDrawingAxisConverter;
+                                                        var canvasInOut         : TDirect2DCanvas       );
                 begin
                     //set font properties
-                        canvasInOut.Font.size   := textSize;
+                        //size
+                            case (objectScaleType) of
+                                EScaleType.scCanvas:
+                                    canvasInOut.Font.size := textSize;
+
+                                EScaleType.scDrawing:
+                                    begin
+                                        var drawingSize : integer := round( axisConverterIn.dY_To_dT( textSize ) );
+
+                                        canvasInOut.Font.size := max(1, drawingSize );
+                                    end;
+                            end;
+
                         canvasInOut.Font.Color  := TStyleManager.ActiveStyle.GetSystemColor( textColour );
                         canvasInOut.Font.Name   := 'Segoe UI';
                         canvasInOut.Font.Style  := textFontStyles;
@@ -127,7 +141,7 @@ implementation
                     transformMatrix             : TD2DMatrix3x2F;
                 begin
                     //set the canvas dont properties
-                        setFontProperties( canvasInOut );
+                        setFontProperties( axisConverterIn, canvasInOut );
 
                     //calculate text translation
                         calculateTextAlignmentTranslation( xTranslation, yTranslation, textExtent, canvasInOut );
