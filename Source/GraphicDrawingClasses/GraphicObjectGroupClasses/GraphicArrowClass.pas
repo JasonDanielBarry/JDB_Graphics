@@ -112,7 +112,7 @@ implementation
                         arrowTail.shift( arrowOriginPointIn.x, arrowOriginPointIn.y );
 
                     //get the head and tail points
-                        arrowHeadPoint := arrowHead.getDrawingPoints()[0];
+                        arrowHeadPoint := arrowHead.getArrGeomPoints()[0];
                         arrowTailPoint := arrowTail.getStartPoint();
                 end;
 

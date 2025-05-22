@@ -64,7 +64,7 @@ implementation
                                         TColors.Null,
                                         lineColourIn,
                                         lineStyleIn,
-                                        geometryIn.getDrawingPoints()   );
+                                        geometryIn.getArrGeomPoints()   );
                 end;
 
         //destructor

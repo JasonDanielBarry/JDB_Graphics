@@ -247,7 +247,7 @@ implementation
 
                     line := TGeomLine.create();
 
-                    arrPolylinPoints := arrowGroupPolylineIn.getDrawingPoints();
+                    arrPolylinPoints := arrowGroupPolylineIn.getArrGeomPoints();
 
                     for i := 0 to ( length( arrPolylinPoints ) - 2 ) do
                         begin
