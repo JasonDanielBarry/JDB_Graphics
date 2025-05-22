@@ -27,7 +27,7 @@ interface
             minorGridLinesVisible : boolean;
             procedure copyOther(const otherGridVisibilitySettingsIn : TGridVisibilitySettings);
             procedure setValues(const showAxisLabelsIn, showAxesIn, showMajorGridLinesIn, showMinorGridLinesIn : boolean);
-            function allElementsDisabled() : boolean; inline;
+            function allElementsDisabled() : boolean;
         end;
 
         TGraphicGrid = class(TGraphicObject)

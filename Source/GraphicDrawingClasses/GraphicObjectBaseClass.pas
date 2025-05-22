@@ -22,12 +22,12 @@ interface
                     lineColour          : TColor;
                     lineStyle           : TPenStyle;
                 //set canvas properties for drawing
-                    procedure setFillProperties(var canvasInOut : TDirect2DCanvas); inline;
-                    procedure setLineProperties(var canvasInOut : TDirect2DCanvas); inline;
+                    procedure setFillProperties(var canvasInOut : TDirect2DCanvas);
+                    procedure setLineProperties(var canvasInOut : TDirect2DCanvas);
                 //rotate canvas
                     procedure rotateCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DCanvas       ); inline;
-                    procedure resetCanvasRotation(var canvasInOut : TDirect2DCanvas); inline;
+                                            var canvasInOut         : TDirect2DCanvas       );
+                    procedure resetCanvasRotation(var canvasInOut : TDirect2DCanvas);
             protected
                 var
                     filled              : boolean;
