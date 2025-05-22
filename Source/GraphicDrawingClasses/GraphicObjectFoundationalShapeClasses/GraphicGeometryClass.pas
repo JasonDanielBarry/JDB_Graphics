@@ -110,12 +110,12 @@ implementation
                                         lineThicknessIn,
                                         0,
                                         EScaleType.scDrawing,
-                                        TAlignment.taCenter,
-                                        TVerticalAlignment.taVerticalCenter,
+                                        THorzRectAlign.Center,
+                                        TVertRectAlign.Center,
                                         fillColourIn,
                                         lineColourIn,
                                         lineStyleIn,
-                                        TGeomPoint.create( 0, 0 )               );
+                                        TGeomPoint.create( 0, 0 )   );
 
                     TGeomPoint.copyPoints( geometryPointsIn, geometryPoints );
 

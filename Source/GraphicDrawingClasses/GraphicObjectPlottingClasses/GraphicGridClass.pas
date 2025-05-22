@@ -538,17 +538,17 @@ implementation
 
                         if ( IsZero(abs(yOut), 1e-6 ) ) then
                             begin
-                                axisValueText.setAlignment( TAlignment.taCenter, TVerticalAlignment.taVerticalCenter );
+                                axisValueText.setAlignment( THorzRectAlign.Center, TVertRectAlign.Center );
                                 exit();
                             end;
 
                         if ( yOut < 0 ) then
                             begin
-                                axisValueText.setAlignment( TAlignment.taCenter, TVerticalAlignment.taAlignTop );
+                                axisValueText.setAlignment( THorzRectAlign.Center, TVertRectAlign.Top );
                                 exit();
                             end;
 
-                        axisValueText.setAlignment( TAlignment.taCenter, TVerticalAlignment.taAlignBottom );
+                        axisValueText.setAlignment( THorzRectAlign.Center, TVertRectAlign.Bottom );
                     end;
 
                 procedure TGraphicGrid.drawXAxisLabel(  const   incrementIn,
@@ -594,17 +594,17 @@ implementation
 
                         if ( IsZero(abs(xOut), 1e-6 ) ) then
                             begin
-                                axisValueText.setAlignment( TAlignment.taCenter, TVerticalAlignment.taVerticalCenter );
+                                axisValueText.setAlignment( THorzRectAlign.Center, TVertRectAlign.Center );
                                 exit();
                             end;
 
                         if ( xOut < 0 ) then
                             begin
-                                axisValueText.setAlignment( TAlignment.taRightJustify, TVerticalAlignment.taVerticalCenter );
+                                axisValueText.setAlignment( THorzRectAlign.Right, TVertRectAlign.Center );
                                 exit();
                             end;
 
-                        axisValueText.setAlignment( TAlignment.taLeftJustify, TVerticalAlignment.taVerticalCenter );
+                        axisValueText.setAlignment( THorzRectAlign.Left, TVertRectAlign.Center );
                     end;
 
                 procedure TGraphicGrid.drawYAxisLabel(  const   incrementIn,
@@ -655,8 +655,8 @@ implementation
                                                             0,
                                                             '',
                                                             EScaleType.scCanvas,
-                                                            TAlignment.taLeftJustify,
-                                                            TVerticalAlignment.taAlignTop,
+                                                            THorzRectAlign.Center,
+                                                            TVertRectAlign.Center,
                                                             TColors.SysWindowText,
                                                             [],
                                                             TGeomPoint.create(0, 0)

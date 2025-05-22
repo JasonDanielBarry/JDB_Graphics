@@ -30,8 +30,8 @@ interface
                                                 ellipseHeightIn,
                                                 rotationAngleIn         : double;
                                         const   scaleTypeIn             : EScaleType;
-                                        const   horizontalAlignmentIn   : TAlignment;
-                                        const   verticalAlignmentIn     : TVerticalAlignment;
+                                        const   horizontalAlignmentIn   : THorzRectAlign;
+                                        const   verticalAlignmentIn     : TVertRectAlign;
                                         const   fillColourIn,
                                                 lineColourIn            : TColor;
                                         const   lineStyleIn             : TPenStyle;
@@ -68,24 +68,24 @@ implementation
 
                     //alignment
                         case ( horizontalAlignment ) of
-                            TAlignment.taLeftJustify:
+                            THorzRectAlign.Left:
                                 ellipseCentreX := handlePointLT.X + ellipseOut.radiusX;
 
-                            TAlignment.taCenter:
+                            THorzRectAlign.Center:
                                 ellipseCentreX := handlePointLT.X;
 
-                            TAlignment.taRightJustify:
+                            THorzRectAlign.Right:
                                 ellipseCentreX := handlePointLT.X - ellipseOut.radiusX;
                         end;
 
                         case ( verticalAlignment ) of
-                            TVerticalAlignment.taAlignBottom:
+                            TVertRectAlign.Bottom:
                                 ellipseCentreY := handlePointLT.y + ellipseOut.radiusY;
 
-                            TVerticalAlignment.taVerticalCenter:
+                            TVertRectAlign.Center:
                                 ellipseCentreY := handlePointLT.y;
 
-                            TVerticalAlignment.taAlignTop:
+                            TVertRectAlign.Top:
                                 ellipseCentreY := handlePointLT.y - ellipseOut.radiusY;
                         end;
 
@@ -120,8 +120,8 @@ implementation
                                                         ellipseHeightIn,
                                                         rotationAngleIn         : double;
                                                 const   scaleTypeIn             : EScaleType;
-                                                const   horizontalAlignmentIn   : TAlignment;
-                                                const   verticalAlignmentIn     : TVerticalAlignment;
+                                                const   horizontalAlignmentIn   : THorzRectAlign;
+                                                const   verticalAlignmentIn     : TVertRectAlign;
                                                 const   fillColourIn,
                                                         lineColourIn            : TColor;
                                                 const   lineStyleIn             : TPenStyle;

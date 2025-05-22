@@ -42,8 +42,8 @@ interface
                                         const   textRotationAngleIn : double;
                                         const   textStringIn        : string;
                                         const   scaleTypeIn         : EScaleType;
-                                        const   textHorAlignmentIn  : TAlignment;
-                                        const   textVertAlignmentIn : TVerticalAlignment;
+                                        const   textHorAlignmentIn  : THorzRectAlign;
+                                        const   textVertAlignmentIn : TVertRectAlign;
                                         const   textColourIn        : TColor;
                                         const   textFontStylesIn    : TFontStyles;
                                         const   textHandlePointIn   : TGeomPoint        );
@@ -76,26 +76,26 @@ implementation
 
                     //x - translation
                         case ( horizontalAlignment ) of
-                            TAlignment.taLeftJustify:
+                            THorzRectAlign.Left:
                                 xTranslationOut := 0;
 
-                            TAlignment.taCenter:
+                            THorzRectAlign.Center:
                                 xTranslationOut := textExtentOut.Width / 2;
 
-                            TAlignment.taRightJustify:
+                            THorzRectAlign.Right:
                                 xTranslationOut := textExtentOut.Width;
                         end;
 
                     //y - translation
                         case ( verticalAlignment ) of
-                            TVerticalAlignment.taAlignTop:
-                                yTranslationOut := 0;
+                            TVertRectAlign.Bottom:
+                                yTranslationOut := textExtentOut.Height;
 
-                            TVerticalAlignment.taVerticalCenter:
+                            TVertRectAlign.Center:
                                 yTranslationOut := textExtentOut.Height / 2;
 
-                            TVerticalAlignment.taAlignBottom:
-                                yTranslationOut := textExtentOut.Height;
+                            TVertRectAlign.Top:
+                                yTranslationOut := 0;
                         end;
                 end;
 
@@ -149,8 +149,8 @@ implementation
                                             const   textRotationAngleIn : double;
                                             const   textStringIn        : string;
                                             const   scaleTypeIn         : EScaleType;
-                                            const   textHorAlignmentIn  : TAlignment;
-                                            const   textVertAlignmentIn : TVerticalAlignment;
+                                            const   textHorAlignmentIn  : THorzRectAlign;
+                                            const   textVertAlignmentIn : TVertRectAlign;
                                             const   textColourIn        : TColor;
                                             const   textFontStylesIn    : TFontStyles;
                                             const   textHandlePointIn   : TGeomPoint        );

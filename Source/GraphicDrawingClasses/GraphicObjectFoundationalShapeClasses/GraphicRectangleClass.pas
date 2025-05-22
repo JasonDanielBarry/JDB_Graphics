@@ -36,8 +36,8 @@ interface
                                                 rectangleHeightIn,
                                                 rotationIn              : double;
                                         const   scaleTypeIn             : EScaleType;
-                                        const   horizontalAlignmentIn   : TAlignment;
-                                        const   verticalAlignmentIn     : TVerticalAlignment;
+                                        const   horizontalAlignmentIn   : THorzRectAlign;
+                                        const   verticalAlignmentIn     : TVertRectAlign;
                                         const   fillColourIn,
                                                 lineColourIn            : TColor;
                                         const   lineStyleIn             : TPenStyle;
@@ -63,19 +63,19 @@ implementation
 
                         //set rectangle bounds
                             case ( horizontalAlignment ) of
-                                TAlignment.taLeftJustify:
+                                THorzRectAlign.Left:
                                     begin
                                         rectOut.rect.left   := handlePointLT.X;
                                         rectOut.rect.right  := handlePointLT.X + width;
                                     end;
 
-                                TAlignment.taCenter:
+                                THorzRectAlign.Center:
                                     begin
                                         rectOut.rect.left   := handlePointLT.X - width / 2;
                                         rectOut.rect.right  := handlePointLT.X + width / 2;
                                     end;
 
-                                TAlignment.taRightJustify:
+                                THorzRectAlign.Right:
                                     begin
                                         rectOut.rect.left   := handlePointLT.X - width;
                                         rectOut.rect.right  := handlePointLT.X;
@@ -83,19 +83,19 @@ implementation
                             end;
 
                             case ( verticalAlignment ) of
-                                TVerticalAlignment.taAlignBottom:
+                                TVertRectAlign.Bottom:
                                     begin
                                         rectOut.rect.bottom := handlePointLT.Y;
                                         rectOut.rect.top    := handlePointLT.Y + height;
                                     end;
 
-                                TVerticalAlignment.taVerticalCenter:
+                                TVertRectAlign.Center:
                                     begin
                                         rectOut.rect.bottom := handlePointLT.Y - height / 2;
                                         rectOut.rect.top    := handlePointLT.Y + height / 2;
                                     end;
 
-                                TVerticalAlignment.taAlignTop:
+                                TVertRectAlign.Top:
                                     begin
                                         rectOut.rect.bottom := handlePointLT.Y - height;
                                         rectOut.rect.top    := handlePointLT.Y;
@@ -167,8 +167,8 @@ implementation
                                                             rectangleHeightIn,
                                                             rotationIn              : double;
                                                     const   scaleTypeIn             : EScaleType;
-                                                    const   horizontalAlignmentIn   : TAlignment;
-                                                    const   verticalAlignmentIn     : TVerticalAlignment;
+                                                    const   horizontalAlignmentIn   : THorzRectAlign;
+                                                    const   verticalAlignmentIn     : TVertRectAlign;
                                                     const   fillColourIn,
                                                             lineColourIn            : TColor;
                                                     const   lineStyleIn             : TPenStyle;

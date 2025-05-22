@@ -31,8 +31,8 @@ interface
             protected
                 var
                     filled              : boolean;
-                    horizontalAlignment : TAlignment;
-                    verticalAlignment   : TVerticalAlignment;
+                    horizontalAlignment : THorzRectAlign;
+                    verticalAlignment   : TVertRectAlign;
                     objectScaleType     : EScaleType;
                     handlePointLT       : TPointF;
                     handlePointXY       : TGeomPoint;
@@ -50,8 +50,8 @@ interface
                                         const   lineThicknessIn         : integer;
                                         const   rotationAngleIn         : double;
                                         const   scaleTypeIn             : EScaleType;
-                                        const   horizontalAlignmentIn   : TAlignment;
-                                        const   verticalAlignmentIn     : TVerticalAlignment;
+                                        const   horizontalAlignmentIn   : THorzRectAlign;
+                                        const   verticalAlignmentIn     : TVertRectAlign;
                                         const   fillColourIn,
                                                 lineColourIn            : TColor;
                                         const   lineStyleIn             : TPenStyle;
@@ -59,8 +59,8 @@ interface
                 //destructor
                     destructor destroy(); override;
                 //modifiers
-                    procedure setAlignment( const horAlignmentIn    : TAlignment;
-                                            const vertAlignmentIn   : TVerticalAlignment );
+                    procedure setAlignment( const horAlignmentIn    : THorzRectAlign;
+                                            const vertAlignmentIn   : TVertRectAlign );
                     procedure setHandlePoint(const xIn, yIn : double);
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
@@ -134,25 +134,25 @@ implementation
 
                     //determine the horizontal centre of the box
                         case (horizontalAlignment) of
-                            TAlignment.taLeftJustify:
+                            THorzRectAlign.Left:
                                 boxCentreX := handlePointXY.X + boxWidthIn / 2;
 
-                            TAlignment.taCenter:
+                            THorzRectAlign.Center:
                                 boxCentreX := handlePointXY.X;
 
-                            TAlignment.taRightJustify:
+                            THorzRectAlign.Right:
                                 boxCentreX := handlePointXY.X - boxWidthIn / 2;
                         end;
 
                     //determine the vertical centre of the box
                         case (verticalAlignment) of
-                            TVerticalAlignment.taAlignBottom:
+                            TVertRectAlign.Bottom:
                                 boxCentreY := handlePointXY.y + boxHeightIn / 2;
 
-                            TVerticalAlignment.taVerticalCenter:
+                            TVertRectAlign.Center:
                                 boxCentreY := handlePointXY.y;
 
-                            TVerticalAlignment.taAlignTop:
+                            TVertRectAlign.Top:
                                 boxCentreY := handlePointXY.y - boxHeightIn / 2;
                         end;
 
@@ -183,8 +183,8 @@ implementation
                                                 const   lineThicknessIn         : integer;
                                                 const   rotationAngleIn         : double;
                                                 const   scaleTypeIn             : EScaleType;
-                                                const   horizontalAlignmentIn   : TAlignment;
-                                                const   verticalAlignmentIn     : TVerticalAlignment;
+                                                const   horizontalAlignmentIn   : THorzRectAlign;
+                                                const   verticalAlignmentIn     : TVertRectAlign;
                                                 const   fillColourIn,
                                                         lineColourIn            : TColor;
                                                 const   lineStyleIn             : TPenStyle;
@@ -216,8 +216,8 @@ implementation
                 end;
 
         //modifiers
-            procedure TGraphicObject.setAlignment(  const horAlignmentIn    : TAlignment;
-                                                    const vertAlignmentIn   : TVerticalAlignment );
+            procedure TGraphicObject.setAlignment(  const horAlignmentIn    : THorzRectAlign;
+                                                    const vertAlignmentIn   : TVertRectAlign );
                 begin
                     horizontalAlignment := horAlignmentIn;
                     verticalAlignment   := vertAlignmentIn;
