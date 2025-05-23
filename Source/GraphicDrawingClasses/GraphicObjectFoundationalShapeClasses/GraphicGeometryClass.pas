@@ -120,8 +120,6 @@ implementation
                                         TGeomPoint.create( 0, 0 )   );
 
                     TGeomPoint.copyPoints( geometryPointsIn, geometryPoints );
-
-                    graphicBox := TGeomBox.determineBoundingBox( geometryPoints );
                 end;
 
         //destructor

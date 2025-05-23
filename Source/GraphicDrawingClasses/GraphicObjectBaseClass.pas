@@ -38,8 +38,7 @@ interface
                     handlePointXY       : TGeomPoint;
                     graphicBox          : TGeomBox;
                 //position graphic box
-                    procedure dimensionAndPositionGraphicBox(const boxWidthIn, boxHeightIn : double); overload;
-                    procedure dimensionAndPositionGraphicBox(const arrPointsIn : TArray<TGeomPoint>); overload;
+                    procedure dimensionAndPositionGraphicBox(const boxWidthIn, boxHeightIn : double);
                 //draw graphic
                     procedure drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
                                                     var canvasInOut         : TDirect2DCanvas       ); virtual;
@@ -103,9 +102,6 @@ implementation
                 var
                     transformMatrix : TD2DMatrix3x2F;
                 begin
-                    if NOT( mustRotateCanvas ) then
-                        exit();
-
                     //get transformation matrix:
                     //positive angles result in anti-clockwise rotation of the canvas
                     //which results in clockwise rotation of the drawing entities
@@ -155,11 +151,6 @@ implementation
 
                     //shift the box to the centre values
                         graphicBox.setCentrePoint( boxCentreX, boxCentreY );
-                end;
-
-            procedure TGraphicObject.dimensionAndPositionGraphicBox(const arrPointsIn : TArray<TGeomPoint>);
-                begin
-                    graphicBox := TGeomBox.determineBoundingBox( arrPointsIn );
                 end;
 
         //draw graphic
