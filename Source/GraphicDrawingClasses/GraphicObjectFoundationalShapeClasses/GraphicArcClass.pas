@@ -21,7 +21,7 @@ interface
             strict private
                 var
                     startAngle, endAngle        : double;
-                    arcRadii                    : TRectF;
+                    arcRadii                    : TSizeF;
                     startPointXY, endPointXY    : TGeomPoint;
                 //calculate startPointXY
                     procedure calculateArcStartAndEndPoints();
@@ -86,14 +86,14 @@ implementation
                     endPointLT          : TPointF;
                     arcSegmentOut       : TD2D1ArcSegment;
                 begin
-                    //centre point
+                    //end point
                         endPointLT := axisConverterIn.XY_to_LT( endPointXY );
 
                         arcSegmentOut.point := D2D1PointF( endPointLT.X, endPointLT.Y );
 
                     //calculate size
                         widthLT     := axisConverterIn.dX_To_dL( arcRadii.Width );
-                        heightLT    := -axisConverterIn.dY_To_dT( arcRadii.Height );
+                        heightLT    := abs( axisConverterIn.dY_To_dT( arcRadii.Height ) );
 
                         ArcSegmentOut.size := D2D1SizeF( widthLT, heightLT );
 
@@ -140,11 +140,11 @@ implementation
 
                         if ( filled ) then
                             begin
-                                var centrePointLT := axisConverterIn.XY_to_LT( handlePointXY );
-
                                 figureEnd := D2D1_FIGURE_END.D2D1_FIGURE_END_CLOSED;
 
-                                geometrySink.BeginFigure( D2D1PointF( centrePointLT.x, centrePointLT.y ), D2D1_FIGURE_BEGIN.D2D1_FIGURE_BEGIN_FILLED );
+                                //handlePointLT is the centre point in TGraphicArc
+
+                                geometrySink.BeginFigure( D2D1PointF( handlePointLT.x, handlePointLT.y ), D2D1_FIGURE_BEGIN.D2D1_FIGURE_BEGIN_FILLED );
                                 geometrySink.AddLine( D2D1PointF( arcStartPointLT.X, arcStartPointLT.Y ) );
                             end
                         else

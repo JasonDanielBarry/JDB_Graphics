@@ -36,7 +36,7 @@ interface
                     objectScaleType     : EScaleType;
                     handlePointLT       : TPointF;
                     handlePointXY       : TGeomPoint;
-                    graphicBox          : TGeomBox;
+                    graphicBox          : TGeomBox; //graphicBox defines the position of the Arc, Ellipse, Rectangle and Text drawing entities before rotation
                 //position graphic box
                     procedure dimensionAndPositionGraphicBox(const boxWidthIn, boxHeightIn : double);
                 //draw graphic
@@ -58,6 +58,7 @@ interface
                 //destructor
                     destructor destroy(); override;
                 //modifiers
+                    procedure setRotationAngle(const rotationAngleIn : double);
                     procedure setAlignment( const horAlignmentIn    : THorzRectAlign;
                                             const vertAlignmentIn   : TVertRectAlign );
                     procedure setHandlePoint(const xIn, yIn : double);
@@ -122,6 +123,10 @@ implementation
                 var
                     boxCentreX, boxCentreY : double;
                 begin
+                    //if the dimensions entered are 0 then the graphic box is a dot at the handle point
+                        if ( IsZero( boxWidthIn ) AND IsZero( boxHeightIn ) ) then
+                            graphicBox := TGeomBox.determineBoundingBox( [ handlePointXY, handlePointXY ] );
+
                     //dimension the box
                         graphicBox.setDimensions( boxWidthIn, boxHeightIn );
 
@@ -182,7 +187,7 @@ implementation
 
                     filled              := filledIn;
                     lineThickness       := lineThicknessIn;
-                    rotationAngle       := rotationAngleIn;
+                    setRotationAngle( rotationAngleIn );
                     objectScaleType     := scaleTypeIn;
                     horizontalAlignment := horizontalAlignmentIn;
                     verticalAlignment   := verticalAlignmentIn;
@@ -191,10 +196,7 @@ implementation
                     lineStyle           := lineStyleIn;
                     handlePointXY.copyPoint( handlePointXYIn );
 
-                    mustRotateCanvas := NOT( IsZero( rotationAngleIn, 1e-3 ) );
-
-                    graphicBox.setDimensions( 0, 0 );
-                    graphicBox.setCentrePoint( handlePointXYIn );
+                    dimensionAndPositionGraphicBox( 0, 0 );
                 end;
 
         //destructor
@@ -204,18 +206,33 @@ implementation
                 end;
 
         //modifiers
+            procedure TGraphicObject.setRotationAngle(const rotationAngleIn : double);
+                begin
+                    rotationAngle := FMod( rotationAngleIn, 360 );
+
+                    mustRotateCanvas := IsZero( rotationAngle, 1e-3 );
+                end;
+
             procedure TGraphicObject.setAlignment(  const horAlignmentIn    : THorzRectAlign;
                                                     const vertAlignmentIn   : TVertRectAlign );
                 begin
                     horizontalAlignment := horAlignmentIn;
                     verticalAlignment   := vertAlignmentIn;
+
+                    dimensionAndPositionGraphicBox(
+                                                        graphicBox.calculateXDimension(),
+                                                        graphicBox.calculateYDimension()
+                                                  );
                 end;
 
             procedure TGraphicObject.setHandlePoint(const xIn, yIn : double);
                 begin
                     handlePointXY.setPoint( xIn, yIn );
 
-                    dimensionAndPositionGraphicBox( graphicBox.calculateXDimension(), graphicBox.calculateYDimension() );
+                    dimensionAndPositionGraphicBox(
+                                                        graphicBox.calculateXDimension(),
+                                                        graphicBox.calculateYDimension()
+                                                  );
                 end;
 
         //draw to canvas

@@ -17,8 +17,7 @@ interface
         TGraphicEllipse = class(TGraphicObject)
             private
                 //convert geom box to ellipse
-                    function convertGeomBoxToEllipse(   const geomBoxIn         : TGeomBox;
-                                                        const axisConverterIn   : TDrawingAxisConverter ) : TD2D1Ellipse;
+                    function convertGraphicBoxToEllipse(const axisConverterIn : TDrawingAxisConverter) : TD2D1Ellipse;
                 //draw to canvas
                     procedure drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
                                                     var canvasInOut         : TDirect2DCanvas       ); override;
@@ -44,8 +43,7 @@ implementation
 
     //private
         //convert geom box to ellipse
-            function TGraphicEllipse.convertGeomBoxToEllipse(   const geomBoxIn         : TGeomBox;
-                                                                const axisConverterIn   : TDrawingAxisConverter ) : TD2D1Ellipse;
+            function TGraphicEllipse.convertGraphicBoxToEllipse(const axisConverterIn : TDrawingAxisConverter) : TD2D1Ellipse;
                 var
                     ellipseCentreX,
                     ellipseCentreY  : double;
@@ -102,7 +100,7 @@ implementation
                     drawingEllipse : TD2D1Ellipse;
                 begin
                     //get the drawing ellipse
-                        drawingEllipse := convertGeomBoxToEllipse( graphicBox, axisConverterIn );
+                        drawingEllipse := convertGraphicBoxToEllipse( axisConverterIn );
 
                     //draw fill
                         if ( filled ) then
@@ -125,7 +123,7 @@ implementation
                                                 const   fillColourIn,
                                                         lineColourIn            : TColor;
                                                 const   lineStyleIn             : TPenStyle;
-                                                const   handlePointXYIn           : TGeomPoint        );
+                                                const   handlePointXYIn         : TGeomPoint        );
                 begin
                     inherited create(   filledIn,
                                         lineThicknessIn,

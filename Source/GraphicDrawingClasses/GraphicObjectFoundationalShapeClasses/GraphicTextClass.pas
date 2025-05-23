@@ -4,7 +4,7 @@ interface
 
     uses
         Winapi.D2D1,
-        system.SysUtils, system.Types, system.Classes, System.Math,
+        system.SysUtils, system.Types, system.Classes, System.Math, System.StrUtils,
         Vcl.Direct2D, vcl.Graphics, vcl.Themes, Vcl.ExtCtrls,
         GeometryTypes,
         GeomBox,
@@ -37,6 +37,8 @@ interface
                     procedure drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
                                                     var canvasInOut         : TDirect2DCanvas       ); override;
             public
+                class var
+                    fontName : TFontName;
                 //constructor
                     constructor create( const   addUnderlayIn       : boolean;
                                         const   textSizeIn          : integer;
@@ -52,6 +54,10 @@ interface
                     destructor destroy(); override;
                 //modifiers
                     procedure setTextString(const newTextIn : string);
+                //measure text
+                    class function measureTextExtent(   const textStringIn      : string;
+                                                        const textSizeIn        : integer = 9;
+                                                        const textFontStylesIn  : TFontStyles = []) : TSize;
         end;
 
 implementation
@@ -76,7 +82,7 @@ implementation
                             end;
 
                         canvasInOut.Font.Color  := TStyleManager.ActiveStyle.GetSystemColor( textColour );
-                        canvasInOut.Font.Name   := 'Segoe UI';
+                        canvasInOut.Font.Name   := fontName;
                         canvasInOut.Font.Style  := textFontStyles;
                         canvasInOut.Brush.Style := TBrushStyle.bsClear;
                 end;
@@ -182,11 +188,10 @@ implementation
 
                     addUnderlay         := addUnderlayIn;
                     textSize            := textSizeIn;
-                    textString          := textStringIn;
                     textColour          := textColourIn;
                     textFontStyles      := textFontStylesIn;
 
-                    dimensionAndPositionGraphicBox( 0, 0 );
+                    setTextString( textStringIn );
                 end;
 
         //destructor
@@ -199,6 +204,61 @@ implementation
             procedure TGraphicText.setTextString(const newTextIn : string);
                 begin
                     textString := newTextIn;
+
+                    case ( objectScaleType ) of
+                        EScaleType.scCanvas:
+                            dimensionAndPositionGraphicBox( 0, 0 );
+
+                        EScaleType.scDrawing:
+                            begin
+                                var textExtent : TSize := measureTextExtent( newTextIn, textSize, textFontStyles );
+
+                                dimensionAndPositionGraphicBox( textExtent.Width, textExtent.Height );
+                            end;
+                    end;
+                end;
+
+        //measure text
+            class function TGraphicText.measureTextExtent(  const textStringIn      : string;
+                                                            const textSizeIn        : integer = 9;
+                                                            const textFontStylesIn  : TFontStyles = []) : TSize;
+                var
+                    i, arrLen       : integer;
+                    textExtentOut   : TSize;
+                    tempBitmap      : TBitmap;
+                    stringArray     : TArray<string>;
+                begin
+                    //create a temp bitmap to use the canvas
+                        tempBitmap := TBitmap.Create( 100, 100 );
+
+                        tempBitmap.Canvas.font.Size     := textSizeIn;
+                        tempBitmap.Canvas.font.Style    := textFontStylesIn;
+
+                    //split the string using line breaks as delimiter
+                        stringArray := textStringIn.Split( [sLineBreak] );
+                        arrLen := length( stringArray );
+
+                    //calculate the extent (size) of the text
+                        if ( 1 < arrLen ) then
+                            begin
+                                textExtentOut.Width     := 0;
+                                textExtentOut.Height    := 0;
+
+                                for i := 0 to (arrLen - 1) do
+                                    begin
+                                        var tempSize : TSize := tempBitmap.Canvas.TextExtent( stringArray[i] );
+
+                                        textExtentOut.Width     := max( tempSize.Width, textExtentOut.Width );
+                                        textExtentOut.Height    := textExtentOut.Height + tempSize.Height;
+                                    end;
+                            end
+                        else
+                            textExtentOut := tempBitmap.Canvas.TextExtent( textStringIn );
+
+                    //free bitmap memory
+                        FreeAndNil( tempBitmap );
+
+                    result := textExtentOut;
                 end;
 
 end.

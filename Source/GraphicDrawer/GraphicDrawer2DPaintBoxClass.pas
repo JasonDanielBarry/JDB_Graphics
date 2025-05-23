@@ -7,7 +7,7 @@ interface
         Winapi.Windows, Winapi.Messages,
         System.SysUtils, System.Classes,
         Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ExtCtrls, Vcl.Themes,
-        GraphicGridClass,
+        GraphicTextClass, GraphicGridClass,
         GraphicObjectListBaseClass, GraphicDrawerDirect2DClass
         ;
 
@@ -141,6 +141,12 @@ implementation
 
                     //grid is not visible by default
                         setGridEnabled( False );
+
+                    //assign font name to graphic text class
+                        if ( self.Parent IS TForm ) then
+                            TGraphicText.fontName := Tform(self.Parent).Font.Name
+                        else
+                            TGraphicText.fontName := 'Segoe UI';
                 end;
 
         //destructor
