@@ -210,7 +210,7 @@ implementation
                 begin
                     rotationAngle := FMod( rotationAngleIn, 360 );
 
-                    mustRotateCanvas := IsZero( rotationAngle, 1e-3 );
+                    mustRotateCanvas := NOT( IsZero( rotationAngle, 1e-3 ) );
                 end;
 
             procedure TGraphicObject.setAlignment(  const horAlignmentIn    : THorzRectAlign;

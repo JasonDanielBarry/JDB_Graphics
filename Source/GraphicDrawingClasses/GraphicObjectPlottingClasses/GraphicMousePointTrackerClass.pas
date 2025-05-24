@@ -100,7 +100,7 @@ implementation
                                 lineInterpPoint     : TPointF;
                                 mouseToLineVector   : TLAVector;
                             begin
-                                interpCount := min(100, Ceil( lineInterpolator.calculateLineLength() ) );
+                                interpCount := min( 50, Ceil( lineInterpolator.calculateLineLength() ) );
 
                                 for i := 0 to interpCount do
                                     begin
