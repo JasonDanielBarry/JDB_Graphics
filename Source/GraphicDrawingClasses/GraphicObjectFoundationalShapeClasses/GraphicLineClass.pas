@@ -4,7 +4,7 @@ interface
 
     uses
         //Delphi
-            system.SysUtils, system.types, system.UITypes, System.UIConsts,
+            system.SysUtils, system.types, system.UITypes, System.UIConsts, System.Math,
             Winapi.D2D1, Vcl.Direct2D,
             vcl.Graphics,
         //custom
@@ -60,7 +60,7 @@ implementation
                                             const   geometryIn      : TGeomLine );
                 begin
                     inherited create(   false,
-                                        lineThicknessIn,
+                                        max( lineThicknessIn, 1 ),
                                         TColors.Null,
                                         lineColourIn,
                                         lineStyleIn,

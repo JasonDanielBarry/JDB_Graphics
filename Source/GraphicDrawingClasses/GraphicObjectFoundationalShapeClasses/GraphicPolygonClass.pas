@@ -45,7 +45,7 @@ implementation
 
                     //get path geometry
                         drawClosedPathGeometry(
-                                                    filled,
+                                                    filled, outlined,
                                                     geometryPoints,
                                                     axisConverterIn,
                                                     canvasInOut

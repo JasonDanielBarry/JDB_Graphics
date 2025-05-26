@@ -131,6 +131,8 @@ implementation
                         currentGraphicBuffer    := TBitmap.create();
                         D2DGraphicDrawer        := TGraphicDrawerDirect2D.create();
 
+                        currentGraphicBuffer.PixelFormat := TPixelFormat.pf32bit;
+
                     //assign events
                         self.OnPaint        := PaintBoxDrawer2DPaint;
                         self.OnMouseEnter   := PaintBoxGraphicMouseEnter;

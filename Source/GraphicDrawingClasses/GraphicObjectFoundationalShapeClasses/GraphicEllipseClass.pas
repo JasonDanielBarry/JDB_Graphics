@@ -107,7 +107,8 @@ implementation
                             canvasInOut.FillEllipse( drawingEllipse );
 
                     //draw line
-                        canvasInOut.DrawEllipse( drawingEllipse );
+                        if ( outlined ) then
+                            canvasInOut.DrawEllipse( drawingEllipse );
                 end;
 
     //public

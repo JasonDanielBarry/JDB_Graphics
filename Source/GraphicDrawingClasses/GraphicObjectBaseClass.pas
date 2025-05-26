@@ -30,7 +30,7 @@ interface
                     procedure resetCanvasRotation(var canvasInOut : TDirect2DCanvas);
             protected
                 var
-                    filled              : boolean;
+                    filled, outlined    : boolean;
                     horizontalAlignment : THorzRectAlign;
                     verticalAlignment   : TVertRectAlign;
                     objectScaleType     : EScaleType;
@@ -80,7 +80,7 @@ implementation
             procedure TGraphicObject.setFillProperties(var canvasInOut : TDirect2DCanvas);
                 begin
                     //hollow object
-                        if NOT(filled) then
+                        if NOT( filled ) then
                             begin
                                 canvasInOut.Brush.Style := TBrushStyle.bsClear;
                                 exit();
@@ -92,6 +92,9 @@ implementation
 
             procedure TGraphicObject.setLineProperties(var canvasInOut : TDirect2DCanvas);
                 begin
+                    if ( lineThickness = 0 ) then
+                        exit();
+
                     canvasInOut.Pen.Color := TStyleManager.ActiveStyle.GetSystemColor( lineColour );
                     canvasInOut.Pen.Style := lineStyle;
                     canvasInOut.Pen.Width := lineThickness;
@@ -186,6 +189,7 @@ implementation
                     inherited create();
 
                     filled              := filledIn;
+                    outlined            := 0 < lineThicknessIn;
                     lineThickness       := lineThicknessIn;
                     setRotationAngle( rotationAngleIn );
                     objectScaleType     := scaleTypeIn;

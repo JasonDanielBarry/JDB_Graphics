@@ -39,10 +39,10 @@ interface
                     destructor destroy(); override;
                 //create path geometry
                     //closed
-                        class procedure drawClosedPathGeometry( const filledIn          : boolean;
-                                                                const geometryPointsIn  : TArray<TGeomPoint>;
-                                                                const axisConverterIn   : TDrawingAxisConverter;
-                                                                var canvasInOut         : TDirect2DCanvas       ); static;
+                        class procedure drawClosedPathGeometry( const filledIn, outlinedIn  : boolean;
+                                                                const geometryPointsIn      : TArray<TGeomPoint>;
+                                                                const axisConverterIn       : TDrawingAxisConverter;
+                                                                var canvasInOut             : TDirect2DCanvas       ); static;
                     //open
                         class procedure drawOpenPathGeometry(   const geometryPointsIn  : TArray<TGeomPoint>;
                                                                 const axisConverterIn   : TDrawingAxisConverter;
@@ -130,10 +130,10 @@ implementation
 
         //create path geometry
             //closed
-                class procedure TGraphicGeometry.drawClosedPathGeometry(const filledIn          : boolean;
-                                                                        const geometryPointsIn  : TArray<TGeomPoint>;
-                                                                        const axisConverterIn   : TDrawingAxisConverter;
-                                                                        var canvasInOut         : TDirect2DCanvas       );
+                class procedure TGraphicGeometry.drawClosedPathGeometry(const filledIn, outlinedIn  : boolean;
+                                                                        const geometryPointsIn      : TArray<TGeomPoint>;
+                                                                        const axisConverterIn       : TDrawingAxisConverter;
+                                                                        var canvasInOut             : TDirect2DCanvas       );
                     var
                         pathGeometry : ID2D1PathGeometry;
                     begin
@@ -147,7 +147,8 @@ implementation
                         if ( filledIn ) then
                             canvasInOut.FillGeometry( pathGeometry );
 
-                        canvasInOut.DrawGeometry( pathGeometry );
+                        if ( outlinedIn ) then
+                            canvasInOut.DrawGeometry( pathGeometry );
                     end;
 
             //open

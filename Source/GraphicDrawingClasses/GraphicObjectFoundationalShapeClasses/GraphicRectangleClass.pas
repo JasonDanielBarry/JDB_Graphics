@@ -161,7 +161,8 @@ implementation
                             canvasInOut.FillRoundedRectangle( drawingRect );
 
                     //draw rectangle line
-                        canvasInOut.DrawRoundedRectangle( drawingRect );
+                        if ( outlined ) then
+                            canvasInOut.DrawRoundedRectangle( drawingRect );
                 end;
 
     //public

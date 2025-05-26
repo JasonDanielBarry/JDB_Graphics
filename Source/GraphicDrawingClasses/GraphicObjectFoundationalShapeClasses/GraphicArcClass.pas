@@ -176,7 +176,8 @@ implementation
                             canvasInOut.FillGeometry( pathGeometry );
 
                     //draw arc line
-                        canvasInOut.DrawGeometry( pathGeometry );
+                        if ( outlined ) then
+                            canvasInOut.DrawGeometry( pathGeometry );
                 end;
 
     //public
