@@ -8,6 +8,7 @@ interface
         System.SysUtils, System.Classes,
         Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ExtCtrls, Vcl.Themes,
         GraphicTextClass, GraphicGridClass,
+        GraphicGridSettingsRecord,
         GraphicObjectListBaseClass, GraphicDrawerDirect2DClass
         ;
 
@@ -145,10 +146,7 @@ implementation
                         setGridEnabled( False );
 
                     //assign font name to graphic text class
-                        if ( self.Parent IS TForm ) then
-                            TGraphicText.fontName := Tform(self.Parent).Font.Name
-                        else
-                            TGraphicText.fontName := 'Segoe UI';
+                        TGraphicText.fontName := 'Segoe UI';
                 end;
 
         //destructor

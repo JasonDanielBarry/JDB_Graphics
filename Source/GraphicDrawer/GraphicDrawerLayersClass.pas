@@ -12,7 +12,8 @@ interface
             DrawingAxisConversionClass,
             GraphicObjectBaseClass, GraphicGridClass,
             GeomBox,
-            GraphicDrawerBaseClass
+            GraphicDrawerBaseClass,
+            GraphicGridSettingsRecord
             ;
 
     type

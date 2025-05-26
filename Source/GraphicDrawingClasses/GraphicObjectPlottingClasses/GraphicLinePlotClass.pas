@@ -57,7 +57,7 @@ implementation
                             exit();
 
                     //create point plot
-                        var pointSize : integer := max( 5, 3 * plotLineThicknessIn );
+                        var pointSize : integer := max( 5, round(2.5 * plotLineThicknessIn) );
 
                         pointPlot := TGraphicScatterPlot.create(  pointSize, plotColourIn, arrPlotPointsIn );
 

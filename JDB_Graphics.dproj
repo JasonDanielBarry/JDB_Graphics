@@ -130,6 +130,7 @@
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicScatterPlotClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawer2DPaintBoxClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicLinePlotClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicGridSettingsRecord.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
