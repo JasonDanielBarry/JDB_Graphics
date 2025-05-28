@@ -45,7 +45,8 @@ uses
   GraphicScatterPlotClass in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicScatterPlotClass.pas',
   GraphicDrawer2DPaintBoxClass in 'Source\GraphicDrawer\GraphicDrawer2DPaintBoxClass.pas',
   GraphicLinePlotClass in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicLinePlotClass.pas',
-  GraphicGridSettingsRecord in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicGridSettingsRecord.pas';
+  GraphicGridSettingsRecord in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicGridSettingsRecord.pas',
+  GraphicDimensionClass in 'Source\GraphicDrawingClasses\GraphicObjectGroupClasses\GraphicDimensionClass.pas';
 
 { keep comment here to protect the following conditional from being removed by the IDE when adding a unit }
 {$IFNDEF TESTINSIGHT}

@@ -19,7 +19,6 @@ interface
                     WM_USER_REDRAWGRAPHIC = WM_USER + 1;
                 var
                     mustRedrawGraphic       : boolean;
-                    gridVisibilitySettings  : TGridVisibilitySettings;
                     currentGraphicBuffer    : TBitmap;
                     D2DGraphicDrawer        : TGraphicDrawerDirect2D;
                 //events
@@ -39,7 +38,7 @@ interface
                     destructor destroy(); override;
                 //modifiers
                     procedure setGridEnabled(const enabledIn : boolean);
-                    procedure setGridElementsVisiblity(const gridVisibilitySettingsIn : TGridVisibilitySettings);
+                    procedure setGridSettings(const gridSettingsIn : TGraphicGridSettings);
                 //redraw the graphic
                     procedure postRedrawGraphicMessage(const callingControlIn : TWinControl);
                     procedure updateBackgroundColour(const callingControlIn : TWinControl);
@@ -165,9 +164,9 @@ implementation
                     GraphicDrawer.setGridEnabled( enabledIn );
                 end;
 
-            procedure TPaintBox.setGridElementsVisiblity(const gridVisibilitySettingsIn : TGridVisibilitySettings);
+            procedure TPaintBox.setGridSettings(const gridSettingsIn : TGraphicGridSettings);
                 begin
-                    gridVisibilitySettings.copyOther( gridVisibilitySettingsIn );
+                    D2DGraphicDrawer.setGridSettings( gridSettingsIn );
                 end;
 
         //redraw the graphic
@@ -194,8 +193,6 @@ implementation
                         D2DGraphicDrawer.clearGraphicObjects();
 
                     //update the D2DGraphicDrawer graphics
-                        D2DGraphicDrawer.setGridElementsVisiblity( gridVisibilitySettings );
-
                         D2DGraphicDrawer.readGraphicObjectList( graphicObjectListIn );
 
                     //activate all drawing layers

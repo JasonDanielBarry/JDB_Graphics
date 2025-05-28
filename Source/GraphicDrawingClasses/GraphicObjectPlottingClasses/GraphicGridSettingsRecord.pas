@@ -3,44 +3,74 @@ unit GraphicGridSettingsRecord;
 interface
 
     type
-        TGridVisibilitySettings  = record
-            axisLabelsVisible,
-            axesVisible,
-            majorGridLinesVisible,
-            minorGridLinesVisible : boolean;
-            procedure copyOther(const otherGridVisibilitySettingsIn : TGridVisibilitySettings);
-            procedure setValues(const showAxisLabelsIn, showAxesIn, showMajorGridLinesIn, showMinorGridLinesIn : boolean);
+        TGraphicGridSettings  = record
+            xAxisValuesVisible,     yAxisValuesVisible,
+            xAxisVisible,           yAxisVisible,
+            majorGridLinesVisible,  minorGridLinesVisible : boolean;
+            procedure copyOther(const otherGridVisibilitySettingsIn : TGraphicGridSettings);
+            procedure setValues(const   showXAxisValuesIn,      showYAxisValuesIn,
+                                        showXAxisIn,            showYAxisIn,
+                                        showMajorGridLinesIn,   showMinorGridLinesIn : boolean);
             function allElementsDisabled() : boolean;
+            function allElementsEnabled() : boolean;
+            function atLeastOneElementEnabled() : boolean;
         end;
 
 implementation
 
     //grid visibility settings
-        procedure TGridVisibilitySettings.copyOther(const otherGridVisibilitySettingsIn : TGridVisibilitySettings);
+        procedure TGraphicGridSettings.copyOther(const otherGridVisibilitySettingsIn : TGraphicGridSettings);
             begin
                 self.setValues(
-                                    otherGridVisibilitySettingsIn.axisLabelsVisible,
-                                    otherGridVisibilitySettingsIn.axesVisible,
+                                    otherGridVisibilitySettingsIn.xAxisValuesVisible,
+                                    otherGridVisibilitySettingsIn.yAxisValuesVisible,
+                                    otherGridVisibilitySettingsIn.xAxisVisible,
+                                    otherGridVisibilitySettingsIn.yAxisVisible,
                                     otherGridVisibilitySettingsIn.majorGridLinesVisible,
                                     otherGridVisibilitySettingsIn.minorGridLinesVisible
                               );
             end;
 
-        procedure TGridVisibilitySettings.setValues(const showAxisLabelsIn, showAxesIn, showMajorGridLinesIn, showMinorGridLinesIn : boolean);
+        procedure TGraphicGridSettings.setValues(const  showXAxisValuesIn,      showYAxisValuesIn,
+                                                        showXAxisIn,            showYAxisIn,
+                                                        showMajorGridLinesIn,   showMinorGridLinesIn : boolean);
             begin
-                self.axisLabelsVisible      := showAxisLabelsIn;
-                self.axesVisible            := showAxesIn;
-                self.majorGridLinesVisible  := showMajorGridLinesIn;
-                self.minorGridLinesVisible  := showMinorGridLinesIn;
+                //axis values
+                    self.xAxisValuesVisible := showXAxisValuesIn;
+                    self.yAxisValuesVisible := showYAxisValuesIn;
+
+                //axis lines
+                    self.xAxisVisible := showXAxisIn;
+                    self.yAxisVisible := showYAxisIn;
+
+                //grid lines
+                    self.majorGridLinesVisible := showMajorGridLinesIn;
+                    self.minorGridLinesVisible := showMinorGridLinesIn;
             end;
 
-        function TGridVisibilitySettings.allElementsDisabled() : boolean;
-            var
-                atLeastOneElementIsVisible : boolean;
+        function TGraphicGridSettings.allElementsDisabled() : boolean;
             begin
-                atLeastOneElementIsVisible := axisLabelsVisible OR axesVisible OR majorGridLinesVisible OR minorGridLinesVisible;
+                result:= (      NOT(xAxisValuesVisible)
+                            AND NOT(yAxisValuesVisible)
+                            AND NOT(xAxisVisible)
+                            AND NOT(yAxisVisible)
+                            AND NOT(majorGridLinesVisible)
+                            AND NOT(minorGridLinesVisible)  );
+            end;
 
-                result := NOT( atLeastOneElementIsVisible );
+        function TGraphicGridSettings.allElementsEnabled() : boolean;
+            begin
+                result := (     xAxisValuesVisible
+                            AND yAxisValuesVisible
+                            AND xAxisVisible
+                            AND yAxisVisible
+                            AND majorGridLinesVisible
+                            AND minorGridLinesVisible   );
+            end;
+
+        function TGraphicGridSettings.atLeastOneElementEnabled() : boolean;
+            begin
+                result := NOT( allElementsDisabled() ) AND NOT( allElementsDisabled() );
             end;
 
 end.

@@ -131,6 +131,7 @@
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawer2DPaintBoxClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicLinePlotClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicGridSettingsRecord.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectGroupClasses\GraphicDimensionClass.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -40,7 +40,7 @@ interface
                     function getAllDrawingLayers() : TArray<string>;
                 //modifiers
                     procedure setGridEnabled(const enabledIn : boolean);
-                    procedure setGridElementsVisiblity(const gridVisibilitySettingsIn : TGridVisibilitySettings);
+                    procedure setGridSettings(const gridSettingsIn : TGraphicGridSettings);
                     procedure setActiveDrawingLayers(const arrActiveDrawingLayersIn : TArray<string>);
                     procedure activateAllDrawingLayers();
                 //reset
@@ -120,9 +120,9 @@ implementation
                     gridEnabled := enabledIn;
                 end;
 
-            procedure TGraphicDrawerLayers.setGridElementsVisiblity(const gridVisibilitySettingsIn : TGridVisibilitySettings);
+            procedure TGraphicDrawerLayers.setGridSettings(const gridSettingsIn : TGraphicGridSettings);
                 begin
-                    graphicGrid.setGridElementsVisiblity( gridVisibilitySettingsIn );
+                    graphicGrid.setGridSettings( gridSettingsIn );
                 end;
 
             procedure TGraphicDrawerLayers.setActiveDrawingLayers(const arrActiveDrawingLayersIn : TArray<string>);
