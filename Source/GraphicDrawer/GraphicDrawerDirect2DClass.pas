@@ -62,7 +62,6 @@ implementation
                                             D2DCanvas
                                          );
 
-
                         D2DCanvas.EndDraw();
 
                     FreeAndNil( D2DCanvas );

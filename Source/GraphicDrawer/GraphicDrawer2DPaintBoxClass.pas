@@ -7,7 +7,7 @@ interface
         Winapi.Windows, Winapi.Messages,
         System.SysUtils, System.Classes,
         Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ExtCtrls, Vcl.Themes,
-        GraphicTextClass, GraphicGridClass,
+        GraphicTextClass,
         GraphicGridSettingsRecord,
         GraphicObjectListBaseClass, GraphicDrawerDirect2DClass
         ;
@@ -77,7 +77,7 @@ implementation
             procedure TPaintBox.setMouseCursor(const messageIn : TMessage);
                 begin
                     //if the graphic drawer is nil then nothing can happen
-                        if NOT( Assigned(D2DGraphicDrawer) ) then
+                        if NOT( Assigned( D2DGraphicDrawer ) ) then
                             exit();
 
                     //set the cursor based on the user input
