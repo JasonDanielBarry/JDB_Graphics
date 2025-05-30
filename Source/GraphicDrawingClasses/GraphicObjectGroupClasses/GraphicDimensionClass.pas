@@ -16,11 +16,13 @@ interface
         TGraphicDimension = class(TGraphicObjectGroup)
             private
                 //create the dimension line group
-                    function createDimensionLineGroup(const dimensionLineIn : TGeomLine) : TArray<TGeomLine>;
+                    function createDimensionLineGroup(  const dimensionOffsetIn : double;
+                                                        const dimensionLineIn   : TGeomLine ) : TArray<TGeomLine>;
             public
                 //constructor
                     constructor create(
-                                            const customTextIn      : string;
+                                            const dimensionOffsetIn : double;
+                                            const dimensionTextIn   : string;
                                             const colourIn          : TColor;
                                             const dimensionLineIn   : TGeomLine
                                       );
@@ -32,7 +34,8 @@ implementation
 
     //private
         //create the dimension line group
-            function TGraphicDimension.createDimensionLineGroup(const dimensionLineIn : TGeomLine) : TArray<TGeomLine>;
+            function TGraphicDimension.createDimensionLineGroup(const dimensionOffsetIn : double;
+                                                                const dimensionLineIn   : TGeomLine) : TArray<TGeomLine>;
                 const
                     SIDE_LINE_LENGTH : double = 0.05;
                 var
@@ -71,16 +74,20 @@ implementation
                             //this shift ensures the bottom of the dim line group aligns with the rotation reference point
                                 TGeomBase.shift( 0, SIDE_LINE_LENGTH/2, [leftLine, dimLine, rightLine] );
 
-                        //rotate line group
-                            dimLineRotationReferencePoint.copyPoint( dimLineShift );
-                            dimLineAngle := dimensionLineIn.calculate2DLineAngle();
-
-                            TGeomBase.rotate( dimLineAngle, dimLineRotationReferencePoint, [leftLine, dimLine, rightLine] );
-
                         //scale line group
+                            dimLineRotationReferencePoint.copyPoint( dimLineShift );
+
                             dimLineLength := dimensionLineIn.calculateLength();
 
                             TGeomBase.scale( dimLineLength, dimLineRotationReferencePoint, [leftLine, dimLine, rightLine] );
+
+                            //apply the offset here AFTER scaling but BEFORE rotation
+                                TGeomBase.shift( 0, dimensionOffsetIn, [leftLine, dimLine, rightLine] );
+
+                        //rotate line group
+                            dimLineAngle := dimensionLineIn.calculate2DLineAngle();
+
+                            TGeomBase.rotate( dimLineAngle, dimLineRotationReferencePoint, [leftLine, dimLine, rightLine] );
 
                     result := [leftLine, dimLine, rightLine];
                 end;
@@ -88,48 +95,60 @@ implementation
     //public
         //constructor
             constructor TGraphicDimension.create(
-                                                    const customTextIn      : string;
+                                                    const dimensionOffsetIn : double;
+                                                    const dimensionTextIn   : string;
                                                     const colourIn          : TColor;
                                                     const dimensionLineIn   : TGeomLine
                                                 );
                 var
                     i, arrLen           : integer;
                     textRotation        : double;
-                    textString          : string;
+                    dimensionText       : string;
                     textHandlePoint     : TGeomPoint;
                     graphicLine         : TGraphicLine;
                     graphicText         : TGraphicText;
                     dimensionLineGroup  : TArray<TGeomLine>;
                 begin
-                    dimensionLineGroup := createDimensionLineGroup( dimensionLineIn );
-                    textHandlePoint := dimensionLineGroup[1].calculateCentroidPoint();
+                    //create lines
+                        dimensionLineGroup := createDimensionLineGroup( dimensionOffsetIn, dimensionLineIn );
+                        textHandlePoint := dimensionLineGroup[1].calculateCentroidPoint();
 
-                    arrLen := Length( dimensionLineGroup );
+                        arrLen := Length( dimensionLineGroup );
 
-                    for i := 0 to ( arrLen - 1 ) do
-                        begin
-                            graphicLine := TGraphicLine.create( 1, colourIn, TPenStyle.psSolid, dimensionLineGroup[i] );
+                        for i := 0 to ( arrLen - 1 ) do
+                            begin
+                                graphicLine := TGraphicLine.create( 1, colourIn, TPenStyle.psSolid, dimensionLineGroup[i] );
 
-                            addGraphicObjectToGroup( graphicLine );
+                                addGraphicObjectToGroup( graphicLine );
 
-                            FreeAndNil( dimensionLineGroup[i] );
-                        end;
+                                FreeAndNil( dimensionLineGroup[i] );
+                            end;
 
-                    textRotation    := dimensionLineIn.calculate2DLineAngle();
-                    textString      := FloatToStrF( dimensionLineIn.calculateLength(), ffFixed, 5, 2 );
+                    //create text
+                        textRotation := dimensionLineIn.calculate2DLineAngle();
 
-                    graphicText := TGraphicText.create( False,
-                                                        9,
-                                                        textRotation,
-                                                        textString,
-                                                        EScaleType.scCanvas,
-                                                        THorzRectAlign.Center,
-                                                        TVertRectAlign.Bottom,
-                                                        colourIn,
-                                                        [],
-                                                        textHandlePoint         );
+                        textRotation := FMod( textRotation, 180 );
 
-                    addGraphicObjectToGroup( graphicText );
+                        if ( 90 < abs(textRotation) ) then
+                            textRotation := textRotation + 180;
+
+                        if ( dimensionTextIn = '' ) then
+                            dimensionText := FloatToStrF( dimensionLineIn.calculateLength(), ffFixed, 5, 2 )
+                        else
+                            dimensionText := dimensionTextIn;
+
+                        graphicText := TGraphicText.create( False,
+                                                            9,
+                                                            textRotation,
+                                                            dimensionText,
+                                                            EScaleType.scCanvas,
+                                                            THorzRectAlign.Center,
+                                                            TVertRectAlign.Bottom,
+                                                            colourIn,
+                                                            [],
+                                                            textHandlePoint         );
+
+                        addGraphicObjectToGroup( graphicText );
                 end;
 
         //destructor
