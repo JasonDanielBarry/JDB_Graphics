@@ -88,25 +88,15 @@ implementation
         //calculate the angle normal to a group line
             function TGraphicArrowGroup.calculateAngleNormalToLine(const arrowGroupLineIn : TGeomline) : double;
                 var
-                    dx, dy,
-                    lineAngleRad,
-                    normalAngleDegOut   : double;
-                    lineVector          : TGeomSpaceVector;
+                    lineAngle,
+                    normalAngleOut : double;
                 begin
-                    //get the line vector components
-                        lineVector := arrowGroupLineIn.unitVector();
-
-                        dx := lineVector[0];
-                        dy := lineVector[1];
-
-                        FreeAndNil( lineVector );
-
                     //calculate the angle of the line and the normal angle
-                        lineAngleRad := ArcTan2( dy, dx );
+                        lineAngle := arrowGroupLineIn.calculate2DLineAngle();
 
-                        normalAngleDegOut := RadToDeg( lineAngleRad ) - 90;
+                        normalAngleOut := lineAngle - 90;
 
-                    result := normalAngleDegOut;
+                    result := normalAngleOut;
                 end;
 
         //determine the arrow group angle

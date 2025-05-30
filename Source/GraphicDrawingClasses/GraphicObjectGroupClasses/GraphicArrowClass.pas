@@ -7,6 +7,7 @@ interface
         system.SysUtils, system.UITypes,
         Vcl.Direct2D, vcl.Graphics,
         GeomBox, GeometryTypes,
+        GeometryBaseClass,
         GeomLineClass, GeomPolygonClass,
         GraphicDrawingTypes,
         DrawingAxisConversionClass,
@@ -85,6 +86,7 @@ implementation
                                                         const   arrowOriginPointIn  : TGeomPoint    );
                 var
                     referencePoint : TGeomPoint;
+
                 begin
                     //objects created here
                         arrowHead := createArrowHead();
@@ -92,24 +94,18 @@ implementation
 
                     //the origin sits by default at the tail
                         if ( arrowOriginIn = EArrowOrigin.aoHead ) then
-                            begin
-                                arrowHead.shift( -1, 0 );
-                                arrowTail.shift( -1, 0 );
-                            end;
+                            TGeomBase.shift( -1, 0, [arrowHead, arrowTail] );
 
                         referencePoint := TGeomPoint.create( 0, 0 );
 
                     //scale the arrow - the arrow is 1 unit in length so the required length IS the scale factor
-                        arrowHead.scale( arrowLengthIn, referencePoint );
-                        arrowTail.scale( arrowLengthIn, referencePoint );
+                        TGeomBase.scale( arrowLengthIn, referencePoint, [arrowHead, arrowTail] );
 
                     //rotate the arrow
-                        arrowHead.rotate( directionAngleIn, referencePoint );
-                        arrowTail.rotate( directionAngleIn, referencePoint );
+                        TGeomBase.rotate( directionAngleIn, referencePoint, [arrowHead, arrowTail] );
 
                     //shift the arrow
-                        arrowHead.shift( arrowOriginPointIn.x, arrowOriginPointIn.y );
-                        arrowTail.shift( arrowOriginPointIn.x, arrowOriginPointIn.y );
+                        TGeomBase.shift( arrowOriginPointIn.x, arrowOriginPointIn.y, [arrowHead, arrowTail] );
 
                     //get the head and tail points
                         arrowHeadPoint := arrowHead.getArrGeomPoints()[0];
