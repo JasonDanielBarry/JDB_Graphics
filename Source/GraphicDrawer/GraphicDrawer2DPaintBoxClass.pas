@@ -36,14 +36,17 @@ interface
                     constructor create(AOwner : TComponent); override;
                 //destructor
                     destructor destroy(); override;
+                //accessors
+                    function getOnPostGraphicDrawEvent() : TOnPostGraphicDrawEvent;
                 //modifiers
                     procedure setGridEnabled(const enabledIn : boolean);
                     procedure setGridSettings(const gridSettingsIn : TGraphicGridSettings);
+                    procedure setOnPostGraphicDrawEvent(const onPostGraphicDrawEventIn : TOnPostGraphicDrawEvent);
                 //redraw the graphic
                     procedure postRedrawGraphicMessage(const callingControlIn : TWinControl);
                     procedure updateBackgroundColour(const callingControlIn : TWinControl);
                     procedure updateGraphics(   const callingControlIn      : TWinControl;
-                                                const graphicObjectListIn   : TGraphicObjectListBase);
+                                                const graphicObjectListIn   : TGraphicObjectListBase );
                 //process windows messages
                     procedure processWindowsMessages(var messageInOut : TMessage; out graphicWasRedrawnOut : boolean);
                 //access graphic drawer
@@ -158,6 +161,12 @@ implementation
                     inherited destroy();
                 end;
 
+        //accessors
+            function TPaintBox.getOnPostGraphicDrawEvent() : TOnPostGraphicDrawEvent;
+                begin
+                    result := D2DGraphicDrawer.getOnPostGraphicDrawEvent();
+                end;
+
         //modifiers
             procedure TPaintBox.setGridEnabled(const enabledIn : boolean);
                 begin
@@ -167,6 +176,11 @@ implementation
             procedure TPaintBox.setGridSettings(const gridSettingsIn : TGraphicGridSettings);
                 begin
                     D2DGraphicDrawer.setGridSettings( gridSettingsIn );
+                end;
+
+            procedure TPaintBox.setOnPostGraphicDrawEvent(const onPostGraphicDrawEventIn : TOnPostGraphicDrawEvent);
+                begin
+                    D2DGraphicDrawer.setOnPostGraphicDrawEvent( onPostGraphicDrawEventIn );
                 end;
 
         //redraw the graphic
@@ -184,7 +198,7 @@ implementation
                 end;
 
             procedure TPaintBox.updateGraphics( const callingControlIn      : TWinControl;
-                                                const graphicObjectListIn   : TGraphicObjectListBase);
+                                                const graphicObjectListIn   : TGraphicObjectListBase );
                 begin
                     //set background to match theme
                         D2DGraphicDrawer.updateBackgroundColour();
