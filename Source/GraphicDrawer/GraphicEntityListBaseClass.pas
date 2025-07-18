@@ -14,7 +14,7 @@ interface
                     currentDrawingLayer : string;
             protected
                 //add a graphic object to the list
-                    procedure addGraphicObject(const graphicObjectIn : TGraphicEntity);
+                    procedure addGraphicEntity(const GraphicEntityIn : TGraphicEntity);
             public
                 //constructor
                     constructor create();
@@ -26,14 +26,14 @@ implementation
 
     //protected
         //add a graphic object to the list
-            procedure TGraphicEntityListBase.addGraphicObject(const graphicObjectIn : TGraphicEntity);
+            procedure TGraphicEntityListBase.addGraphicEntity(const GraphicEntityIn : TGraphicEntity);
                 var
-                    layerGraphicObjectPair : TPair<string, TGraphicEntity>;
+                    layerGraphicEntityPair : TPair<string, TGraphicEntity>;
                 begin
-                    layerGraphicObjectPair.Key      := currentDrawingLayer;
-                    layerGraphicObjectPair.Value    := graphicObjectIn;
+                    layerGraphicEntityPair.Key      := currentDrawingLayer;
+                    layerGraphicEntityPair.Value    := GraphicEntityIn;
 
-                    self.Add( layerGraphicObjectPair );
+                    self.Add( layerGraphicEntityPair );
                 end;
 
     //public
