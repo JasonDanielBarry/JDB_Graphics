@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
-  jdb;
+  JDBDirect2DCanvasClass;
 
 type
   TJDB_D2D_Form = class(TForm)
@@ -25,8 +25,10 @@ implementation
 {$R *.dfm}
 
 procedure TJDB_D2D_Form.PaintBox1Paint(Sender: TObject);
+    var
+        D2DCanvas : TJDBDirect2DCanvas;
     begin
-        asdf
+//        asdf
     end;
 
 end.
