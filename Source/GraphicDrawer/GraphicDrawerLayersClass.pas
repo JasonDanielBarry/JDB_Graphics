@@ -7,10 +7,10 @@ interface
             Winapi.D2D1, Vcl.Direct2D,
             system.SysUtils, system.UITypes, system.Generics.Collections,
         //custom
-            GraphicObjectListBaseClass,
-            LayerGraphicObjectMapClass,
+            GraphicEntityListBaseClass,
+            LayerGraphicEntityMapClass,
             DrawingAxisConversionClass,
-            GraphicObjectBaseClass, GraphicGridClass,
+            GraphicGridClass,
             GeomBox,
             GraphicDrawerBaseClass,
             GraphicGridSettingsRecord
@@ -22,7 +22,7 @@ interface
                 var
                     gridEnabled             : boolean;
                     graphicGrid             : TGraphicGrid;
-                    layerGraphicObjectMap   : TLayerGraphicObjectMap;
+                    layerGraphicEntityMap   : TLayerGraphicEntityMap;
                 //bounding box
                     procedure determineActiveBoundingBox();
             protected
@@ -35,7 +35,7 @@ interface
                 //destructor
                     destructor destroy(); override;
                 //add graphic drawing objects to the drawing object container
-                    procedure readGraphicObjectList(const graphicObjectListIn : TGraphicObjectListBase);
+                    procedure readGraphicEntityList(const GraphicEntityListIn : TGraphicEntityListBase);
                 //accessors
                     function getAllDrawingLayers() : TArray<string>;
                 //modifiers
@@ -44,7 +44,7 @@ interface
                     procedure setActiveDrawingLayers(const arrActiveDrawingLayersIn : TArray<string>);
                     procedure activateAllDrawingLayers();
                 //reset
-                    procedure clearGraphicObjects();
+                    procedure clearGraphicEntitys();
         end;
 
 implementation
@@ -55,7 +55,7 @@ implementation
                 var
                     activeBoundingBox : TGeomBox;
                 begin
-                    activeBoundingBox := layerGraphicObjectMap.determineActiveBoundingBox();
+                    activeBoundingBox := layerGraphicEntityMap.determineActiveBoundingBox();
 
                     axisConverter.setGeometryBoundary( activeBoundingBox );
                 end;
@@ -74,7 +74,7 @@ implementation
                                 graphicGrid.drawToCanvas( axisConverter, D2DCanvasInOut );
 
                         //draw graphic objects
-                            layerGraphicObjectMap.drawActiveGraphicObjectsToCanvas( axisConverter, D2DCanvasInOut );
+                            layerGraphicEntityMap.drawActiveGraphicEntitysToCanvas( axisConverter, D2DCanvasInOut );
 
                         //draw the grid axis labels
                             if ( gridEnabled ) then
@@ -88,30 +88,30 @@ implementation
                     inherited create();
 
                     graphicGrid             := TGraphicGrid.create();
-                    layerGraphicObjectMap   := TLayerGraphicObjectMap.Create();
+                    layerGraphicEntityMap   := TLayerGraphicEntityMap.Create();
                 end;
 
         //destructor
             destructor TGraphicDrawerLayers.destroy();
                 begin
-                    clearGraphicObjects();
+                    clearGraphicEntitys();
 
                     FreeAndNil( graphicGrid );
-                    FreeAndNil( layerGraphicObjectMap );
+                    FreeAndNil( layerGraphicEntityMap );
 
                     inherited destroy();
                 end;
 
         //add graphic objects to the map
-            procedure TGraphicDrawerLayers.readGraphicObjectList(const graphicObjectListIn : TGraphicObjectListBase);
+            procedure TGraphicDrawerLayers.readGraphicEntityList(const GraphicEntityListIn : TGraphicEntityListBase);
                 begin
-                    layerGraphicObjectMap.readGraphicObjectList( graphicObjectListIn );
+                    layerGraphicEntityMap.readGraphicEntityList( GraphicEntityListIn );
                 end;
 
         //accessors
             function TGraphicDrawerLayers.getAllDrawingLayers() : TArray<string>;
                 begin
-                    result := layerGraphicObjectMap.Keys.ToArray();
+                    result := layerGraphicEntityMap.Keys.ToArray();
                 end;
 
         //modifiers
@@ -127,22 +127,22 @@ implementation
 
             procedure TGraphicDrawerLayers.setActiveDrawingLayers(const arrActiveDrawingLayersIn : TArray<string>);
                 begin
-                    layerGraphicObjectMap.setActiveDrawingLayers( arrActiveDrawingLayersIn );
+                    layerGraphicEntityMap.setActiveDrawingLayers( arrActiveDrawingLayersIn );
 
                     determineActiveBoundingBox();
                 end;
 
             procedure TGraphicDrawerLayers.activateAllDrawingLayers();
                 begin
-                    layerGraphicObjectMap.activateAllDrawingLayers();
+                    layerGraphicEntityMap.activateAllDrawingLayers();
 
                     determineActiveBoundingBox();
                 end;
 
         //reset drawing geometry by freeing all drawing geometry objects
-            procedure TGraphicDrawerLayers.clearGraphicObjects();
+            procedure TGraphicDrawerLayers.clearGraphicEntitys();
                 begin
-                    layerGraphicObjectMap.clear();
+                    layerGraphicEntityMap.clear();
                 end;
 
 end.

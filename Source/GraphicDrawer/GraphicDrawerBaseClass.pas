@@ -10,7 +10,7 @@ interface
         //custom
             ColourMethods,
             DrawingAxisConversionClass,
-            GraphicObjectBaseClass,
+            GraphicEntityBaseClass,
             GraphicGeometryClass, GraphicLineClass, GraphicPolylineClass, GraphicPolygonClass,
             GeometryTypes
             ;

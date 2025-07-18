@@ -9,11 +9,11 @@ interface
         GeometryBaseClass, GeomLineClass,
         GraphicDrawingTypes,
         GraphicLineClass, GraphicTextClass,
-        GraphicObjectGroupClass
+        GraphicEntityGroupClass
         ;
 
     type
-        TGraphicDimension = class(TGraphicObjectGroup)
+        TGraphicDimension = class(TGraphicEntityGroup)
             private
                 //create the dimension line group
                     function createDimensionLineGroup(  const dimensionOffsetIn : double;
@@ -119,7 +119,7 @@ implementation
                             begin
                                 graphicLine := TGraphicLine.create( 1, colourIn, TPenStyle.psSolid, dimensionLineGroup[i] );
 
-                                addGraphicObjectToGroup( graphicLine );
+                                addGraphicEntityToGroup( graphicLine );
 
                                 FreeAndNil( dimensionLineGroup[i] );
                             end;
@@ -148,7 +148,7 @@ implementation
                                                             [],
                                                             textHandlePoint         );
 
-                        addGraphicObjectToGroup( graphicText );
+                        addGraphicEntityToGroup( graphicText );
                 end;
 
         //destructor

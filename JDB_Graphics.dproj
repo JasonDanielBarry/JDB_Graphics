@@ -35,9 +35,21 @@
         <Cfg_1>true</Cfg_1>
         <Base>true</Base>
     </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win64)'!=''">
+        <Cfg_1_Win64>true</Cfg_1_Win64>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
         <Cfg_2>true</Cfg_2>
         <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win64)'!=''">
+        <Cfg_2_Win64>true</Cfg_2_Win64>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
@@ -52,11 +64,12 @@
         <UsingDelphiRTL>true</UsingDelphiRTL>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <Icns_MainIcns>$(BDS)\bin\delphi_PROJECTICNS.icns</Icns_MainIcns>
-        <DCC_UnitSearchPath>$(DUnitX);..\JDB_Mathematics\Source;..\JDB_Mathematics\Source\Engineering;..\JDB_Mathematics\Source\Geometry;..\JDB_Mathematics\Source\LinearAlgebra;..\JDB_Mathematics\Source\LinearAlgebra\Matrices;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>$(DUnitX);..\JDB_Mathematics\Source;..\JDB_Mathematics\Source\AxisConversion;..\JDB_Mathematics\Source\Geometry;..\JDB_Mathematics\Source\LinearAlgebra;..\JDB_Mathematics\Source\LinearAlgebra\Matrices;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <SanitizedProjectName>JDB_Graphics</SanitizedProjectName>
         <VerInfo_Locale>7177</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_IncludeDCUsInUsesCompletion>false</DCC_IncludeDCUsInUsesCompletion>
+        <DCC_UseMSBuildExternally>true</DCC_UseMSBuildExternally>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_UsePackage>vclwinx;fmx;vclie;DbxCommonDriver;bindengine;IndyIPCommon;VCLRESTComponents;FireDACCommonODBC;FireDACCommonDriver;appanalytics;IndyProtocols;vclx;Skia.Package.RTL;IndyIPClient;dbxcds;vcledge;bindcompvclwinx;bindcompfmx;inetdb;FireDACSqliteDriver;DbxClientDriver;soapmidas;vclactnband;fmxFireDAC;dbexpress;DBXMySQLDriver;VclSmp;inet;ProkonGPK;EurekaLogCore;vcltouch;fmxase;dbrtl;Skia.Package.FMX;fmxdae;FireDACMSAccDriver;CustomIPTransport;vcldsnap;DBXInterBaseDriver;IndySystem;Skia.Package.VCL;vcldb;vclFireDAC;bindcomp;FireDACCommon;inetstn;IndyCore;RESTBackendComponents;bindcompdbx;rtl;FireDACMySQLDriver;FireDACADSDriver;RESTComponents;DBXSqliteDriver;vcl;IndyIPServer;dsnapxml;dsnapcon;adortl;SVGImage32Package;vclimg;FireDACPgDriver;FireDAC;inetdbxpress;xmlrtl;tethering;bindcompvcl;dsnap;CloudService;fmxobj;bindcompvclsmp;SVGIconImageList;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
@@ -71,6 +84,9 @@
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <Manifest_File>(None)</Manifest_File>
+        <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
+        <DCC_DcuOutput>..\CompiledUnits64\</DCC_DcuOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -88,11 +104,17 @@
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
+        <VerInfo_Locale>1033</VerInfo_Locale>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
         <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
         <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
         <DCC_DebugInformation>0</DCC_DebugInformation>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
+        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -103,29 +125,29 @@
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawerBaseClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawerDirect2DClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawerLayersClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawer\GraphicObjectListBaseClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawer\LayerGraphicObjectMapClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawer\GraphicEntityListBaseClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawer\LayerGraphicEntityMapClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicDrawingTypes.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectBaseClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectFoundationalShapeClasses\GraphicArcClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectFoundationalShapeClasses\GraphicEllipseClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectFoundationalShapeClasses\GraphicGeometryClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectFoundationalShapeClasses\GraphicLineClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectFoundationalShapeClasses\GraphicPolygonClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectFoundationalShapeClasses\GraphicPolylineClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectFoundationalShapeClasses\GraphicRectangleClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectFoundationalShapeClasses\GraphicTextClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectGroupClasses\GraphicArrowClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectGroupClasses\GraphicArrowGroupClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectGroupClasses\GraphicObjectGroupClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicGridClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicMousePointTrackerClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicScatterPlotClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityBaseClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawer2DPaintBoxClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicLinePlotClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicGridSettingsRecord.pas"/>
-        <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectGroupClasses\GraphicDimensionClass.pas"/>
         <DCCReference Include="Source\CustomDirect2DCanvas\JDBDirect2DCanvasClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicArcClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicEllipseClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicGeometryClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicLineClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicPolygonClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicPolylineClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicRectangleClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicTextClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityGroupClasses\GraphicArrowClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityGroupClasses\GraphicArrowGroupClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityGroupClasses\GraphicDimensionClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityGroupClasses\GraphicEntityGroupClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicGridClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicGridSettingsRecord.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicLinePlotClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicMousePointTrackerClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicScatterPlotClass.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

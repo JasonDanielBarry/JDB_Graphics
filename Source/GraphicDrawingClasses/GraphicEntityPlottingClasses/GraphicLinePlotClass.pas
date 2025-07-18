@@ -11,12 +11,12 @@ interface
             GraphicDrawingTypes,
             DrawingAxisConversionClass,
             GeometryTypes, GeomPolyLineClass,
-            GraphicObjectGroupClass,
+            GraphicEntityGroupClass,
             GraphicPolylineClass, GraphicScatterPlotClass
             ;
 
     type
-        TGraphicLinePlot = class(TGraphicObjectGroup)
+        TGraphicLinePlot = class(TGraphicEntityGroup)
             public
                 //constructor
                     constructor create( const   showPlotPointsIn    : boolean;
@@ -51,7 +51,7 @@ implementation
 
                         FreeAndNil( tempPolyline );
 
-                        addGraphicObjectToGroup( linePlot );
+                        addGraphicEntityToGroup( linePlot );
 
                         if NOT( showPlotPointsIn ) then
                             exit();
@@ -61,7 +61,7 @@ implementation
 
                         pointPlot := TGraphicScatterPlot.create(  pointSize, plotColourIn, arrPlotPointsIn );
 
-                        addGraphicObjectToGroup( pointPlot );
+                        addGraphicEntityToGroup( pointPlot );
                 end;
 
         //destructor

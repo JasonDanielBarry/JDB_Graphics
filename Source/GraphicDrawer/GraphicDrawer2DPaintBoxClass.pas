@@ -9,7 +9,7 @@ interface
         Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ExtCtrls, Vcl.Themes,
         GraphicTextClass,
         GraphicGridSettingsRecord,
-        GraphicObjectListBaseClass, GraphicDrawerDirect2DClass
+        GraphicEntityListBaseClass, GraphicDrawerDirect2DClass
         ;
 
     type
@@ -46,7 +46,7 @@ interface
                     procedure postRedrawGraphicMessage(const callingControlIn : TWinControl);
                     procedure updateBackgroundColour(const callingControlIn : TWinControl);
                     procedure updateGraphics(   const callingControlIn      : TWinControl;
-                                                const graphicObjectListIn   : TGraphicObjectListBase );
+                                                const GraphicEntityListIn   : TGraphicEntityListBase );
                 //process windows messages
                     procedure processWindowsMessages(var messageInOut : TMessage; out graphicWasRedrawnOut : boolean);
                 //access graphic drawer
@@ -198,16 +198,16 @@ implementation
                 end;
 
             procedure TPaintBox.updateGraphics( const callingControlIn      : TWinControl;
-                                                const graphicObjectListIn   : TGraphicObjectListBase );
+                                                const GraphicEntityListIn   : TGraphicEntityListBase );
                 begin
                     //set background to match theme
                         D2DGraphicDrawer.updateBackgroundColour();
 
                     //reset the stored graphics
-                        D2DGraphicDrawer.clearGraphicObjects();
+                        D2DGraphicDrawer.clearGraphicEntitys();
 
                     //update the D2DGraphicDrawer graphics
-                        D2DGraphicDrawer.readGraphicObjectList( graphicObjectListIn );
+                        D2DGraphicDrawer.readGraphicEntityList( GraphicEntityListIn );
 
                     //activate all drawing layers
                         D2DGraphicDrawer.activateAllDrawingLayers();
