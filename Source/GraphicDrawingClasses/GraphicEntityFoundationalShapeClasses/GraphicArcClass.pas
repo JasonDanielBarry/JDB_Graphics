@@ -100,7 +100,7 @@ implementation
                     //sweep angle
                         sweepAngle := endAngle - startAngle;
 
-                        ArcSegmentOut.rotationAngle := sweepAngle;
+                        ArcSegmentOut.rotationAngle := 0;
 
                         if ( 180 < abs( sweepAngle ) ) then
                             ArcSegmentOut.arcSize := D2D1_ARC_SIZE.D2D1_ARC_SIZE_LARGE
@@ -215,6 +215,7 @@ implementation
                         arcRadii.Width  := arcXRadiusIn;
                         arcRadii.Height := arcYRadiusIn;
 
+                    //the handle point is the arc centre point after running this procedure
                         dimensionAndPositionGraphicBox( 2 * arcXRadiusIn, 2 * arcYRadiusIn );
 
                     //calculate start and end points

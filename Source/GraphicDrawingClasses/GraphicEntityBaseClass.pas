@@ -25,8 +25,7 @@ interface
                     procedure setFillProperties(var canvasInOut : TDirect2DCanvas);
                     procedure setLineProperties(var canvasInOut : TDirect2DCanvas);
                 //rotate canvas
-                    procedure rotateCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DCanvas       );
+                    procedure rotateCanvas(var canvasInOut : TDirect2DCanvas);
                     procedure resetCanvasRotation(var canvasInOut : TDirect2DCanvas);
             protected
                 var
@@ -101,8 +100,7 @@ implementation
                 end;
 
         //rotate canvas
-            procedure TGraphicEntity.rotateCanvas(  const axisConverterIn   : TDrawingAxisConverter;
-                                                    var canvasInOut         : TDirect2DCanvas       );
+            procedure TGraphicEntity.rotateCanvas(var canvasInOut : TDirect2DCanvas);
                 var
                     transformMatrix : TD2DMatrix3x2F;
                 begin
@@ -248,7 +246,7 @@ implementation
 
                     //canvas rotation
                         if ( mustRotateCanvas ) then
-                            rotateCanvas( axisConverterIn, canvasInOut );
+                            rotateCanvas( canvasInOut );
 
                     //fill properties
                         setFillProperties( canvasInOut );

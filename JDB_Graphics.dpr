@@ -40,7 +40,8 @@ uses
   GraphicGridSettingsRecord in 'Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicGridSettingsRecord.pas',
   GraphicLinePlotClass in 'Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicLinePlotClass.pas',
   GraphicMousePointTrackerClass in 'Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicMousePointTrackerClass.pas',
-  GraphicScatterPlotClass in 'Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicScatterPlotClass.pas';
+  GraphicScatterPlotClass in 'Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicScatterPlotClass.pas',
+  D2D_EntityGeometryMethods in 'Source\CustomDirect2DCanvas\D2D_EntityGeometryMethods.pas';
 
 { keep comment here to protect the following conditional from being removed by the IDE when adding a unit }
 {$IFNDEF TESTINSIGHT}

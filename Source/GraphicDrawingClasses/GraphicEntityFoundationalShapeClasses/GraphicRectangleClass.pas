@@ -55,97 +55,97 @@ implementation
                 function TGraphicRectangle.convertGeomBoxToD2DRectCanvasScale(const axisConverterIn : TDrawingAxisConverter) : TD2D1RoundedRect;
                     var
                         width, height   : double;
-                        rectOut         : TD2D1RoundedRect;
+                        roundRectOut    : TD2D1RoundedRect;
                     begin
                         //cache dimensions
                             width   := graphicBox.calculateXDimension();
                             height  := graphicBox.calculateYDimension();
 
                         //set radius
-                            rectOut.radiusX := cornerRadius;
-                            rectOut.radiusY := cornerRadius;
+                            roundRectOut.radiusX := cornerRadius;
+                            roundRectOut.radiusY := cornerRadius;
 
                         //set rectangle bounds
                             case ( horizontalAlignment ) of
                                 THorzRectAlign.Left:
                                     begin
-                                        rectOut.rect.left   := handlePointLT.X;
-                                        rectOut.rect.right  := handlePointLT.X + width;
+                                        roundRectOut.rect.left   := handlePointLT.X;
+                                        roundRectOut.rect.right  := handlePointLT.X + width;
                                     end;
 
                                 THorzRectAlign.Center:
                                     begin
-                                        rectOut.rect.left   := handlePointLT.X - width / 2;
-                                        rectOut.rect.right  := handlePointLT.X + width / 2;
+                                        roundRectOut.rect.left   := handlePointLT.X - width / 2;
+                                        roundRectOut.rect.right  := handlePointLT.X + width / 2;
                                     end;
 
                                 THorzRectAlign.Right:
                                     begin
-                                        rectOut.rect.left   := handlePointLT.X - width;
-                                        rectOut.rect.right  := handlePointLT.X;
+                                        roundRectOut.rect.left   := handlePointLT.X - width;
+                                        roundRectOut.rect.right  := handlePointLT.X;
                                     end;
                             end;
 
                             case ( verticalAlignment ) of
                                 TVertRectAlign.Bottom:
                                     begin
-                                        rectOut.rect.bottom := handlePointLT.Y;
-                                        rectOut.rect.top    := handlePointLT.Y + height;
+                                        roundRectOut.rect.bottom := handlePointLT.Y;
+                                        roundRectOut.rect.top    := handlePointLT.Y + height;
                                     end;
 
                                 TVertRectAlign.Center:
                                     begin
-                                        rectOut.rect.bottom := handlePointLT.Y - height / 2;
-                                        rectOut.rect.top    := handlePointLT.Y + height / 2;
+                                        roundRectOut.rect.bottom := handlePointLT.Y - height / 2;
+                                        roundRectOut.rect.top    := handlePointLT.Y + height / 2;
                                     end;
 
                                 TVertRectAlign.Top:
                                     begin
-                                        rectOut.rect.bottom := handlePointLT.Y - height;
-                                        rectOut.rect.top    := handlePointLT.Y;
+                                        roundRectOut.rect.bottom := handlePointLT.Y - height;
+                                        roundRectOut.rect.top    := handlePointLT.Y;
                                     end;
                             end;
 
-                        result := rectOut;
+                        result := roundRectOut;
                     end;
 
             //drawing scale
                 function TGraphicRectangle.convertGeomBoxToD2DRectDrawingScale(const axisConverterIn : TDrawingAxisConverter) : TD2D1RoundedRect;
                     var
                         bottomLeft, topRight    : TPointF;
-                        rectOut                 : TD2D1RoundedRect;
+                        roundRectOut                 : TD2D1RoundedRect;
                     begin
                         //set radius
-                            rectOut.radiusX := axisConverterIn.dX_To_dL( cornerRadius );
-                            rectOut.radiusY := abs( axisConverterIn.dY_To_dT( cornerRadius ) );
+                            roundRectOut.radiusX := axisConverterIn.dX_To_dL( cornerRadius );
+                            roundRectOut.radiusY := abs( axisConverterIn.dY_To_dT( cornerRadius ) );
 
                         //get bottom-left and top-right points
                             bottomLeft  := axisConverterIn.XY_to_LT( graphicBox.minPoint );
                             topRight    := axisConverterIn.XY_to_LT( graphicBox.maxPoint );
 
                         //set rectangle bounds
-                            rectOut.rect.left   := bottomLeft.X;
-                            rectOut.rect.bottom := bottomLeft.Y;
-                            rectOut.rect.right  := topRight.X;
-                            rectOut.rect.top    := topRight.Y;
+                            roundRectOut.rect.left   := bottomLeft.X;
+                            roundRectOut.rect.bottom := bottomLeft.Y;
+                            roundRectOut.rect.right  := topRight.X;
+                            roundRectOut.rect.top    := topRight.Y;
 
-                        result := rectOut;
+                        result := roundRectOut;
                     end;
 
             function TGraphicRectangle.convertGeomBoxToD2DRect(const axisConverterIn : TDrawingAxisConverter) : TD2D1RoundedRect;
                 var
 
-                    rectOut : TD2D1RoundedRect;
+                    roundRectOut : TD2D1RoundedRect;
                 begin
                     case ( objectScaleType ) of
                         EScaleType.scDrawing:
-                            rectOut := convertGeomBoxToD2DRectDrawingScale( axisConverterIn );
+                            roundRectOut := convertGeomBoxToD2DRectDrawingScale( axisConverterIn );
 
                         EScaleType.scCanvas:
-                            rectOut := convertGeomBoxToD2DRectCanvasScale( axisConverterIn );
+                            roundRectOut := convertGeomBoxToD2DRectCanvasScale( axisConverterIn );
                     end;
 
-                    result := rectOut;
+                    result := roundRectOut;
                 end;
 
         //draw to canvas
