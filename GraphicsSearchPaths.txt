@@ -1,3 +1,8 @@
+..\JDB_Mathematics\Source;
+..\JDB_Mathematics\Source\AxisConversion;
+..\JDB_Mathematics\Source\Geometry;
+..\JDB_Mathematics\Source\LinearAlgebra;
+..\JDB_Mathematics\Source\LinearAlgebra\Matrices;
 ..\JDB_Graphics\Source;
 ..\JDB_Graphics\Source\AxisConversion;
 ..\JDB_Graphics\Source\GraphicDrawer;

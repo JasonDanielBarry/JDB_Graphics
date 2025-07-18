@@ -99,13 +99,6 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="Source\ColourMethods.pas"/>
-        <DCCReference Include="Source\AxisConversion\DrawingAxisConversionAspectRatioClass.pas"/>
-        <DCCReference Include="Source\AxisConversion\DrawingAxisConversionBaseClass.pas"/>
-        <DCCReference Include="Source\AxisConversion\DrawingAxisConversionCalculationsClass.pas"/>
-        <DCCReference Include="Source\AxisConversion\DrawingAxisConversionClass.pas"/>
-        <DCCReference Include="Source\AxisConversion\DrawingAxisConversionMouseControlClass.pas"/>
-        <DCCReference Include="Source\AxisConversion\DrawingAxisConversionPanningClass.pas"/>
-        <DCCReference Include="Source\AxisConversion\DrawingAxisConversionZoomingClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawerAxisConversionInterfaceClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawerBaseClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawerDirect2DClass.pas"/>
@@ -132,6 +125,7 @@
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicLinePlotClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicGridSettingsRecord.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicObjectGroupClasses\GraphicDimensionClass.pas"/>
+        <DCCReference Include="Source\CustomDirect2DCanvas\JDBDirect2DCanvasClass.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

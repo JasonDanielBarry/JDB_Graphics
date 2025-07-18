@@ -14,13 +14,6 @@ uses
   {$ENDIF }
   DUnitX.TestFramework,
   ColourMethods in 'Source\ColourMethods.pas',
-  DrawingAxisConversionAspectRatioClass in 'Source\AxisConversion\DrawingAxisConversionAspectRatioClass.pas',
-  DrawingAxisConversionBaseClass in 'Source\AxisConversion\DrawingAxisConversionBaseClass.pas',
-  DrawingAxisConversionCalculationsClass in 'Source\AxisConversion\DrawingAxisConversionCalculationsClass.pas',
-  DrawingAxisConversionClass in 'Source\AxisConversion\DrawingAxisConversionClass.pas',
-  DrawingAxisConversionMouseControlClass in 'Source\AxisConversion\DrawingAxisConversionMouseControlClass.pas',
-  DrawingAxisConversionPanningClass in 'Source\AxisConversion\DrawingAxisConversionPanningClass.pas',
-  DrawingAxisConversionZoomingClass in 'Source\AxisConversion\DrawingAxisConversionZoomingClass.pas',
   GraphicDrawerAxisConversionInterfaceClass in 'Source\GraphicDrawer\GraphicDrawerAxisConversionInterfaceClass.pas',
   GraphicDrawerBaseClass in 'Source\GraphicDrawer\GraphicDrawerBaseClass.pas',
   GraphicDrawerDirect2DClass in 'Source\GraphicDrawer\GraphicDrawerDirect2DClass.pas',
@@ -46,7 +39,8 @@ uses
   GraphicDrawer2DPaintBoxClass in 'Source\GraphicDrawer\GraphicDrawer2DPaintBoxClass.pas',
   GraphicLinePlotClass in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicLinePlotClass.pas',
   GraphicGridSettingsRecord in 'Source\GraphicDrawingClasses\GraphicObjectPlottingClasses\GraphicGridSettingsRecord.pas',
-  GraphicDimensionClass in 'Source\GraphicDrawingClasses\GraphicObjectGroupClasses\GraphicDimensionClass.pas';
+  GraphicDimensionClass in 'Source\GraphicDrawingClasses\GraphicObjectGroupClasses\GraphicDimensionClass.pas',
+  JDBDirect2DCanvasClass in 'Source\CustomDirect2DCanvas\JDBDirect2DCanvasClass.pas';
 
 { keep comment here to protect the following conditional from being removed by the IDE when adding a unit }
 {$IFNDEF TESTINSIGHT}
