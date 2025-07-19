@@ -187,7 +187,7 @@ implementation
                     inherited create();
 
                     filled              := filledIn;
-                    outlined            := 0 < lineThicknessIn;
+                    outlined            := ( 0 < lineThicknessIn );
                     lineThickness       := lineThicknessIn;
                     setRotationAngle( rotationAngleIn );
                     objectScaleType     := scaleTypeIn;

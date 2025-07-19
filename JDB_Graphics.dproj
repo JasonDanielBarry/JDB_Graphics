@@ -130,7 +130,7 @@
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicDrawingTypes.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityBaseClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawer2DPaintBoxClass.pas"/>
-        <DCCReference Include="Source\CustomDirect2DCanvas\JDBDirect2DCanvasClass.pas"/>
+        <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DEntityCanvasClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicArcClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicEllipseClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicGeometryClass.pas"/>
@@ -148,7 +148,7 @@
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicLinePlotClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicMousePointTrackerClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicScatterPlotClass.pas"/>
-        <DCCReference Include="Source\CustomDirect2DCanvas\D2D_EntityGeometryMethods.pas"/>
+        <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DDrawingEntityMethods.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

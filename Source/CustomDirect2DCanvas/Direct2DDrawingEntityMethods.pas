@@ -1,4 +1,4 @@
-unit D2D_EntityGeometryMethods;
+unit Direct2DDrawingEntityMethods;
 
 interface
 
@@ -20,12 +20,26 @@ interface
                                         const   verticalAlignmentIn     : TVertRectAlign;
                                         const   handlePointIn           : TPointF       ) : TD2D1Ellipse;
 
+    //generic path geometry
+        //create closed geometry
+            function createClosedPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
+
+        //create open geometry
+            function createOpenPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
+
+    //rectangle
+        function createRectangleGeometry(   const   widthIn, heightIn,
+                                                    cornerRadiusIn          : double;
+                                            const   horizontalAlignmentIn   : THorzRectAlign;
+                                            const   verticalAlignmentIn     : TVertRectAlign;
+                                            const   handlePointIn           : TPointF           ) : TD2D1RoundedRect;
+                
 implementation
 
     //ARC------------------------------------------------------------------------------------------------------------
         //calculate the point on an ellipse given an angle
             function calculateEllipsePoint( const pointAngleIn, ellipseWidthIn, ellipseHeightIn : double;
-                                            const ellipseCentrePointIn                          : TPointF) : TPointF;
+                                            const ellipseCentrePointIn                          : TPointF ) : TPointF;
                 var
                     sinComponent, cosComponent  : double;
                     pointOut                    : TPointF;
@@ -86,10 +100,10 @@ implementation
                 end;
 
         //create arc geometry
-            function createArcPathGeometry( const   filledIn                    : boolean;
+            function createArcPathGeometry( const   filledIn                        : boolean;
                                             const   startAngleIn, endAngleIn,
-                                                    arcHorRadiusIn, arcVertRadiusIn     : double;
-                                            const   centrePointIn               : TPointF ) : ID2D1PathGeometry;
+                                                    arcHorRadiusIn, arcVertRadiusIn : double;
+                                            const   centrePointIn                   : TPointF ) : ID2D1PathGeometry;
                 var
                     figureEnd               : D2D1_FIGURE_END;
                     geometrySink            : ID2D1GeometrySink;
@@ -140,7 +154,7 @@ implementation
                     result := pathGeometryOut;
                 end;
 
-    //ELLIPSE---------------------------------------------------------------------------------------------------------
+    //ELLIPSE------------------------------------------------------------------------------------------------
         //create ellipse geometry
             function createEllipseGeometry( const   ellipseWidthIn,
                                                     ellipseHeightIn         : double;
@@ -158,25 +172,25 @@ implementation
 
                     //alignment
                         case ( horizontalAlignmentIn ) of
-                            THorzRectAlign.Left:
+                            THorzRectAlign.Left: //centre to the right of handle point
                                 ellipseCentreX := handlePointIn.X + ellipseOut.radiusX;
 
                             THorzRectAlign.Center:
                                 ellipseCentreX := handlePointIn.X;
 
-                            THorzRectAlign.Right:
+                            THorzRectAlign.Right: //centre to the left of handle point
                                 ellipseCentreX := handlePointIn.X - ellipseOut.radiusX;
                         end;
 
                         case ( verticalAlignmentIn ) of
-                            TVertRectAlign.Bottom:
-                                ellipseCentreY := handlePointIn.y + ellipseOut.radiusY;
+                            TVertRectAlign.Bottom: //centre above handle point
+                                ellipseCentreY := handlePointIn.y - ellipseOut.radiusY;
 
                             TVertRectAlign.Center:
                                 ellipseCentreY := handlePointIn.y;
 
-                            TVertRectAlign.Top:
-                                ellipseCentreY := handlePointIn.y - ellipseOut.radiusY;
+                            TVertRectAlign.Top: //centre below handle point
+                                ellipseCentreY := handlePointIn.y + ellipseOut.radiusY;
                         end;
 
                         ellipseOut.point.x := ellipseCentreX;
@@ -185,6 +199,126 @@ implementation
                     result := ellipseOut;
                 end;
 
+    //GEOMETRY--------------------------------------------------------------------------------------------------------
+        //create generic path geometry
+            function createGenericPathGeometry( const figureBeginIn         : D2D1_FIGURE_BEGIN;
+                                                const figureEndIn           : D2D1_FIGURE_END;
+                                                const arrDrawingPointsIn    : TArray<TPointF>   ) : ID2D1PathGeometry;
+                var
+                    geometrySink    : ID2D1GeometrySink;
+                    pathGeometryOut : ID2D1PathGeometry;
+                begin
+                    //create path geometry
+                        D2DFactory( D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_MULTI_THREADED ).CreatePathGeometry( pathGeometryOut );
 
+                    //open path geometry
+                        pathGeometryOut.Open( geometrySink );
+
+                    //create geometry sink
+                        geometrySink.BeginFigure( D2D1PointF( arrDrawingPointsIn[0].x, arrDrawingPointsIn[0].y ), figureBeginIn );
+
+                    //add lines
+                        //single line
+                            if ( length(arrDrawingPointsIn) < 3 ) then
+                                geometrySink.AddLine( D2D1PointF( arrDrawingPointsIn[1].x, arrDrawingPointsIn[1].y ) )
+                        //polyline
+                            else
+                                begin
+                                    var i, arrLen : integer;
+
+                                    arrLen := length( arrDrawingPointsIn );
+
+                                    for i := 1 to ( arrLen - 1 ) do
+                                        geometrySink.AddLine( D2D1PointF( arrDrawingPointsIn[i].x, arrDrawingPointsIn[i].y ) );
+                                end;
+
+                    //end geometry
+                        geometrySink.EndFigure( figureEndIn );
+
+                        geometrySink.Close();
+
+                    result := pathGeometryOut;
+                end;
+
+        //create closed geometry
+            function createClosedPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
+                begin
+                    result := createGenericPathGeometry(
+                                                            D2D1_FIGURE_BEGIN.D2D1_FIGURE_BEGIN_FILLED,
+                                                            D2D1_FIGURE_END.D2D1_FIGURE_END_CLOSED,
+                                                            arrDrawingPointsIn
+                                                       );
+                end;
+
+        //create open geometry
+            function createOpenPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
+                begin
+                    result := createGenericPathGeometry(
+                                                            D2D1_FIGURE_BEGIN.D2D1_FIGURE_BEGIN_HOLLOW,
+                                                            D2D1_FIGURE_END.D2D1_FIGURE_END_OPEN,
+                                                            arrDrawingPointsIn
+                                                       );
+                end;
+
+    //RECTANGLE------------------------------------------------------------------------------------------------------
+        function createRectangleGeometry(   const   widthIn, heightIn,
+                                                    cornerRadiusIn          : double;
+                                            const   horizontalAlignmentIn   : THorzRectAlign;
+                                            const   verticalAlignmentIn     : TVertRectAlign;
+                                            const   handlePointIn           : TPointF           ) : TD2D1RoundedRect;
+            var
+                roundRectOut : TD2D1RoundedRect;
+            begin
+                //set radius
+                    roundRectOut.radiusX := cornerRadiusIn;
+                    roundRectOut.radiusY := cornerRadiusIn;
+
+                //set rectangle bounds
+                    case ( horizontalAlignmentIn ) of
+                        THorzRectAlign.Left:
+                            begin
+                                roundRectOut.rect.left   := handlePointIn.X;
+                                roundRectOut.rect.right  := handlePointIn.X + widthIn;
+                            end;
+
+                        THorzRectAlign.Center:
+                            begin
+                                roundRectOut.rect.left   := handlePointIn.X - widthIn / 2;
+                                roundRectOut.rect.right  := handlePointIn.X + widthIn / 2;
+                            end;
+
+                        THorzRectAlign.Right:
+                            begin
+                                roundRectOut.rect.left   := handlePointIn.X - widthIn;
+                                roundRectOut.rect.right  := handlePointIn.X;
+                            end;
+                    end;
+
+                    case ( verticalAlignmentIn ) of
+                        TVertRectAlign.Bottom:
+                            begin
+                                roundRectOut.rect.bottom := handlePointIn.Y;
+                                roundRectOut.rect.top    := handlePointIn.Y - heightIn;
+                            end;
+
+                        TVertRectAlign.Center:
+                            begin
+                                //on the drawing canvas the top value < the bottom value
+                                    roundRectOut.rect.bottom := handlePointIn.Y + heightIn / 2;
+                                    roundRectOut.rect.top    := handlePointIn.Y - heightIn / 2;
+                            end;
+
+                        TVertRectAlign.Top:
+                            begin
+                                roundRectOut.rect.bottom := handlePointIn.Y + heightIn;
+                                roundRectOut.rect.top    := handlePointIn.Y;
+                            end;
+                    end;
+
+                result := roundRectOut;
+            end;
+
+    //TEXT
+        //text alignment
 
 end.

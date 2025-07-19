@@ -37,6 +37,16 @@ object JDB_D2D_Form: TJDB_D2D_Form
         Column = 1
         Control = PaintBoxEllipseEntity
         Row = 0
+      end
+      item
+        Column = 0
+        Control = PaintBoxPathGeometry
+        Row = 1
+      end
+      item
+        Column = 1
+        Control = PaintBoxRectangle
+        Row = 1
       end>
     RowCollection = <
       item
@@ -46,15 +56,16 @@ object JDB_D2D_Form: TJDB_D2D_Form
         Value = 50.000000000000000000
       end>
     TabOrder = 0
-    ExplicitLeft = 584
-    ExplicitTop = 360
-    ExplicitWidth = 185
-    ExplicitHeight = 41
     object PaintBoxArcEntity: TPaintBox
-      Left = 0
-      Top = 0
-      Width = 667
-      Height = 360
+      AlignWithMargins = True
+      Left = 5
+      Top = 5
+      Width = 657
+      Height = 350
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
       Align = alClient
       Anchors = []
       OnPaint = PaintBoxArcEntityPaint
@@ -64,14 +75,53 @@ object JDB_D2D_Form: TJDB_D2D_Form
       ExplicitHeight = 105
     end
     object PaintBoxEllipseEntity: TPaintBox
-      Left = 667
-      Top = 0
-      Width = 667
-      Height = 360
+      AlignWithMargins = True
+      Left = 672
+      Top = 5
+      Width = 657
+      Height = 350
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
       Align = alClient
       OnPaint = PaintBoxEllipseEntityPaint
       ExplicitLeft = 616
       ExplicitTop = 312
+      ExplicitWidth = 105
+      ExplicitHeight = 105
+    end
+    object PaintBoxPathGeometry: TPaintBox
+      AlignWithMargins = True
+      Left = 5
+      Top = 365
+      Width = 657
+      Height = 351
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      Align = alClient
+      OnPaint = PaintBoxPathGeometryPaint
+      ExplicitLeft = 616
+      ExplicitTop = 312
+      ExplicitWidth = 105
+      ExplicitHeight = 105
+    end
+    object PaintBoxRectangle: TPaintBox
+      AlignWithMargins = True
+      Left = 672
+      Top = 365
+      Width = 657
+      Height = 351
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      Align = alClient
+      OnPaint = PaintBoxRectanglePaint
+      ExplicitLeft = 816
+      ExplicitTop = 592
       ExplicitWidth = 105
       ExplicitHeight = 105
     end

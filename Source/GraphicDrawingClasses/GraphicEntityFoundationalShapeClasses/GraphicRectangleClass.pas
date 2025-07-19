@@ -20,7 +20,7 @@ interface
                     cornerRadius : double;
                 //convert a TGeomBox to TD2D1Rectangle
                     //canvas scale
-                        function convertGeomBoxToD2DRectCanvasScale(const axisConverterIn : TDrawingAxisConverter) : TD2D1RoundedRect;
+                        function convertGeomBoxToD2DRectCanvasScale() : TD2D1RoundedRect;
                     //drawing scale
                         function convertGeomBoxToD2DRectDrawingScale(const axisConverterIn : TDrawingAxisConverter ) : TD2D1RoundedRect;
                     function convertGeomBoxToD2DRect(const axisConverterIn : TDrawingAxisConverter) : TD2D1RoundedRect;
@@ -52,7 +52,7 @@ implementation
     //private
         //convert a TGeomBox to TD2D1Rectangle
             //canvas scale
-                function TGraphicRectangle.convertGeomBoxToD2DRectCanvasScale(const axisConverterIn : TDrawingAxisConverter) : TD2D1RoundedRect;
+                function TGraphicRectangle.convertGeomBoxToD2DRectCanvasScale() : TD2D1RoundedRect;
                     var
                         width, height   : double;
                         roundRectOut    : TD2D1RoundedRect;
@@ -90,18 +90,18 @@ implementation
                                 TVertRectAlign.Bottom:
                                     begin
                                         roundRectOut.rect.bottom := handlePointLT.Y;
-                                        roundRectOut.rect.top    := handlePointLT.Y + height;
+                                        roundRectOut.rect.top    := handlePointLT.Y - height;
                                     end;
 
                                 TVertRectAlign.Center:
                                     begin
-                                        roundRectOut.rect.bottom := handlePointLT.Y - height / 2;
-                                        roundRectOut.rect.top    := handlePointLT.Y + height / 2;
+                                        roundRectOut.rect.bottom := handlePointLT.Y + height / 2;
+                                        roundRectOut.rect.top    := handlePointLT.Y - height / 2;
                                     end;
 
                                 TVertRectAlign.Top:
                                     begin
-                                        roundRectOut.rect.bottom := handlePointLT.Y - height;
+                                        roundRectOut.rect.bottom := handlePointLT.Y + height;
                                         roundRectOut.rect.top    := handlePointLT.Y;
                                     end;
                             end;
@@ -113,7 +113,7 @@ implementation
                 function TGraphicRectangle.convertGeomBoxToD2DRectDrawingScale(const axisConverterIn : TDrawingAxisConverter) : TD2D1RoundedRect;
                     var
                         bottomLeft, topRight    : TPointF;
-                        roundRectOut                 : TD2D1RoundedRect;
+                        roundRectOut            : TD2D1RoundedRect;
                     begin
                         //set radius
                             roundRectOut.radiusX := axisConverterIn.dX_To_dL( cornerRadius );
@@ -142,7 +142,7 @@ implementation
                             roundRectOut := convertGeomBoxToD2DRectDrawingScale( axisConverterIn );
 
                         EScaleType.scCanvas:
-                            roundRectOut := convertGeomBoxToD2DRectCanvasScale( axisConverterIn );
+                            roundRectOut := convertGeomBoxToD2DRectCanvasScale();
                     end;
 
                     result := roundRectOut;
