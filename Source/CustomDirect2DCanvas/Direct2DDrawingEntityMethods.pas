@@ -27,16 +27,22 @@ interface
         //create open geometry
             function createOpenPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
 
-    //rectangle
+    //create rectangle geometry
         function createRectangleGeometry(   const   widthIn, heightIn,
                                                     cornerRadiusIn          : double;
                                             const   horizontalAlignmentIn   : THorzRectAlign;
                                             const   verticalAlignmentIn     : TVertRectAlign;
                                             const   handlePointIn           : TPointF           ) : TD2D1RoundedRect;
+
+    //calculate text drawing point
+        function calculateTextDrawingPoint( const textExtentIn              : TSize;
+                                            const horizontalAlignmentIn     : THorzRectAlign;
+                                            const verticalAlignmentIn       : TVertRectAlign;
+                                            const textHandlePointIn         : TPointF           ) : TPoint;
                 
 implementation
 
-    //ARC------------------------------------------------------------------------------------------------------------
+    //ARC-------------------------------------------------------------------------------------------------------------
         //calculate the point on an ellipse given an angle
             function calculateEllipsePoint( const pointAngleIn, ellipseWidthIn, ellipseHeightIn : double;
                                             const ellipseCentrePointIn                          : TPointF ) : TPointF;
@@ -154,7 +160,7 @@ implementation
                     result := pathGeometryOut;
                 end;
 
-    //ELLIPSE------------------------------------------------------------------------------------------------
+    //ELLIPSE---------------------------------------------------------------------------------------------------------
         //create ellipse geometry
             function createEllipseGeometry( const   ellipseWidthIn,
                                                     ellipseHeightIn         : double;
@@ -260,7 +266,7 @@ implementation
                                                        );
                 end;
 
-    //RECTANGLE------------------------------------------------------------------------------------------------------
+    //RECTANGLE-------------------------------------------------------------------------------------------------------
         function createRectangleGeometry(   const   widthIn, heightIn,
                                                     cornerRadiusIn          : double;
                                             const   horizontalAlignmentIn   : THorzRectAlign;
@@ -318,7 +324,57 @@ implementation
                 result := roundRectOut;
             end;
 
-    //TEXT
+    //TEXT------------------------------------------------------------------------------------------------------------
         //text alignment
+            procedure calculateTextAlignmentTranslation(const textExtentIn              : TSize;
+                                                        const horizontalAlignmentIn     : THorzRectAlign;
+                                                        const verticalAlignmentIn       : TVertRectAlign;
+                                                        out horizontalShiftOut,
+                                                            verticalShiftOut            : double        );
+                begin
+                    //horizontal - translation
+                        case ( horizontalAlignmentIn ) of
+                            THorzRectAlign.Left:
+                                horizontalShiftOut := 0;
+
+                            THorzRectAlign.Center:
+                                horizontalShiftOut := textExtentIn.Width / 2;
+
+                            THorzRectAlign.Right:
+                                horizontalShiftOut := textExtentIn.Width;
+                        end;
+
+                    //vertical - translation
+                        case ( verticalAlignmentIn ) of
+                            TVertRectAlign.Bottom:
+                                verticalShiftOut := textExtentIn.Height;
+
+                            TVertRectAlign.Center:
+                                verticalShiftOut := textExtentIn.Height / 2;
+
+                            TVertRectAlign.Top:
+                                verticalShiftOut := 0;
+                        end;
+                end;
+
+        //text top left point for drawing
+            function calculateTextDrawingPoint( const textExtentIn              : TSize;
+                                                const horizontalAlignmentIn     : THorzRectAlign;
+                                                const verticalAlignmentIn       : TVertRectAlign;
+                                                const textHandlePointIn         : TPointF           ) : TPoint;
+                var
+                    horShift, vertShift : double;
+                    pointOut            : TPoint;
+                begin
+                    calculateTextAlignmentTranslation(  textExtentIn,
+                                                        horizontalAlignmentIn,
+                                                        verticalAlignmentIn,
+                                                        horShift, vertShift     );
+
+                    pointOut.x := round( textHandlePointIn.x - horShift );
+                    pointOut.y := round( textHandlePointIn.y - vertShift );
+
+                    result := pointOut;
+                end;
 
 end.

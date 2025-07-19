@@ -79,6 +79,12 @@ procedure TJDB_D2D_Form.PaintBoxArcEntityPaint(Sender: TObject);
         centrePoint := PointF( 3*canvasRect.Width/4, 3*canvasRect.Height/4 );
         D2DCanvas.drawArcF( True, True, 135, 225, canvasRect.Width/6, canvasRect.Height/6, centrePoint );
 
+        D2DCanvas.printTextF( 'Arc Entities', PointF( canvasRect.Width/2, 1 ), False, THorzRectAlign.Center, TVertRectAlign.Top );
+
+        D2DCanvas.printTextF( 'Text Test', PointF( canvasRect.Width - 1, canvasRect.Height - 1 ), False, THorzRectAlign.Right, TVertRectAlign.Bottom );
+
+        D2DCanvas.printTextF( 'Text Test', PointF( 1, 1 ), False );
+
         FreeAndNil( D2DCanvas );
     end;
 
@@ -109,6 +115,10 @@ procedure TJDB_D2D_Form.PaintBoxEllipseEntityPaint(Sender: TObject);
             D2DCanvas.Brush.Color := TColors.Darkred;
             handlePoint := PointF( canvasRect.Width/2, canvasRect.Height/2 );
             D2DCanvas.drawEllipseF( True, True, canvasRect.Width/4, canvasRect.Height/4, handlePoint );
+
+        D2DCanvas.printTextF( 'Ellipse Entities', PointF( canvasRect.Width/2, 1 ), False, THorzRectAlign.Center, TVertRectAlign.Top );
+
+        D2DCanvas.printTextF( 'Text Test', PointF( canvasRect.Width/2, canvasRect.Height/2 ), True, THorzRectAlign.Center, TVertRectAlign.Center );
 
         FreeAndNil( D2DCanvas );
     end;
@@ -165,6 +175,8 @@ procedure TJDB_D2D_Form.PaintBoxPathGeometryPaint(Sender: TObject);
                 D2DCanvas.drawPolygonF( True, True, arrPoints );
             end;
 
+        D2DCanvas.printTextF( 'Path Geometry Entities', PointF( canvasRect.Width/2, 1 ), False, THorzRectAlign.Center, TVertRectAlign.Top );
+
         FreeAndNil( D2DCanvas );
     end;
 
@@ -195,6 +207,8 @@ procedure TJDB_D2D_Form.PaintBoxRectanglePaint(Sender: TObject);
             D2DCanvas.Brush.Color := TColors.Darkred;
             handlePoint := PointF( canvasRect.Width/2, canvasRect.Height/2 );
             D2DCanvas.drawRectangleF( True, True, canvasRect.Width/4, canvasRect.Height/4, 0, handlePoint );
+
+        D2DCanvas.printTextF( 'Rectangle Entities', PointF( canvasRect.Width/2, 1 ), False, THorzRectAlign.Center, TVertRectAlign.Top );
 
         FreeAndNil( D2DCanvas );
     end;

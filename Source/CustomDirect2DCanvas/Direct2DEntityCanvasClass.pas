@@ -4,8 +4,8 @@ interface
 
     uses
         Winapi.D2D1,
-        system.Types,
-        Vcl.Direct2D, Vcl.Graphics,
+        System.SysUtils, system.Math, system.Types,
+        Vcl.Direct2D, Vcl.Graphics, vcl.Themes,
         Direct2DDrawingEntityMethods
         ;
 
@@ -48,6 +48,15 @@ interface
                                                     const   handlePointIn           : TPointF;
                                                     const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
                                                     const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    );
+                    //text
+                        function measureTextExtent( const textStringIn      : string;
+                                                    const textSizeIn        : integer = 9;
+                                                    const textFontStylesIn  : TFontStyles = [] ) : TSize;
+                        procedure printTextF(   const textStringIn          : string;
+                                                const textHandlePointIn     : TPointF;
+                                                const drawTextUnderlayIn    : boolean = False;
+                                                const horizontalAlignmentIn : THorzRectAlign = THorzRectAlign.Left;
+                                                const verticalAlignmentIn   : TVertRectAlign = TVertRectAlign.Top   );
         end;
 
 implementation
@@ -216,6 +225,97 @@ implementation
 
                         if ( outlinedIn ) then
                             DrawRoundedRectangle( drawingRect );
+                    end;
+
+            //text
+                function TDirect2DEntityCanvas.measureTextExtent(   const textStringIn      : string;
+                                                                    const textSizeIn        : integer = 9;
+                                                                    const textFontStylesIn  : TFontStyles = []  ) : TSize;
+                    var
+                        i, arrLen       : integer;
+                        textExtentOut   : TSize;
+                        tempBitmap      : TBitmap;
+                        stringArray     : TArray<string>;
+                    begin
+                        //create a temp bitmap to use the canvas
+                            tempBitmap := TBitmap.Create( 100, 100 );
+
+                            tempBitmap.Canvas.font.Size     := textSizeIn;
+                            tempBitmap.Canvas.font.Style    := textFontStylesIn;
+
+                        //split the string using line breaks as delimiter
+                            stringArray := textStringIn.Split( [sLineBreak] );
+                            arrLen := length( stringArray );
+
+                        //calculate the extent (size) of the text
+                            if ( 1 < arrLen ) then
+                                begin
+                                    textExtentOut.Width     := 0;
+                                    textExtentOut.Height    := 0;
+
+                                    for i := 0 to (arrLen - 1) do
+                                        begin
+                                            var tempSize : TSize := tempBitmap.Canvas.TextExtent( stringArray[i] );
+
+                                            textExtentOut.Width     := max( tempSize.Width, textExtentOut.Width );
+                                            textExtentOut.Height    := textExtentOut.Height + tempSize.Height;
+                                        end;
+                                end
+                            else
+                                textExtentOut := tempBitmap.Canvas.TextExtent( textStringIn );
+
+                        //free bitmap memory
+                            FreeAndNil( tempBitmap );
+
+                        result := textExtentOut;
+                    end;
+
+                procedure TDirect2DEntityCanvas.printTextF( const textStringIn          : string;
+                                                            const textHandlePointIn     : TPointF;
+                                                            const drawTextUnderlayIn    : boolean = False;
+                                                            const horizontalAlignmentIn : THorzRectAlign = THorzRectAlign.Left;
+                                                            const verticalAlignmentIn   : TVertRectAlign = TVertRectAlign.Top   );
+                    var
+                        mustCalculateDrawingPoint   : boolean;
+                        textExtent                  : TSize;
+                        drawingPoint                : TPoint;
+                    begin
+                        //check if drawing point must be calculated
+                            //true alignment is NOT top left
+                                mustCalculateDrawingPoint := NOT( ( horizontalAlignmentIn = THorzRectAlign.Left ) AND ( verticalAlignmentIn = TVertRectAlign.Top ) );
+
+                        //calculate the drawing point
+                            if ( mustCalculateDrawingPoint ) then
+                                begin
+                                    //measure text extent
+                                        textExtent := measureTextExtent( textStringIn, font.Size, font.Style );
+
+                                    //calculate drawing point
+                                        drawingPoint := calculateTextDrawingPoint(  textExtent,
+                                                                                    horizontalAlignmentIn,
+                                                                                    verticalAlignmentIn,
+                                                                                    textHandlePointIn       );
+                                end
+                            else
+                                begin
+                                    drawingPoint.X := round( textHandlePointIn.X );
+                                    drawingPoint.Y := round( textHandlePointIn.Y );
+                                end;
+
+                        //adjust canvas for underlay box
+                            if ( drawTextUnderlayIn ) then
+                                begin
+                                    var underlayColour : TColor;
+
+                                    underlayColour := TStyleManager.ActiveStyle.GetStyleColor( TStyleColor.scGenericBackground );
+
+                                    Brush.Color := underlayColour;
+                                    Brush.Style := TBrushStyle.bsSolid;
+                                end
+                            else
+                                Brush.Style := TBrushStyle.bsClear;
+
+                        TextOut( drawingPoint.x, drawingPoint.y, textStringIn );
                     end;
 
 end.

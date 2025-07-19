@@ -84,7 +84,11 @@ implementation
                         canvasInOut.Font.Color  := TStyleManager.ActiveStyle.GetSystemColor( textColour );
                         canvasInOut.Font.Name   := fontName;
                         canvasInOut.Font.Style  := textFontStyles;
-                        canvasInOut.Brush.Style := TBrushStyle.bsClear;
+
+                        if ( addUnderlay ) then
+                            canvasInOut.Brush.Style := TBrushStyle.bsSolid
+                        else
+                            canvasInOut.Brush.Style := TBrushStyle.bsClear;
                 end;
 
         //calculate the translation of the text for the alignment settings
@@ -132,9 +136,6 @@ implementation
                     fillColour := TStyleManager.ActiveStyle.GetStyleColor( TStyleColor.scGenericBackground );
 
                     canvasInOut.Brush.Color := fillColour;
-                    canvasInOut.Brush.Style := TBrushStyle.bsSolid;
-
-                    canvasInOut.FillRect( Rect( xIn, yIn, xIn + textExtentIn.Width, yIn + textExtentIn.Height ) );
                 end;
 
         //draw to canvas
@@ -146,7 +147,7 @@ implementation
                     textExtent                  : Tsize;
                     transformMatrix             : TD2DMatrix3x2F;
                 begin
-                    //set the canvas dont properties
+                    //set the canvas font properties
                         setFontProperties( axisConverterIn, canvasInOut );
 
                     //calculate text translation
