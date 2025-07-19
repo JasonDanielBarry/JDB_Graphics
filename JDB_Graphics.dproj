@@ -149,6 +149,7 @@
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicMousePointTrackerClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicScatterPlotClass.pas"/>
         <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DDrawingEntityMethods.pas"/>
+        <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DXYCanvasClass.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -35,7 +35,8 @@ interface
                                                 const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
                                                 const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center );
                     //line
-                        procedure drawLineF(const startPointIn, endPointIn : TPointF);
+                        procedure drawLineF(const arrDrawingPointsIn : TArray<TPointF>); overload;
+                        procedure drawLineF(const startPointIn, endPointIn : TPointF); overload;
                     //polyline
                         procedure drawPolylineF(const arrDrawingPointsIn : TArray<TPointF>);
                     //polygon
@@ -49,9 +50,9 @@ interface
                                                     const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
                                                     const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    );
                     //text
-                        function measureTextExtent( const textStringIn      : string;
-                                                    const textSizeIn        : integer = 9;
-                                                    const textFontStylesIn  : TFontStyles = [] ) : TSize;
+                        class function measureTextExtent(   const textStringIn      : string;
+                                                            const textSizeIn        : integer = 9;
+                                                            const textFontStylesIn  : TFontStyles = []  ) : TSize; static;
                         procedure printTextF(   const textStringIn          : string;
                                                 const textHandlePointIn     : TPointF;
                                                 const drawTextUnderlayIn    : boolean = False;
@@ -158,19 +159,25 @@ implementation
                     end;
 
             //line
+                procedure TDirect2DEntityCanvas.drawLineF(const arrDrawingPointsIn : TArray<TPointF>);
+                    var
+                        lineGeometry : ID2D1PathGeometry;
+                    begin
+                        lineGeometry := createOpenPathGeometry( arrDrawingPointsIn );
+
+                        DrawGeometry( lineGeometry );
+                    end;
+
                 procedure TDirect2DEntityCanvas.drawLineF(const startPointIn, endPointIn : TPointF);
                     var
-                        lineGeometry    : ID2D1PathGeometry;
-                        drawingPoints   : TArray<TPointF>;
+                        drawingPoints : TArray<TPointF>;
                     begin
                         SetLength( drawingPoints, 2 );
 
                         drawingPoints[0] := startPointIn;
                         drawingPoints[1] := endPointIn;
 
-                        lineGeometry := createOpenPathGeometry( drawingPoints );
-
-                        DrawGeometry( lineGeometry );
+                        drawLineF( drawingPoints );
                     end;
 
             //polyline
@@ -228,9 +235,9 @@ implementation
                     end;
 
             //text
-                function TDirect2DEntityCanvas.measureTextExtent(   const textStringIn      : string;
-                                                                    const textSizeIn        : integer = 9;
-                                                                    const textFontStylesIn  : TFontStyles = []  ) : TSize;
+                class function TDirect2DEntityCanvas.measureTextExtent( const textStringIn      : string;
+                                                                        const textSizeIn        : integer = 9;
+                                                                        const textFontStylesIn  : TFontStyles = [] ) : TSize;
                     var
                         i, arrLen       : integer;
                         textExtentOut   : TSize;

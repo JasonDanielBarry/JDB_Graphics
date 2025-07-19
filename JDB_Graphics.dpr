@@ -41,7 +41,8 @@ uses
   GraphicLinePlotClass in 'Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicLinePlotClass.pas',
   GraphicMousePointTrackerClass in 'Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicMousePointTrackerClass.pas',
   GraphicScatterPlotClass in 'Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicScatterPlotClass.pas',
-  Direct2DDrawingEntityMethods in 'Source\CustomDirect2DCanvas\Direct2DDrawingEntityMethods.pas';
+  Direct2DDrawingEntityMethods in 'Source\CustomDirect2DCanvas\Direct2DDrawingEntityMethods.pas',
+  Direct2DXYCanvasClass in 'Source\CustomDirect2DCanvas\Direct2DXYCanvasClass.pas';
 
 { keep comment here to protect the following conditional from being removed by the IDE when adding a unit }
 {$IFNDEF TESTINSIGHT}
