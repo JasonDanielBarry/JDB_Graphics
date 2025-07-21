@@ -8,7 +8,6 @@ interface
             vcl.Graphics,
         //custom
             DrawingAxisConversionClass,
-            GeometryTypes,
             GeomPolygonClass,
             GraphicGeometryClass,
             Direct2DXYEntityCanvasClass

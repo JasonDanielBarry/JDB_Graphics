@@ -131,6 +131,9 @@ implementation
                         normStartAngle  := FMod( startAngleIn, 360 );
                         normEndAngle    := FMod( endAngleIn, 360 );
 
+                        if ( SameValue( normStartAngle, normEndAngle, 1e-3 ) ) then
+                            exit();
+
                     //get start and end points
                         calculateArcStartAndEndPoints(  normStartAngle, normEndAngle,
                                                         arcHorRadiusIn, arcVertRadiusIn,

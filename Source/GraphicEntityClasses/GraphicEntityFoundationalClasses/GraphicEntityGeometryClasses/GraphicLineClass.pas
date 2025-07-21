@@ -8,7 +8,6 @@ interface
             vcl.Graphics,
         //custom
             DrawingAxisConversionClass,
-            GeometryTypes,
             GeomLineClass,
             GraphicGeometryClass,
             Direct2DXYEntityCanvasClass
@@ -21,7 +20,7 @@ interface
                     constructor create( const   lineThicknessIn : integer;
                                         const   lineColourIn    : TColor;
                                         const   lineStyleIn     : TPenStyle;
-                                        const   geometryIn      : TGeomLine ); overload;
+                                        const   geometryIn      : TGeomLine );
                 //destructor
                     destructor destroy(); override;
                 //modifiers
