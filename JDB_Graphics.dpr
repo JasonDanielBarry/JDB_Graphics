@@ -23,7 +23,7 @@ uses
   GraphicDrawingTypes in 'Source\GraphicDrawingClasses\GraphicDrawingTypes.pas',
   GraphicEntityBaseClass in 'Source\GraphicDrawingClasses\GraphicEntityBaseClass.pas',
   GraphicDrawer2DPaintBoxClass in 'Source\GraphicDrawer\GraphicDrawer2DPaintBoxClass.pas',
-  Direct2DEntityCanvasClass in 'Source\CustomDirect2DCanvas\Direct2DEntityCanvasClass.pas',
+  Direct2DLTEntityCanvasClass in 'Source\CustomDirect2DCanvas\Direct2DLTEntityCanvasClass.pas',
   GraphicArcClass in 'Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicArcClass.pas',
   GraphicEllipseClass in 'Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicEllipseClass.pas',
   GraphicGeometryClass in 'Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicGeometryClass.pas',
@@ -42,7 +42,7 @@ uses
   GraphicMousePointTrackerClass in 'Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicMousePointTrackerClass.pas',
   GraphicScatterPlotClass in 'Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicScatterPlotClass.pas',
   Direct2DDrawingEntityMethods in 'Source\CustomDirect2DCanvas\Direct2DDrawingEntityMethods.pas',
-  Direct2DXYCanvasClass in 'Source\CustomDirect2DCanvas\Direct2DXYCanvasClass.pas';
+  Direct2DXYEntityCanvasClass in 'Source\CustomDirect2DCanvas\Direct2DXYEntityCanvasClass.pas';
 
 { keep comment here to protect the following conditional from being removed by the IDE when adding a unit }
 {$IFNDEF TESTINSIGHT}

@@ -77,7 +77,7 @@ implementation
                                     begin
                                         var drawingSize : integer := abs(round( axisConverterIn.dY_To_dT( textSize ) ) );
 
-                                        canvasInOut.Font.size := max(1, drawingSize );
+                                        canvasInOut.Font.size := max( 1, drawingSize );
                                     end;
                             end;
 

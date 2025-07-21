@@ -22,10 +22,6 @@ object JDB_D2D_Form: TJDB_D2D_Form
     ActivePage = TabSheetXY
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 528
-    ExplicitTop = 288
-    ExplicitWidth = 289
-    ExplicitHeight = 193
     object TabSheetLT: TTabSheet
       Caption = 'LT-Coordinates'
       object GridPanel1: TGridPanel

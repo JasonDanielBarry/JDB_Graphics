@@ -1,4 +1,4 @@
-unit Direct2DEntityCanvasClass;
+unit Direct2DLTEntityCanvasClass;
 
 interface
 
@@ -10,7 +10,7 @@ interface
         ;
 
     type
-        TDirect2DEntityCanvas = class( TDirect2DCanvas )
+        TDirect2DLTEntityCanvas = class( TDirect2DCanvas )
             public
                 //constructor
                     constructor create( const canvasIn  : TCanvas;
@@ -18,42 +18,49 @@ interface
                 //destructor
                     destructor destroy(); override;
                 //canvas rotation
-                    procedure rotateCanvas( const rotationAngleIn           : double;
-                                            const rotationReferencePointIn  : TPointF );
+                    procedure rotateCanvasLT(   const rotationAngleIn           : double;
+                                                const rotationReferencePointIn  : TPointF );
                     procedure resetCanvasRotation();
                 //drawing entities
                     //arc
-                        procedure drawArcF( const   filledIn, outlinedIn        : boolean;
-                                            const   startAngleIn, endAngleIn,
-                                                    arcWidthIn, arcHeightIn     : double;
-                                            const   centrePointIn               : TPointF );
+                        procedure drawLTArcF(   const   filledIn, outlinedIn            : boolean;
+                                                const   startAngleIn, endAngleIn,
+                                                        arcHorRadiusIn, arcVertRadiusIn : double;
+                                                const   centrePointIn                   : TPointF );
                     //ellipse
-                        procedure drawEllipseF( const   filledIn, outlinedIn    : boolean;
-                                                const   ellipseWidthIn,
-                                                        ellipseHeightIn         : double;
-                                                const   handlePointIn           : TPointF;
-                                                const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
-                                                const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center );
+                        procedure drawLTEllipseF(   const   filledIn, outlinedIn    : boolean;
+                                                    const   ellipseWidthIn,
+                                                            ellipseHeightIn         : double;
+                                                    const   handlePointIn           : TPointF;
+                                                    const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
+                                                    const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center );
                     //line
-                        procedure drawLineF(const arrDrawingPointsIn : TArray<TPointF>); overload;
-                        procedure drawLineF(const startPointIn, endPointIn : TPointF); overload;
+                        procedure drawLTLineF(const arrDrawingPointsIn : TArray<TPointF>); overload;
+                        procedure drawLTLineF(const startPointIn, endPointIn : TPointF); overload;
                     //polyline
-                        procedure drawPolylineF(const arrDrawingPointsIn : TArray<TPointF>);
+                        procedure drawLTPolylineF(const arrDrawingPointsIn : TArray<TPointF>);
                     //polygon
-                        procedure drawPolygonF( const filledIn, outlinedIn  : boolean;
-                                                const arrDrawingPointsIn    : TArray<TPointF> );
+                        procedure drawLTPolygonF(   const filledIn, outlinedIn  : boolean;
+                                                    const arrDrawingPointsIn    : TArray<TPointF> );
                     //rectangle
-                        procedure drawRectangleF(   const   filledIn, outlinedIn    : boolean;
+                        procedure drawLTRectangleF( const   filledIn, outlinedIn    : boolean;
+                                                    const   widthIn, heightIn,
+                                                            cornerRadiusHorIn,
+                                                            cornerRadiusVertIn      : double;
+                                                    const   handlePointIn           : TPointF;
+                                                    const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
+                                                    const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    ); overload;
+                        procedure drawLTRectangleF( const   filledIn, outlinedIn    : boolean;
                                                     const   widthIn, heightIn,
                                                             cornerRadiusIn          : double;
                                                     const   handlePointIn           : TPointF;
                                                     const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
-                                                    const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    );
+                                                    const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    ); overload;
                     //text
                         class function measureTextExtent(   const textStringIn      : string;
                                                             const textSizeIn        : integer = 9;
                                                             const textFontStylesIn  : TFontStyles = []  ) : TSize; static;
-                        procedure printTextF(   const textStringIn          : string;
+                        procedure printLTTextF( const textStringIn          : string;
                                                 const textHandlePointIn     : TPointF;
                                                 const drawTextUnderlayIn    : boolean = False;
                                                 const horizontalAlignmentIn : THorzRectAlign = THorzRectAlign.Left;
@@ -64,7 +71,7 @@ implementation
 
     //public
         //constructor
-            constructor TDirect2DEntityCanvas.create(   const canvasIn  : TCanvas;
+            constructor TDirect2DLTEntityCanvas.create( const canvasIn  : TCanvas;
                                                         const rectIn    : TRect     );
                 begin
                     inherited create( canvasIn, rectIn );
@@ -77,7 +84,7 @@ implementation
                 end;
 
         //destructor
-            destructor TDirect2DEntityCanvas.destroy();
+            destructor TDirect2DLTEntityCanvas.destroy();
                 begin
                     EndDraw();
 
@@ -85,8 +92,8 @@ implementation
                 end;
 
         //canvas rotation
-            procedure TDirect2DEntityCanvas.rotateCanvas(   const rotationAngleIn           : double;
-                                                            const rotationReferencePointIn  : TPointF   );
+            procedure TDirect2DLTEntityCanvas.rotateCanvasLT(   const rotationAngleIn           : double;
+                                                                const rotationReferencePointIn  : TPointF   );
                 var
                     transformMatrix : TD2DMatrix3x2F;
                 begin
@@ -100,17 +107,17 @@ implementation
                         RenderTarget.SetTransform( transformMatrix );
                 end;
 
-            procedure TDirect2DEntityCanvas.resetCanvasRotation();
+            procedure TDirect2DLTEntityCanvas.resetCanvasRotation();
                 begin
                     RenderTarget.SetTransform( TD2DMatrix3x2F.Identity );
                 end;
 
         //drawing entities
             //arc
-                procedure TDirect2DEntityCanvas.drawArcF(   const   filledIn, outlinedIn        : boolean;
-                                                            const   startAngleIn, endAngleIn,
-                                                                    arcWidthIn, arcHeightIn     : double;
-                                                            const   centrePointIn               : TPointF   );
+                procedure TDirect2DLTEntityCanvas.drawLTArcF(   const   filledIn, outlinedIn            : boolean;
+                                                                const   startAngleIn, endAngleIn,
+                                                                        arcHorRadiusIn, arcVertRadiusIn : double;
+                                                                const   centrePointIn                   : TPointF   );
                     var
                         arcPathGeometry : ID2D1PathGeometry;
                     begin
@@ -119,7 +126,7 @@ implementation
 
                         arcPathGeometry := createArcPathGeometry(   filledIn,
                                                                     startAngleIn, endAngleIn,
-                                                                    arcWidthIn, arcHeightIn,
+                                                                    arcHorRadiusIn, arcVertRadiusIn,
                                                                     centrePointIn               );
 
                         //fill arc shape
@@ -132,12 +139,12 @@ implementation
                     end;
 
             //ellipse
-                procedure TDirect2DEntityCanvas.drawEllipseF(   const   filledIn, outlinedIn    : boolean;
-                                                                const   ellipseWidthIn,
-                                                                        ellipseHeightIn         : double;
-                                                                const   handlePointIn           : TPointF;
-                                                                const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
-                                                                const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    );
+                procedure TDirect2DLTEntityCanvas.drawLTEllipseF(   const   filledIn, outlinedIn    : boolean;
+                                                                    const   ellipseWidthIn,
+                                                                            ellipseHeightIn         : double;
+                                                                    const   handlePointIn           : TPointF;
+                                                                    const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
+                                                                    const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    );
                     var
                         drawingEllipse : TD2D1Ellipse;
                     begin
@@ -159,7 +166,7 @@ implementation
                     end;
 
             //line
-                procedure TDirect2DEntityCanvas.drawLineF(const arrDrawingPointsIn : TArray<TPointF>);
+                procedure TDirect2DLTEntityCanvas.drawLTLineF(const arrDrawingPointsIn : TArray<TPointF>);
                     var
                         lineGeometry : ID2D1PathGeometry;
                     begin
@@ -168,7 +175,7 @@ implementation
                         DrawGeometry( lineGeometry );
                     end;
 
-                procedure TDirect2DEntityCanvas.drawLineF(const startPointIn, endPointIn : TPointF);
+                procedure TDirect2DLTEntityCanvas.drawLTLineF(const startPointIn, endPointIn : TPointF);
                     var
                         drawingPoints : TArray<TPointF>;
                     begin
@@ -177,11 +184,11 @@ implementation
                         drawingPoints[0] := startPointIn;
                         drawingPoints[1] := endPointIn;
 
-                        drawLineF( drawingPoints );
+                        drawLTLineF( drawingPoints );
                     end;
 
             //polyline
-                procedure TDirect2DEntityCanvas.drawPolylineF(const arrDrawingPointsIn : TArray<TPointF>);
+                procedure TDirect2DLTEntityCanvas.drawLTPolylineF(const arrDrawingPointsIn : TArray<TPointF>);
                     var
                         polylineGeometry : ID2D1PathGeometry;
                     begin
@@ -191,8 +198,8 @@ implementation
                     end;
 
             //polygon
-                procedure TDirect2DEntityCanvas.drawPolygonF(   const filledIn, outlinedIn  : boolean;
-                                                                const arrDrawingPointsIn    : TArray<TPointF>   );
+                procedure TDirect2DLTEntityCanvas.drawLTPolygonF(   const filledIn, outlinedIn  : boolean;
+                                                                    const arrDrawingPointsIn    : TArray<TPointF>   );
                     var
                         polygonGeometry : ID2D1PathGeometry;
                     begin
@@ -209,12 +216,13 @@ implementation
                     end;
 
             //rectangle
-                procedure TDirect2DEntityCanvas.drawRectangleF( const   filledIn, outlinedIn    : boolean;
-                                                                const   widthIn, heightIn,
-                                                                        cornerRadiusIn          : double;
-                                                                const   handlePointIn           : TPointF;
-                                                                const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
-                                                                const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center );
+                procedure TDirect2DLTEntityCanvas.drawLTRectangleF( const   filledIn, outlinedIn    : boolean;
+                                                                    const   widthIn, heightIn,
+                                                                            cornerRadiusHorIn,
+                                                                            cornerRadiusVertIn      : double;
+                                                                    const   handlePointIn           : TPointF;
+                                                                    const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
+                                                                    const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center );
                     var
                         drawingRect : TD2D1RoundedRect;
                     begin
@@ -222,7 +230,8 @@ implementation
                             exit();
 
                         drawingRect := createRectangleGeometry( widthIn, heightIn,
-                                                                cornerRadiusIn,
+                                                                cornerRadiusHorIn,
+                                                                cornerRadiusVertIn,
                                                                 horizontalAlignmentIn,
                                                                 verticalAlignmentIn,
                                                                 handlePointIn           );
@@ -234,10 +243,25 @@ implementation
                             DrawRoundedRectangle( drawingRect );
                     end;
 
+                procedure TDirect2DLTEntityCanvas.drawLTRectangleF( const   filledIn, outlinedIn    : boolean;
+                                                                    const   widthIn, heightIn,
+                                                                            cornerRadiusIn          : double;
+                                                                    const   handlePointIn           : TPointF;
+                                                                    const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
+                                                                    const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    );
+                    begin
+                        drawLTRectangleF(   filledIn, outlinedIn,
+                                            widthIn, heightIn,
+                                            cornerRadiusIn, cornerRadiusIn,
+                                            handlePointIn,
+                                            horizontalAlignmentIn,
+                                            verticalAlignmentIn             );
+                    end;
+
             //text
-                class function TDirect2DEntityCanvas.measureTextExtent( const textStringIn      : string;
-                                                                        const textSizeIn        : integer = 9;
-                                                                        const textFontStylesIn  : TFontStyles = [] ) : TSize;
+                class function TDirect2DLTEntityCanvas.measureTextExtent(   const textStringIn      : string;
+                                                                            const textSizeIn        : integer = 9;
+                                                                            const textFontStylesIn  : TFontStyles = [] ) : TSize;
                     var
                         i, arrLen       : integer;
                         textExtentOut   : TSize;
@@ -277,11 +301,11 @@ implementation
                         result := textExtentOut;
                     end;
 
-                procedure TDirect2DEntityCanvas.printTextF( const textStringIn          : string;
-                                                            const textHandlePointIn     : TPointF;
-                                                            const drawTextUnderlayIn    : boolean = False;
-                                                            const horizontalAlignmentIn : THorzRectAlign = THorzRectAlign.Left;
-                                                            const verticalAlignmentIn   : TVertRectAlign = TVertRectAlign.Top   );
+                procedure TDirect2DLTEntityCanvas.printLTTextF( const textStringIn          : string;
+                                                                const textHandlePointIn     : TPointF;
+                                                                const drawTextUnderlayIn    : boolean = False;
+                                                                const horizontalAlignmentIn : THorzRectAlign = THorzRectAlign.Left;
+                                                                const verticalAlignmentIn   : TVertRectAlign = TVertRectAlign.Top   );
                     var
                         mustCalculateDrawingPoint   : boolean;
                         textExtent                  : TSize;

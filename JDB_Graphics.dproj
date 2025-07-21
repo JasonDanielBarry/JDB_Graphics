@@ -130,7 +130,7 @@
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicDrawingTypes.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityBaseClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawer2DPaintBoxClass.pas"/>
-        <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DEntityCanvasClass.pas"/>
+        <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DLTEntityCanvasClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicArcClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicEllipseClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicGeometryClass.pas"/>
@@ -149,7 +149,7 @@
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicMousePointTrackerClass.pas"/>
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicScatterPlotClass.pas"/>
         <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DDrawingEntityMethods.pas"/>
-        <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DXYCanvasClass.pas"/>
+        <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DXYEntityCanvasClass.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

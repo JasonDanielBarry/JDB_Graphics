@@ -7,11 +7,18 @@ interface
         system.SysUtils, system.Math, system.Types,
         Vcl.Direct2D;
 
-    //create arc geometry
-        function createArcPathGeometry( const   filledIn                        : boolean;
-                                        const   startAngleIn, endAngleIn,
-                                                arcHorRadiusIn, arcVertRadiusIn : double;
-                                        const   centrePointIn                   : TPointF ) : ID2D1PathGeometry;
+    //arc
+        //calculate an arc's start and end points from the centre and start and end angles
+            procedure calculateArcStartAndEndPoints(const   startAngleIn, endAngleIn,
+                                                            arcHorRadiusIn, arcVertRadiusIn : double;
+                                                    const   centrePointIn                   : TPointF;
+                                                    out startPointOut, endPointOut          : TPointF);
+
+        //create arc geometry
+            function createArcPathGeometry( const   filledIn                        : boolean;
+                                            const   startAngleIn, endAngleIn,
+                                                    arcHorRadiusIn, arcVertRadiusIn : double;
+                                            const   centrePointIn                   : TPointF ) : ID2D1PathGeometry;
 
     //create ellipse geometry
         function createEllipseGeometry( const   ellipseWidthIn,
@@ -29,7 +36,8 @@ interface
 
     //create rectangle geometry
         function createRectangleGeometry(   const   widthIn, heightIn,
-                                                    cornerRadiusIn          : double;
+                                                    cornerRadiusHorIn,
+                                                    cornerRadiusVertIn      : double;
                                             const   horizontalAlignmentIn   : THorzRectAlign;
                                             const   verticalAlignmentIn     : TVertRectAlign;
                                             const   handlePointIn           : TPointF           ) : TD2D1RoundedRect;
@@ -111,20 +119,26 @@ implementation
                                                     arcHorRadiusIn, arcVertRadiusIn : double;
                                             const   centrePointIn                   : TPointF ) : ID2D1PathGeometry;
                 var
+                    normStartAngle,
+                    normEndAngle            : double;
                     figureEnd               : D2D1_FIGURE_END;
                     geometrySink            : ID2D1GeometrySink;
                     pathGeometryOut         : ID2D1PathGeometry;
                     startPoint, endPoint    : TPointF;
                     arcSegment              : TD2D1ArcSegment;
                 begin
+                    //normalise start and end angles
+                        normStartAngle  := FMod( startAngleIn, 360 );
+                        normEndAngle    := FMod( endAngleIn, 360 );
+
                     //get start and end points
-                        calculateArcStartAndEndPoints(  startAngleIn, endAngleIn,
+                        calculateArcStartAndEndPoints(  normStartAngle, normEndAngle,
                                                         arcHorRadiusIn, arcVertRadiusIn,
                                                         centrePointIn,
-                                                        startPoint, endPoint        );
+                                                        startPoint, endPoint            );
 
                     //create arc segment
-                        arcSegment := createArcSegment( startAngleIn, endAngleIn, arcHorRadiusIn, arcVertRadiusIn, endPoint );
+                        arcSegment := createArcSegment( normStartAngle, normEndAngle, arcHorRadiusIn, arcVertRadiusIn, endPoint );
 
                     //create path geometry
                         D2DFactory( D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_MULTI_THREADED ).CreatePathGeometry( pathGeometryOut );
@@ -268,7 +282,8 @@ implementation
 
     //RECTANGLE-------------------------------------------------------------------------------------------------------
         function createRectangleGeometry(   const   widthIn, heightIn,
-                                                    cornerRadiusIn          : double;
+                                                    cornerRadiusHorIn,
+                                                    cornerRadiusVertIn      : double;
                                             const   horizontalAlignmentIn   : THorzRectAlign;
                                             const   verticalAlignmentIn     : TVertRectAlign;
                                             const   handlePointIn           : TPointF           ) : TD2D1RoundedRect;
@@ -276,8 +291,8 @@ implementation
                 roundRectOut : TD2D1RoundedRect;
             begin
                 //set radius
-                    roundRectOut.radiusX := cornerRadiusIn;
-                    roundRectOut.radiusY := cornerRadiusIn;
+                    roundRectOut.radiusX := cornerRadiusHorIn;
+                    roundRectOut.radiusY := cornerRadiusVertIn;
 
                 //set rectangle bounds
                     case ( horizontalAlignmentIn ) of

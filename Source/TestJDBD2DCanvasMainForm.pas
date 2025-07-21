@@ -7,9 +7,9 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
   Vcl.ComCtrls,
 
-  GeometryTypes, GeomBox, GeomLineClass,
+  GeometryTypes, GeomBox, GeomLineClass, GeomPolyLineClass, GeomPolygonClass,
   DrawingAxisConversionClass,
-  Direct2DXYCanvasClass;
+  Direct2DXYEntityCanvasClass;
 
 type
   TJDB_D2D_Form = class(TForm)
@@ -77,11 +77,11 @@ procedure TJDB_D2D_Form.PaintBoxArcEntityPaint(Sender: TObject);
     var
         centrePoint : TPointF;
         canvasRect  : TRect;
-        D2DCanvas   : TDirect2DXYCanvas;
+        D2DCanvas   : TDirect2DXYEntityCanvas;
     begin
         canvasRect  := PaintBoxArcEntity.ClientRect;
 
-        D2DCanvas := TDirect2DXYCanvas.Create( PaintBoxArcEntity.Canvas, canvasRect );
+        D2DCanvas := TDirect2DXYEntityCanvas.Create( PaintBoxArcEntity.Canvas, canvasRect );
 
         D2DCanvas.Brush.Color := TColors.Deepskyblue;
 
@@ -89,22 +89,22 @@ procedure TJDB_D2D_Form.PaintBoxArcEntityPaint(Sender: TObject);
         D2DCanvas.Pen.Width := 3;
 
         centrePoint := PointF( canvasRect.Width/4, canvasRect.Height/4 );
-        D2DCanvas.drawArcF( True, True, 45, 315, canvasRect.Width/6, canvasRect.Height/6, centrePoint );
+        D2DCanvas.drawLTArcF( True, True, 360 + 45, 315, canvasRect.Width/6, canvasRect.Height/6, centrePoint );
 
         centrePoint := PointF( 1.2*canvasRect.Width/4, canvasRect.Height/4 );
-        D2DCanvas.drawArcF( True, False, -45, 45, canvasRect.Width/6, canvasRect.Height/6, centrePoint );
+        D2DCanvas.drawLTArcF( True, False, -360-45, 45, canvasRect.Width/6, canvasRect.Height/6, centrePoint );
 
         centrePoint := PointF( 1.4*canvasRect.Width/4, canvasRect.Height/4 );
-        D2DCanvas.drawArcF( False, True, -45, 45, canvasRect.Width/6, canvasRect.Height/6, centrePoint );
+        D2DCanvas.drawLTArcF( False, True, -45, 45, canvasRect.Width/6, canvasRect.Height/6, centrePoint );
 
         centrePoint := PointF( 3*canvasRect.Width/4, 3*canvasRect.Height/4 );
-        D2DCanvas.drawArcF( True, True, 135, 225, canvasRect.Width/6, canvasRect.Height/6, centrePoint );
+        D2DCanvas.drawLTArcF( True, True, 135, 225, canvasRect.Width/6, canvasRect.Height/6, centrePoint );
 
-        D2DCanvas.printTextF( 'Arc Entities', PointF( canvasRect.Width/2, 1 ), False, THorzRectAlign.Center, TVertRectAlign.Top );
+        D2DCanvas.printLTTextF( 'Arc Entities', PointF( canvasRect.Width/2, 1 ), False, THorzRectAlign.Center, TVertRectAlign.Top );
 
-        D2DCanvas.printTextF( 'Text Test', PointF( canvasRect.Width - 1, canvasRect.Height - 1 ), False, THorzRectAlign.Right, TVertRectAlign.Bottom );
+        D2DCanvas.printLTTextF( 'Text Test', PointF( canvasRect.Width - 1, canvasRect.Height - 1 ), False, THorzRectAlign.Right, TVertRectAlign.Bottom );
 
-        D2DCanvas.printTextF( 'Text Test', PointF( 1, 1 ), False );
+        D2DCanvas.printLTTextF( 'Text Test', PointF( 1, 1 ), False );
 
         FreeAndNil( D2DCanvas );
     end;
@@ -113,33 +113,35 @@ procedure TJDB_D2D_Form.PaintBoxEllipseEntityPaint(Sender: TObject);
     var
         handlePoint : TPointF;
         canvasRect  : TRect;
-        D2DCanvas   : TDirect2DXYCanvas;
+        D2DCanvas   : TDirect2DXYEntityCanvas;
     begin
         canvasRect  := PaintBoxEllipseEntity.ClientRect;
 
-        D2DCanvas := TDirect2DXYCanvas.Create( PaintBoxEllipseEntity.Canvas, canvasRect );
+        D2DCanvas := TDirect2DXYEntityCanvas.Create( PaintBoxEllipseEntity.Canvas, canvasRect );
 
         D2DCanvas.Pen.Color := TColors.Black;
         D2DCanvas.Pen.Width := 3;
+        D2DCanvas.Font.Size := 12;
 
         //top left handle point
             D2DCanvas.Brush.Color := TColors.Greenyellow;
             handlePoint := PointF( 0, 0 );
-            D2DCanvas.drawEllipseF( True, True, canvasRect.Width/4, canvasRect.Height/4, handlePoint, THorzRectAlign.Left, TVertRectAlign.Top );
+            D2DCanvas.drawLTEllipseF( True, True, canvasRect.Width/4, canvasRect.Height/4, handlePoint, THorzRectAlign.Left, TVertRectAlign.Top );
 
         //bottom right handle point
             D2DCanvas.Brush.Color := TColors.Mediumblue;
             handlePoint := PointF( canvasRect.Width, canvasRect.Height );
-            D2DCanvas.drawEllipseF( True, True, canvasRect.Width/4, canvasRect.Height/4, handlePoint, THorzRectAlign.Right, TVertRectAlign.Bottom );
+            D2DCanvas.drawLTEllipseF( True, True, canvasRect.Width/4, canvasRect.Height/4, handlePoint, THorzRectAlign.Right, TVertRectAlign.Bottom );
 
         //centre handle point
             D2DCanvas.Brush.Color := TColors.Darkred;
             handlePoint := PointF( canvasRect.Width/2, canvasRect.Height/2 );
-            D2DCanvas.drawEllipseF( True, True, canvasRect.Width/4, canvasRect.Height/4, handlePoint );
+            D2DCanvas.rotateCanvasLT( 45, handlePoint );
+            D2DCanvas.drawLTEllipseF( True, True, canvasRect.Width/4, canvasRect.Height/4, handlePoint );
 
-        D2DCanvas.printTextF( 'Ellipse Entities', PointF( canvasRect.Width/2, 1 ), False, THorzRectAlign.Center, TVertRectAlign.Top );
+        D2DCanvas.printLTTextF( 'Ellipse Entities', PointF( canvasRect.Width/2, 1 ), False, THorzRectAlign.Center, TVertRectAlign.Top );
 
-        D2DCanvas.printTextF( 'Text Test', PointF( canvasRect.Width/2, canvasRect.Height/2 ), True, THorzRectAlign.Center, TVertRectAlign.Center );
+        D2DCanvas.printLTTextF( 'Text Test', PointF( canvasRect.Width/2, canvasRect.Height/2 ), True, THorzRectAlign.Center, TVertRectAlign.Center );
 
         FreeAndNil( D2DCanvas );
     end;
@@ -147,11 +149,11 @@ procedure TJDB_D2D_Form.PaintBoxEllipseEntityPaint(Sender: TObject);
 procedure TJDB_D2D_Form.PaintBoxPathGeometryPaint(Sender: TObject);
     var
         canvasRect  : TRect;
-        D2DCanvas   : TDirect2DXYCanvas;
+        D2DCanvas   : TDirect2DXYEntityCanvas;
     begin
         canvasRect  := PaintBoxPathGeometry.ClientRect;
 
-        D2DCanvas := TDirect2DXYCanvas.Create( PaintBoxPathGeometry.Canvas, canvasRect );
+        D2DCanvas := TDirect2DXYEntityCanvas.Create( PaintBoxPathGeometry.Canvas, canvasRect );
 
         D2DCanvas.Pen.Width := 4;
 
@@ -162,7 +164,7 @@ procedure TJDB_D2D_Form.PaintBoxPathGeometryPaint(Sender: TObject);
                 startPoint := PointF(0, 0);
                 endPoint := PointF( canvasRect.Width/4, canvasRect.Height/4 );
 
-                D2DCanvas.drawLineF( startPoint, endPoint );
+                D2DCanvas.drawLTLineF( startPoint, endPoint );
             end;
 
         //polyline
@@ -177,7 +179,7 @@ procedure TJDB_D2D_Form.PaintBoxPathGeometryPaint(Sender: TObject);
                                 PointF( (5/6)*canvasRect.Width, (3/4)*canvasRect.Height ),
                                 PointF( (6/6)*canvasRect.Width, canvasRect.Height )         ];
 
-                D2DCanvas.drawPolylineF( arrPoints );
+                D2DCanvas.drawLTPolylineF( arrPoints );
             end;
 
         //polygon
@@ -193,10 +195,10 @@ procedure TJDB_D2D_Form.PaintBoxPathGeometryPaint(Sender: TObject);
 
                 D2DCanvas.Brush.Color := TColors.Royalblue;
 
-                D2DCanvas.drawPolygonF( True, True, arrPoints );
+                D2DCanvas.drawLTPolygonF( True, True, arrPoints );
             end;
 
-        D2DCanvas.printTextF( 'Path Geometry Entities', PointF( canvasRect.Width/2, 1 ), False, THorzRectAlign.Center, TVertRectAlign.Top );
+        D2DCanvas.printLTTextF( 'Path Geometry Entities', PointF( canvasRect.Width/2, 1 ), False, THorzRectAlign.Center, TVertRectAlign.Top );
 
         FreeAndNil( D2DCanvas );
     end;
@@ -205,11 +207,11 @@ procedure TJDB_D2D_Form.PaintBoxRectanglePaint(Sender: TObject);
     var
         handlePoint : TPointF;
         canvasRect  : TRect;
-        D2DCanvas   : TDirect2DXYCanvas;
+        D2DCanvas   : TDirect2DXYEntityCanvas;
     begin
         canvasRect  := PaintBoxRectangle.ClientRect;
 
-        D2DCanvas := TDirect2DXYCanvas.Create( PaintBoxRectangle.Canvas, canvasRect );
+        D2DCanvas := TDirect2DXYEntityCanvas.Create( PaintBoxRectangle.Canvas, canvasRect );
 
         D2DCanvas.Pen.Color := TColors.Black;
         D2DCanvas.Pen.Width := 3;
@@ -217,19 +219,19 @@ procedure TJDB_D2D_Form.PaintBoxRectanglePaint(Sender: TObject);
         //top left handle point
             D2DCanvas.Brush.Color := TColors.Greenyellow;
             handlePoint := PointF( 0, 0 );
-            D2DCanvas.drawRectangleF( True, True, canvasRect.Width/4, canvasRect.Height/4, 15, handlePoint, THorzRectAlign.Left, TVertRectAlign.Top );
+            D2DCanvas.drawLTRectangleF( True, True, canvasRect.Width/4, canvasRect.Height/4, 15, handlePoint, THorzRectAlign.Left, TVertRectAlign.Top );
 
         //bottom right handle point
             D2DCanvas.Brush.Color := TColors.Mediumblue;
             handlePoint := PointF( canvasRect.Width, canvasRect.Height );
-            D2DCanvas.drawRectangleF( True, True, canvasRect.Width/4, canvasRect.Height/4, 25, handlePoint, THorzRectAlign.Right, TVertRectAlign.Bottom );
+            D2DCanvas.drawLTRectangleF( True, True, canvasRect.Width/4, canvasRect.Height/4, 25, handlePoint, THorzRectAlign.Right, TVertRectAlign.Bottom );
 
         //centre handle point
             D2DCanvas.Brush.Color := TColors.Darkred;
             handlePoint := PointF( canvasRect.Width/2, canvasRect.Height/2 );
-            D2DCanvas.drawRectangleF( True, True, canvasRect.Width/4, canvasRect.Height/4, 0, handlePoint );
+            D2DCanvas.drawLTRectangleF( True, True, canvasRect.Width/4, canvasRect.Height/4, 0, handlePoint );
 
-        D2DCanvas.printTextF( 'Rectangle Entities', PointF( canvasRect.Width/2, 1 ), False, THorzRectAlign.Center, TVertRectAlign.Top );
+        D2DCanvas.printLTTextF( 'Rectangle Entities', PointF( canvasRect.Width/2, 1 ), False, THorzRectAlign.Center, TVertRectAlign.Top );
 
         FreeAndNil( D2DCanvas );
     end;
@@ -237,19 +239,61 @@ procedure TJDB_D2D_Form.PaintBoxRectanglePaint(Sender: TObject);
 procedure TJDB_D2D_Form.PaintBoxXYPaint(Sender: TObject);
     var
         canvasRect  : TRect;
-        D2DCanvas   : TDirect2DXYCanvas;
+        D2DCanvas   : TDirect2DXYEntityCanvas;
     begin
         canvasRect  := PaintBoxXY.ClientRect;
 
-        D2DCanvas := TDirect2DXYCanvas.Create( PaintBoxXY.Canvas, canvasRect );
+        D2DCanvas := TDirect2DXYEntityCanvas.Create( PaintBoxXY.Canvas, canvasRect );
 
         D2DCanvas.Pen.Width := 3;
 
-        axisConverter.setGeometryBoundary( TGeomBox.newBox( canvasRect.Width, canvasRect.Height ) );
+        axisConverter.setGeometryBoundary( TGeomBox.newBox( (2/3) * canvasRect.Width, (2/3) * canvasRect.Height ) );
         axisConverter.resetDrawingRegionToGeometryBoundary();
 
         axisConverter.setCanvasDimensions( canvasRect.Width, canvasRect.Height );
         axisConverter.setDrawingSpaceRatio( 1 );
+
+//        D2DCanvas.rotateCanvasXY( -15, TGeomPoint.create( 0, 0 ), axisConverter );
+
+        //arc
+            begin
+                D2DCanvas.Brush.Color := TColors.Indianred;
+
+                var centrePoint : TGeomPoint := TGeomPoint.create( 550, 400 );
+
+                D2DCanvas.drawXYArc( True, True, 45, -45, 200, 125, centrePoint, axisConverter, EScaleType.scCanvas );
+
+                centrePoint := TGeomPoint.create( 500, 400 );
+
+                D2DCanvas.drawXYArc( True, True, 45, 360 - 45, 200, 125, centrePoint, axisConverter );
+
+                var textPoint : TGeomPoint := TGeomPoint.create( 500, 525 );
+
+                D2DCanvas.printXYText( 'Arc XY entities', textPoint, axisConverter, False, 12, THorzRectAlign.Center, TVertRectAlign.Bottom, EScaleType.scDrawing );
+
+                D2DCanvas.printXYText( 'Arc Centre ', centrePoint, axisConverter, False, 16, THorzRectAlign.Right, TVertRectAlign.Center, EScaleType.scDrawing );
+
+                textPoint.setPoint(500, 275);
+                D2DCanvas.printXYText( 'Arc Bottom ', textPoint, axisConverter, False, 16, THorzRectAlign.Center, TVertRectAlign.Top, EScaleType.scCanvas );
+            end;
+
+        //ellipse
+            begin
+                D2DCanvas.Brush.Color := TColors.Indigo;
+                var handlePoint : TGeomPoint;
+
+                //top-left handle
+                    handlePoint.setPoint( 800, 550 );
+                    D2DCanvas.drawXYEllipse( True, True, 50, 100, handlePoint, axisConverter, THorzRectAlign.Left, TVertRectAlign.Top );
+
+                //centre handle
+                    handlePoint.setPoint( 900, 550 );
+                    D2DCanvas.drawXYEllipse( True, True, 50, 100, handlePoint, axisConverter, THorzRectAlign.Center, TVertRectAlign.Center );
+
+                //bottom-right handle
+                    handlePoint.setPoint( 1000, 550 );
+                    D2DCanvas.drawXYEllipse( True, True, 50, 100, handlePoint, axisConverter, THorzRectAlign.Right, TVertRectAlign.Bottom, EScaleType.scCanvas );
+            end;
 
         //line
             begin
@@ -258,7 +302,94 @@ procedure TJDB_D2D_Form.PaintBoxXYPaint(Sender: TObject);
                 testLine.setStartPoint( 0, 0 );
                 testLine.setEndPoint( 100, 100 );
 
-                D2DCanvas.drawXYLine( testLine, axisConverter );
+                var linePoints : TArray<TGeomPoint> := testLine.getArrGeomPoints();
+
+                D2DCanvas.drawXYLine( linePoints, axisConverter );
+
+                FreeAndNil( testLine );
+            end;
+
+        //polyline
+            begin
+                var testPolyline : TGeomPolyLine := TGeomPolyLine.create();
+
+                testPolyline.clearVertices();
+
+                for var i := 0 to 100 do
+                    begin
+                        var x, y, piVal : double;
+
+                        piVal := Pi();
+
+                        x := 100 + 2 * i;
+
+                        y := 50 * sin( piVal * i / 50 ) + 125;
+
+                        testPolyline.addVertex( x, y );
+                    end;
+
+                var polylinePoints : TArray<TGeomPoint> := testPolyline.getArrGeomPoints();
+
+                D2DCanvas.drawXYPolyline( polylinePoints, axisConverter );
+
+                FreeAndNil( testPolyline );
+            end;
+
+        //polygon
+            begin
+                var xC, yC : double;
+                xC := 200;
+                yC := 300;
+
+                D2DCanvas.Brush.Color := TColors.Blueviolet;
+
+                var testPolygon : TGeomPolygon := TGeomPolygon.create();
+
+                testPolygon.clearVertices();
+
+                testPolygon.addVertex( xC + 100, yC );
+                testPolygon.addVertex( xC + 25, yC + 25 );
+                testPolygon.addVertex( xC, yC + 100 );
+                testPolygon.addVertex( xC - 25, yC + 25 );
+                testPolygon.addVertex( xC - 100, yC );
+                testPolygon.addVertex( xC - 25, yC - 25 );
+                testPolygon.addVertex( xC, yC - 100 );
+                testPolygon.addVertex( xC + 25, yC - 25 );
+
+                var polygonPoints : TArray<TGeomPoint> := testPolygon.getArrGeomPoints();
+
+                D2DCanvas.drawXYPolygon( True, True, polygonPoints, axisConverter );
+
+                FreeAndNil( testPolygon );
+            end;
+
+        //rectangle
+            begin
+                D2DCanvas.Brush.Color := TColors.Green;
+                var handlePoint : TGeomPoint;
+
+                //top-left handle
+                    handlePoint.setPoint( 900, 350 );
+                    D2DCanvas.drawXYRectangle( True, True, 75, 150, 10, handlePoint, axisConverter, THorzRectAlign.Left, TVertRectAlign.Top );
+
+                //centre handle
+                    handlePoint.setPoint( 1100, 350 );
+                    D2DCanvas.drawXYRectangle( True, True, 75, 150, 20, handlePoint, axisConverter, THorzRectAlign.Center, TVertRectAlign.Center, EScaleType.scCanvas );
+
+                //bottom-right
+                    handlePoint.setPoint( 1300, 350 );
+                    D2DCanvas.drawXYRectangle( True, True, 75, 150, 30, handlePoint, axisConverter, THorzRectAlign.Right, TVertRectAlign.Bottom );
+            end;
+
+        //text
+            begin
+                var textPoint : TGeomPoint := TGeomPoint.create( 0, (2/3) * canvasRect.Height );
+
+                D2DCanvas.printXYText( 'Text test, size 18, drawing scale, top-left align', textPoint, axisConverter, True, 18, THorzRectAlign.Left, TVertRectAlign.Top, EScaleType.scDrawing );
+
+                textPoint.shiftX( (2/3)*canvasRect.Width );
+
+                D2DCanvas.printXYText( 'Text test, size 18, canvas scale, top-right align', textPoint, axisConverter, False, 18, THorzRectAlign.Right, TVertRectAlign.Top, EScaleType.scCanvas );
             end;
 
         FreeAndNil( D2DCanvas );
