@@ -4,24 +4,18 @@ interface
 
     uses
         //Delphi
-            system.SysUtils, system.types, system.UITypes, System.UIConsts, System.Math,
-            Winapi.D2D1, Vcl.Direct2D,
+            system.SysUtils, system.UITypes, System.Math,
             vcl.Graphics,
         //custom
-            GraphicDrawingTypes,
-            GraphicGeometryClass,
             DrawingAxisConversionClass,
             GeometryTypes,
-            GeometryBaseClass,
-            GeomLineClass
+            GeomLineClass,
+            GraphicGeometryClass,
+            Direct2DXYEntityCanvasClass
             ;
 
     type
         TGraphicLine = class(TGraphicGeometry)
-            private
-                //draw to canvas
-                    procedure drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
-                                                    var canvasInOut         : TDirect2DCanvas       ); override;
             public
                 //constructor
                     constructor create( const   lineThicknessIn : integer;
@@ -33,24 +27,12 @@ interface
                 //modifiers
                     procedure setStartPoint(const xIn, yIn : double);
                     procedure setEndPoint(const xIn, yIn : double);
+                //draw to canvas
+                    procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
+                                            var canvasInOut         : TDirect2DXYEntityCanvas ); override;
         end;
 
 implementation
-
-    //private
-        //draw to canvas
-            procedure TGraphicLine.drawGraphicToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                                        var canvasInOut         : TDirect2DCanvas       );
-                begin
-                    if (length( geometryPoints ) < 2) then
-                        exit();
-
-                    drawOpenPathGeometry(
-                                            geometryPoints,
-                                            axisConverterIn,
-                                            canvasInOut
-                                        );
-                end;
 
     //public
         //constructor
@@ -82,6 +64,15 @@ implementation
             procedure TGraphicLine.setEndPoint(const xIn, yIn : double);
                 begin
                     geometryPoints[1].setPoint( xIn, yIn );
+                end;
+
+        //draw to canvas
+            procedure TGraphicLine.drawToCanvas(const axisConverterIn   : TDrawingAxisConverter;
+                                                var canvasInOut         : TDirect2DXYEntityCanvas);
+                begin
+                    inherited drawToCanvas( axisConverterIn, canvasInOut );
+
+                    canvasInOut.drawXYLine( geometryPoints, axisConverterIn );
                 end;
 
 end.

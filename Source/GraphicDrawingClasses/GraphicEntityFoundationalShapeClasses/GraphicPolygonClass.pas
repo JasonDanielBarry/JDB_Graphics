@@ -4,23 +4,18 @@ interface
 
     uses
         //Delphi
-            system.SysUtils, system.types, system.UITypes, System.UIConsts,
-            Winapi.D2D1, Vcl.Direct2D,
+            system.SysUtils, system.types, system.UITypes,
             vcl.Graphics,
         //custom
-            GraphicGeometryClass,
             DrawingAxisConversionClass,
             GeometryTypes,
-            GeometryBaseClass,
-            GeomPolygonClass
+            GeomPolygonClass,
+            GraphicGeometryClass,
+            Direct2DXYEntityCanvasClass
             ;
 
     type
         TGraphicPolygon = class(TGraphicGeometry)
-            private
-                //draw to canvas
-                    procedure drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
-                                                    var canvasInOut         : TDirect2DCanvas       ); override;
             public
                 //constructor
                     constructor create( const   filledIn        : boolean;
@@ -31,26 +26,12 @@ interface
                                         const   geometryIn      : TGeomPolygon );
                 //destructor
                     destructor destroy(); override;
+                //draw to canvas
+                    procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
+                                            var canvasInOut         : TDirect2DXYEntityCanvas ); override;
         end;
 
 implementation
-
-    //private
-        //draw to canvas
-            procedure TGraphicPolygon.drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
-                                                            var canvasInOut         : TDirect2DCanvas       );
-                begin
-                    if (length( geometryPoints ) < 3) then
-                        exit();
-
-                    //get path geometry
-                        drawClosedPathGeometry(
-                                                    filled, outlined,
-                                                    geometryPoints,
-                                                    axisConverterIn,
-                                                    canvasInOut
-                                              );
-                end;
 
     //public
         //constructor
@@ -73,6 +54,15 @@ implementation
             destructor TGraphicPolygon.destroy();
                 begin
                     inherited destroy();
+                end;
+
+        //draw to canvas
+            procedure TGraphicPolygon.drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
+                                                    var canvasInOut         : TDirect2DXYEntityCanvas );
+                begin
+                    inherited drawToCanvas( axisConverterIn, canvasInOut );
+
+                    canvasInOut.drawXYPolygon( filled, outlined, geometryPoints, axisConverterIn );
                 end;
 
 end.

@@ -42,7 +42,9 @@ uses
   GraphicMousePointTrackerClass in 'Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicMousePointTrackerClass.pas',
   GraphicScatterPlotClass in 'Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicScatterPlotClass.pas',
   Direct2DDrawingEntityMethods in 'Source\CustomDirect2DCanvas\Direct2DDrawingEntityMethods.pas',
-  Direct2DXYEntityCanvasClass in 'Source\CustomDirect2DCanvas\Direct2DXYEntityCanvasClass.pas';
+  Direct2DXYEntityCanvasClass in 'Source\CustomDirect2DCanvas\Direct2DXYEntityCanvasClass.pas',
+  GraphicEntityFoundationalClass in 'Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicEntityFoundationalClass.pas',
+  GraphicShapeClass in 'Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicShapeClass.pas';
 
 { keep comment here to protect the following conditional from being removed by the IDE when adding a unit }
 {$IFNDEF TESTINSIGHT}

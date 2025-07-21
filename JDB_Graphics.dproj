@@ -150,6 +150,8 @@
         <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityPlottingClasses\GraphicScatterPlotClass.pas"/>
         <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DDrawingEntityMethods.pas"/>
         <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DXYEntityCanvasClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicEntityFoundationalClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawingClasses\GraphicEntityFoundationalShapeClasses\GraphicShapeClass.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -4,23 +4,17 @@ interface
 
     uses
         //Delphi
-            system.SysUtils, system.types, system.UITypes, System.UIConsts, System.Math,
-            Winapi.D2D1, Vcl.Direct2D,
+            system.SysUtils, system.UITypes, System.Math,
             vcl.Graphics,
         //custom
-            GraphicGeometryClass,
-            GeometryBaseClass,
             GeomPolyLineClass,
-            DrawingAxisConversionClass
-
+            DrawingAxisConversionClass,
+            Direct2DXYEntityCanvasClass,
+            GraphicGeometryClass
             ;
 
     type
         TGraphicPolyline = class(TGraphicGeometry)
-            private
-                //draw to canvas
-                    procedure drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
-                                                    var canvasInOut         : TDirect2DCanvas       ); override;
             public
                 //constructor
                     constructor create( const   lineThicknessIn : integer;
@@ -29,24 +23,12 @@ interface
                                         const   geometryIn      : TGeomPolyLine );
                 //destructor
                     destructor destroy(); override;
+                //draw to canvas
+                    procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
+                                            var canvasInOut         : TDirect2DXYEntityCanvas ); override;
         end;
 
 implementation
-
-    //private
-        //draw to canvas
-            procedure TGraphicPolyline.drawGraphicToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                                            var canvasInOut         : TDirect2DCanvas       );
-                begin
-                    if (length( geometryPoints ) < 2) then
-                        exit();
-
-                    drawOpenPathGeometry(
-                                            geometryPoints,
-                                            axisConverterIn,
-                                            canvasInOut
-                                        );
-                end;
 
     //public
         //constructor
@@ -67,6 +49,15 @@ implementation
             destructor TGraphicPolyline.destroy();
                 begin
                     inherited destroy();
+                end;
+
+        //draw to canvas
+            procedure TGraphicPolyline.drawToCanvas(const axisConverterIn   : TDrawingAxisConverter;
+                                                    var canvasInOut         : TDirect2DXYEntityCanvas);
+                begin
+                    inherited drawToCanvas( axisConverterIn, canvasInOut );
+
+                    canvasInOut.drawXYPolyline( geometryPoints, axisConverterIn );
                 end;
 
 end.

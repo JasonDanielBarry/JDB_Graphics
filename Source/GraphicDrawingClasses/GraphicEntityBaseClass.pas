@@ -3,11 +3,10 @@ unit GraphicEntityBaseClass;
 interface
 
     uses
-        Winapi.D2D1,
         system.UITypes, system.Math, System.Classes, System.Types,
-        Vcl.Direct2D, vcl.Graphics, vcl.Themes,
-        GeometryTypes, GeomBox,
-        GraphicDrawingTypes,
+        vcl.Graphics, vcl.Themes,
+        GeomBox,
+        Direct2DXYEntityCanvasClass,
         DrawingAxisConversionClass
         ;
 
@@ -16,17 +15,12 @@ interface
             private
                 var
                     mustRotateCanvas    : boolean;
-                    lineThickness       : integer;
+
                     rotationAngle       : double;
-                    fillColour,
-                    lineColour          : TColor;
-                    lineStyle           : TPenStyle;
-                //set canvas properties for drawing
-                    procedure setFillProperties(var canvasInOut : TDirect2DCanvas);
-                    procedure setLineProperties(var canvasInOut : TDirect2DCanvas);
+
                 //rotate canvas
-                    procedure rotateCanvas(var canvasInOut : TDirect2DCanvas);
-                    procedure resetCanvasRotation(var canvasInOut : TDirect2DCanvas);
+                    procedure rotateCanvas(var canvasInOut : TDirect2DXYEntityCanvas);
+                    procedure resetCanvasRotation(var canvasInOut : TDirect2DXYEntityCanvas);
             protected
                 var
                     filled, outlined    : boolean;
@@ -40,7 +34,7 @@ interface
                     procedure dimensionAndPositionGraphicBox(const boxWidthIn, boxHeightIn : double);
                 //draw graphic
                     procedure drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
-                                                    var canvasInOut         : TDirect2DCanvas       ); virtual;
+                                                    var canvasInOut         : TDirect2DXYEntityCanvas       ); virtual;
             public
                 //constructor
                     constructor create(); overload;
@@ -63,44 +57,21 @@ interface
                     procedure setHandlePoint(const xIn, yIn : double);
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DCanvas       ); virtual;
-                    class procedure drawAllToCanvas(const arrGraphicObjectsIn   : TArray<TGraphicEntity>;
+                                            var canvasInOut         : TDirect2DXYEntityCanvas       ); virtual;
+                    class procedure drawAllToCanvas(const arrGraphicEntitiesIn  : TArray<TGraphicEntity>;
                                                     const axisConverterIn       : TDrawingAxisConverter;
-                                                    var canvasInOut             : TDirect2DCanvas       ); static;
+                                                    var canvasInOut             : TDirect2DXYEntityCanvas       ); static;
                 //bounding box
                     function determineBoundingBox() : TGeomBox; overload; virtual;
-                    class function determineBoundingBox(const arrGraphicObjectsIn : TArray<TGraphicEntity>) : TGeomBox; overload; static;
+                    class function determineBoundingBox(const arrGraphicEntitiesIn : TArray<TGraphicEntity>) : TGeomBox; overload; static;
         end;
 
 implementation
 
-    //private
-        //set canvas properties for drawing
-            procedure TGraphicEntity.setFillProperties(var canvasInOut : TDirect2DCanvas);
-                begin
-                    //hollow object
-                        if NOT( filled ) then
-                            begin
-                                canvasInOut.Brush.Style := TBrushStyle.bsClear;
-                                exit();
-                            end;
-
-                    canvasInOut.Brush.Color := TStyleManager.ActiveStyle.GetSystemColor( fillColour );
-                    canvasInOut.Brush.Style := TBrushStyle.bsSolid;
-                end;
-
-            procedure TGraphicEntity.setLineProperties(var canvasInOut : TDirect2DCanvas);
-                begin
-                    if ( lineThickness = 0 ) then
-                        exit();
-
-                    canvasInOut.Pen.Color := TStyleManager.ActiveStyle.GetSystemColor( lineColour );
-                    canvasInOut.Pen.Style := lineStyle;
-                    canvasInOut.Pen.Width := lineThickness;
-                end;
+    
 
         //rotate canvas
-            procedure TGraphicEntity.rotateCanvas(var canvasInOut : TDirect2DCanvas);
+            procedure TGraphicEntity.rotateCanvas(var canvasInOut : TDirect2DXYEntityCanvas);
                 var
                     transformMatrix : TD2DMatrix3x2F;
                 begin
@@ -113,7 +84,7 @@ implementation
                         canvasInOut.RenderTarget.SetTransform( transformMatrix );
                 end;
 
-            procedure TGraphicEntity.resetCanvasRotation(var canvasInOut : TDirect2DCanvas);
+            procedure TGraphicEntity.resetCanvasRotation(var canvasInOut : TDirect2DXYEntityCanvas);
                 begin
                     canvasInOut.RenderTarget.SetTransform( TD2DMatrix3x2F.Identity );
                 end;
@@ -161,7 +132,7 @@ implementation
 
         //draw graphic
             procedure TGraphicEntity.drawGraphicToCanvas(   const axisConverterIn   : TDrawingAxisConverter;
-                                                            var canvasInOut         : TDirect2DCanvas           );
+                                                            var canvasInOut         : TDirect2DXYEntityCanvas           );
                 begin
                     //nothing here
                 end;
@@ -239,7 +210,7 @@ implementation
 
         //draw to canvas
             procedure TGraphicEntity.drawToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
-                                                    var canvasInOut         : TDirect2DCanvas       );
+                                                    var canvasInOut         : TDirect2DXYEntityCanvas       );
                 begin
                     //calculate handle point on canvas
                         handlePointLT := axisConverterIn.XY_to_LT( handlePointXY );
@@ -262,16 +233,16 @@ implementation
                             resetCanvasRotation( canvasInOut );
                 end;
 
-            class procedure TGraphicEntity.drawAllToCanvas( const arrGraphicObjectsIn   : TArray<TGraphicEntity>;
+            class procedure TGraphicEntity.drawAllToCanvas( const arrGraphicEntitiesIn   : TArray<TGraphicEntity>;
                                                             const axisConverterIn       : TDrawingAxisConverter;
-                                                            var canvasInOut             : TDirect2DCanvas           );
+                                                            var canvasInOut             : TDirect2DXYEntityCanvas           );
                 var
                     i, arrLen : integer;
                 begin
-                    arrLen := length( arrGraphicObjectsIn );
+                    arrLen := length( arrGraphicEntitiesIn );
 
                     for i := 0 to ( arrLen - 1 ) do
-                        arrGraphicObjectsIn[i].drawToCanvas( axisConverterIn, canvasInOut );
+                        arrGraphicEntitiesIn[i].drawToCanvas( axisConverterIn, canvasInOut );
                 end;
 
         //bounding box
@@ -296,17 +267,17 @@ implementation
                     result := boundingBoxOut;
                 end;
 
-            class function TGraphicEntity.determineBoundingBox(const arrGraphicObjectsIn : TArray<TGraphicEntity>) : TGeomBox;
+            class function TGraphicEntity.determineBoundingBox(const arrGraphicEntitiesIn : TArray<TGraphicEntity>) : TGeomBox;
                 var
                     i, graphicObjectsCount  : integer;
                     arrBoundingBoxes        : TArray<TGeomBox>;
                 begin
-                    graphicObjectsCount := length( arrGraphicObjectsIn );
+                    graphicObjectsCount := length( arrGraphicEntitiesIn );
 
                     SetLength( arrBoundingBoxes, graphicObjectsCount );
 
                     for i := 0 to (graphicObjectsCount - 1) do
-                        arrBoundingBoxes[i] := arrGraphicObjectsIn[i].determineBoundingBox();
+                        arrBoundingBoxes[i] := arrGraphicEntitiesIn[i].determineBoundingBox();
 
                     result := TGeomBox.determineBoundingBox( arrBoundingBoxes );
                 end;
