@@ -7,18 +7,11 @@ interface
         system.SysUtils, system.Math, system.Types,
         Vcl.Direct2D;
 
-    //arc
-        //calculate an arc's start and end points from the centre and start and end angles
-            procedure calculateArcStartAndEndPoints(const   startAngleIn, endAngleIn,
-                                                            arcHorRadiusIn, arcVertRadiusIn : double;
-                                                    const   centrePointIn                   : TPointF;
-                                                    out startPointOut, endPointOut          : TPointF);
-
-        //create arc geometry
-            function createArcPathGeometry( const   filledIn                        : boolean;
-                                            const   startAngleIn, endAngleIn,
-                                                    arcHorRadiusIn, arcVertRadiusIn : double;
-                                            const   centrePointIn                   : TPointF ) : ID2D1PathGeometry;
+    //create arc geometry
+        function createArcPathGeometry( const   filledIn                        : boolean;
+                                        const   startAngleIn, endAngleIn,
+                                                arcHorRadiusIn, arcVertRadiusIn : double;
+                                        const   centrePointIn                   : TPointF ) : ID2D1PathGeometry;
 
     //create ellipse geometry
         function createEllipseGeometry( const   ellipseWidthIn,

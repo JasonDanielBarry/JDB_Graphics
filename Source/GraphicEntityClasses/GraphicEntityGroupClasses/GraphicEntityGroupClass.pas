@@ -3,12 +3,10 @@ unit GraphicEntityGroupClass;
 interface
 
     uses
-        Winapi.D2D1,
-        system.SysUtils, system.UITypes,
-        Vcl.Direct2D,
+        system.SysUtils,
         GeomBox,
-        GraphicDrawingTypes,
         DrawingAxisConversionClass,
+        Direct2DXYEntityCanvasClass,
         GraphicEntityBaseClass
         ;
 
@@ -23,12 +21,12 @@ interface
                     destructor destroy(); override;
                 //add graphic object to array
                     procedure addGraphicEntityToGroup(const GraphicEntityIn : TGraphicEntity);
-                    procedure addGraphicEntitysToGroup(const arrGraphicEntitysIn : TArray<TGraphicEntity>);
+                    procedure addArrGraphicEntitysToGroup(const arrGraphicEntitysIn : TArray<TGraphicEntity>);
                 //clear the array
-                    procedure clearGraphicEntitysGroup(const freeGraphicEntitysIn : boolean = True);
+                    procedure clearGraphicEntityGroup(const freeGraphicEntitysIn : boolean = True);
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DCanvas       ); override;
+                                            var canvasInOut         : TDirect2DXYEntityCanvas ); override;
                 //bounding box
                     function determineBoundingBox() : TGeomBox; override;
         end;
@@ -44,13 +42,13 @@ implementation
                 begin
                     inherited create();
 
-                    clearGraphicEntitysGroup( False );
+                    clearGraphicEntityGroup( False );
                 end;
 
         //destructor
             destructor TGraphicEntityGroup.destroy();
                 begin
-                    clearGraphicEntitysGroup( True );
+                    clearGraphicEntityGroup( True );
 
                     inherited destroy();
                 end;
@@ -67,7 +65,7 @@ implementation
                     arrGraphicEntitysGroup[ arrLen ] := GraphicEntityIn;
                 end;
 
-            procedure TGraphicEntityGroup.addGraphicEntitysToGroup(const arrGraphicEntitysIn : TArray<TGraphicEntity>);
+            procedure TGraphicEntityGroup.addArrGraphicEntitysToGroup(const arrGraphicEntitysIn : TArray<TGraphicEntity>);
                 var
                     i : integer;
                 begin
@@ -76,7 +74,7 @@ implementation
                 end;
 
         //clear the array
-            procedure TGraphicEntityGroup.clearGraphicEntitysGroup(const freeGraphicEntitysIn : boolean = True);
+            procedure TGraphicEntityGroup.clearGraphicEntityGroup(const freeGraphicEntitysIn : boolean = True);
                 var
                     i, arrLen : integer;
                 begin
@@ -96,7 +94,7 @@ implementation
 
         //draw to canvas
             procedure TGraphicEntityGroup.drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                                        var canvasInOut         : TDirect2DCanvas       );
+                                                        var canvasInOut         : TDirect2DXYEntityCanvas );
                 begin
                     TGraphicEntity.drawAllToCanvas(
                                                         arrGraphicEntitysGroup,

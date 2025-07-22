@@ -38,7 +38,6 @@ interface
                                             var canvasInOut         : TDirect2DXYEntityCanvas ); override;
         end;
 
-
 implementation
 
     //private

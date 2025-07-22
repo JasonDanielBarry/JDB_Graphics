@@ -3,10 +3,11 @@ unit GraphicDrawerAxisConversionInterfaceClass;
 interface
 
     uses
-        system.SysUtils, system.math, system.Types,
         Winapi.Messages,
+        system.SysUtils, system.Math, system.Types,
         vcl.Controls,
-        GeometryTypes, GeomBox,
+        GeometryTypes,
+        GeomBox,
         DrawingAxisConversionClass,
         GraphicDrawerLayersClass
         ;

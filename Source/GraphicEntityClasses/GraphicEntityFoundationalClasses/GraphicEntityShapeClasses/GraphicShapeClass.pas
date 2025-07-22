@@ -3,7 +3,7 @@ unit GraphicShapeClass;
 interface
 
     uses
-        system.SysUtils, System.Math, system.Types, System.UITypes,
+        system.SysUtils, System.Math, system.Types,
         Vcl.Graphics,
         GeometryTypes, GeomBox,
         DrawingAxisConversionClass,
@@ -27,7 +27,7 @@ interface
                     function calculateShapeBoundingBox(const shapeWidthIn, shapeHeightIn : double) : TGeomBox;
                 //draw shape to canvas
                     procedure drawShapeToCanvas(const axisConverterIn   : TDrawingAxisConverter;
-                                                var canvasInOut         : TDirect2DXYEntityCanvas   ); virtual; abstract;
+                                                var canvasInOut         : TDirect2DXYEntityCanvas); virtual; abstract;
             public
                 //constructor
                     constructor create( const   filledIn                : boolean;
@@ -49,10 +49,8 @@ interface
                     procedure setHandlePoint(const xIn, yIn : double);
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DXYEntityCanvas   ); override;
-
+                                            var canvasInOut         : TDirect2DXYEntityCanvas ); override;
         end;
-
 
 implementation
 
@@ -70,11 +68,11 @@ implementation
                         mustCalculateBoundingBox := NOT(
                                                             ( IsZero( shapeWidthIn ) AND IsZero( shapeHeightIn ) )
                                                             OR
-                                                            (scaleType = EScaleType.scCanvas )
+                                                            ( scaleType = EScaleType.scCanvas )
                                                        );
 
 
-                        if NOT (mustCalculateBoundingBox ) then
+                        if NOT( mustCalculateBoundingBox ) then
                             begin
                                 result := TGeomBox.determineBoundingBox( [ handlePointXY, handlePointXY ] );
                                 exit();

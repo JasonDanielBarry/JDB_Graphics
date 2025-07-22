@@ -3,12 +3,11 @@ unit GraphicArrowGroupClass;
 interface
 
     uses
-        Winapi.D2D1,
-        system.SysUtils, system.Math, system.UITypes,
-        Vcl.Direct2D, vcl.Graphics,
+        system.SysUtils, system.Math,
+        vcl.Graphics,
         GeomBox, GeometryTypes, GeomSpaceVectorClass,
         GeomLineClass, GeomPolyLineClass,
-        GraphicDrawingTypes,
+        GraphicEntityTypes,
         DrawingAxisConversionClass,
         GraphicEntityBaseClass,
         GraphicLineClass, GraphicPolygonClass,
@@ -32,8 +31,7 @@ interface
                 //calculate group arrow points
                     function calculateArrowPoints(  const arrowCountIn      : integer;
                                                     const arrowSpacingIn    : double;
-                                                    const lineIn            : TGeomLine) : TArray<TGeomPoint>;
-
+                                                    const lineIn            : TGeomLine ) : TArray<TGeomPoint>;
             public
                 //constructor
                     constructor create( const   filledIn                : boolean;
@@ -60,7 +58,6 @@ interface
                 //destructor
                     destructor destroy(); override;
         end;
-
 
 implementation
 
@@ -123,14 +120,14 @@ implementation
                             result := calculateAngleNormalToLine( arrowGroupLineIn );
 
                         EArrowGroupDirection.agdUserDefined:
-                            result := userDirectionAngleIn;
+                            result := FMod( userDirectionAngleIn, 360 );
                     end;
                 end;
 
         //calculate group arrow point
             function TGraphicArrowGroup.calculateArrowPoints(   const arrowCountIn      : integer;
                                                                 const arrowSpacingIn    : double;
-                                                                const lineIn            : TGeomLine) : TArray<TGeomPoint>;
+                                                                const lineIn            : TGeomLine ) : TArray<TGeomPoint>;
                 var
                     i                   : integer;
                     dx, dy, x, y        : double;
@@ -163,7 +160,6 @@ implementation
                     result := arrArrowPointsOut;
                 end;
 
-
     //public
         //constructor
             constructor TGraphicArrowGroup.create(  const   filledIn                : boolean;
@@ -190,13 +186,13 @@ implementation
                     //calculate number of arrows needed
                         arrowGroupCount := calculateArrowGroupCount( arrowLengthIn, lineLength );
 
-                    //calculate spacing
+                    //calculate spacing between arrows
                         arrowSpacing := calculateArrowSpacing( arrowGroupCount, lineLength );
 
                     //calculate arrow group angle
                         arrowGroupAngle := determineArrowGroupDirectionAngle( userDirectionAngleIn, arrowGroupDirectionIn, arrowGroupLineIn );
 
-                    //calculate the arrow points
+                    //calculate the arrow points where arrows are drawn along the arrow group line
                         arrArrowPoints := calculateArrowPoints( arrowGroupCount, arrowSpacing, arrowGroupLineIn );
 
                     //create each arrow
@@ -212,7 +208,7 @@ implementation
                                                                             arrArrowPoints[i]
                                                                        );
 
-                    addGraphicEntitysToGroup( arrGraphicArrows );
+                    addArrGraphicEntitysToGroup( arrGraphicArrows );
                 end;
 
             constructor TGraphicArrowGroup.create(  const   filledIn                : boolean;
@@ -231,7 +227,8 @@ implementation
                     arrPolylinPoints        : TArray<TGeomPoint>;
                     singleLineArrowGroup    : TGraphicArrowGroup;
                 begin
-                    //this constructer creates an instance of its own class type for each line in the polyline
+                    //this constructer creates an array of instances of its own class type for each line in the polyline
+                    //a TGraphicArrowGroup for each line of the polyline if you will
 
                     inherited create();
 

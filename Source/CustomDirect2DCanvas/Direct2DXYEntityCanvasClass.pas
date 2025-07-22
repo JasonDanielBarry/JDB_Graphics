@@ -3,7 +3,7 @@ unit Direct2DXYEntityCanvasClass;
 interface
 
     uses
-        system.Types,
+        System.Types, System.Math,
         DrawingAxisConversionClass,
         GeometryTypes,
         Direct2DLTEntityCanvasClass;
@@ -298,7 +298,7 @@ implementation
                                     textSizeLT := abs( axisConverterIn.dY_To_dT( textSizeIn ) );
                             end;
 
-                            font.Size := round( textSizeLT );
+                            font.Size := max( 1, round( textSizeLT ) );
 
                             handlePointLT := axisConverterIn.XY_to_LT( textHandlePointIn );
 

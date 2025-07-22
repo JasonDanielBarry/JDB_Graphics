@@ -4,14 +4,14 @@ interface
 
     uses
         //Delphi
-            Winapi.D2D1, Vcl.Direct2D,
             system.SysUtils, system.UITypes, system.Generics.Collections,
         //custom
+            GeomBox,
+            Direct2DXYEntityCanvasClass,
             GraphicEntityListBaseClass,
             LayerGraphicEntityMapClass,
             DrawingAxisConversionClass,
             GraphicGridClass,
-            GeomBox,
             GraphicDrawerBaseClass,
             GraphicGridSettingsRecord
             ;
@@ -28,7 +28,7 @@ interface
             protected
                 //draw all geometry
                     procedure drawAll(  const canvasWidthIn, canvasHeightIn : integer;
-                                        var D2DCanvasInOut                  : TDirect2DCanvas);
+                                        var D2DCanvasInOut                  : TDirect2DXYEntityCanvas);
             public
                 //constructor
                     constructor create(); override;
@@ -64,7 +64,7 @@ implementation
         //drawing procedures
             //draw all geometry
                 procedure TGraphicDrawerLayers.drawAll( const canvasWidthIn, canvasHeightIn : integer;
-                                                        var D2DCanvasInOut                  : TDirect2DCanvas);
+                                                        var D2DCanvasInOut                  : TDirect2DXYEntityCanvas);
                     begin
                         inherited drawAll(  canvasWidthIn, canvasHeightIn,
                                             D2DCanvasInOut                  );

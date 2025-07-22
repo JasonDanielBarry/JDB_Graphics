@@ -315,15 +315,15 @@ procedure TJDB_D2D_Form.PaintBoxXYPaint(Sender: TObject);
 
                 testPolyline.clearVertices();
 
-                for var i := 0 to 100 do
+                for var i := 0 to 200 do
                     begin
                         var x, y, piVal : double;
 
                         piVal := Pi();
 
-                        x := 100 + 2 * i;
+                        x := 100 + i;
 
-                        y := 50 * sin( piVal * i / 50 ) + 125;
+                        y := 50 * sin( piVal * i / 100 ) + 125;
 
                         testPolyline.addVertex( x, y );
                     end;

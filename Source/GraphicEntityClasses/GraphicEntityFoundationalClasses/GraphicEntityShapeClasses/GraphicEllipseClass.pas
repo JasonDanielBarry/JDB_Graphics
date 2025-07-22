@@ -3,24 +3,23 @@ unit GraphicEllipseClass;
 interface
 
     uses
-        Winapi.D2D1,
         system.SysUtils, system.Types, System.Classes,
-        Vcl.Direct2D, vcl.Graphics,
+        vcl.Graphics,
         GeometryTypes,
         GeomBox,
-        GraphicDrawingTypes,
-        GraphicEntityBaseClass,
-        DrawingAxisConversionClass
+        DrawingAxisConversionClass,
+        GraphicShapeClass,
+        Direct2DXYEntityCanvasClass
         ;
 
     type
-        TGraphicEllipse = class(TGraphicEntity)
+        TGraphicEllipse = class( TGraphicShape )
             private
-                //convert geom box to ellipse
-                    function convertGraphicBoxToEllipse(const axisConverterIn : TDrawingAxisConverter) : TD2D1Ellipse;
+                var
+                    ellipseWidth, ellipseHeight : double;
                 //draw to canvas
-                    procedure drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
-                                                    var canvasInOut         : TDirect2DCanvas       ); override;
+                    procedure drawShapeToCanvas(const axisConverterIn   : TDrawingAxisConverter;
+                                                var canvasInOut         : TDirect2DXYEntityCanvas); override;
             public
                 //constructor
                     constructor create( const   filledIn                : boolean;
@@ -34,81 +33,26 @@ interface
                                         const   fillColourIn,
                                                 lineColourIn            : TColor;
                                         const   lineStyleIn             : TPenStyle;
-                                        const   handlePointXYIn         : TGeomPoint        );
+                                        const   handlePointXYIn         : TGeomPoint    );
                 //destructor
                     destructor destroy(); override;
+                //bounding box
+                    function determineBoundingBox() : TGeomBox; override;
         end;
 
 implementation
 
-    //private
-        //convert geom box to ellipse
-            function TGraphicEllipse.convertGraphicBoxToEllipse(const axisConverterIn : TDrawingAxisConverter) : TD2D1Ellipse;
-                var
-                    ellipseCentreX,
-                    ellipseCentreY  : double;
-                    ellipseOut      : TD2D1Ellipse;
-                begin
-                    //calculate the ellipse dimensions
-                        case ( objectScaleType ) of
-                            EScaleType.scDrawing:
-                                begin
-                                    ellipseOut.radiusX := 0.5 * axisConverterIn.dX_To_dL( graphicBox.calculateXDimension() );
-                                    ellipseOut.radiusY := 0.5 * axisConverterIn.dY_To_dT( graphicBox.calculateYDimension() );
-                                end;
-
-                            EScaleType.scCanvas:
-                                begin
-                                    ellipseOut.radiusX := 0.5 * graphicBox.calculateXDimension();
-                                    ellipseOut.radiusY := 0.5 * graphicBox.calculateYDimension();
-                                end;
-                        end;
-
-                    //alignment
-                        case ( horizontalAlignment ) of
-                            THorzRectAlign.Left:
-                                ellipseCentreX := handlePointLT.X + ellipseOut.radiusX;
-
-                            THorzRectAlign.Center:
-                                ellipseCentreX := handlePointLT.X;
-
-                            THorzRectAlign.Right:
-                                ellipseCentreX := handlePointLT.X - ellipseOut.radiusX;
-                        end;
-
-                        case ( verticalAlignment ) of
-                            TVertRectAlign.Bottom:
-                                ellipseCentreY := handlePointLT.y + ellipseOut.radiusY;
-
-                            TVertRectAlign.Center:
-                                ellipseCentreY := handlePointLT.y;
-
-                            TVertRectAlign.Top:
-                                ellipseCentreY := handlePointLT.y - ellipseOut.radiusY;
-                        end;
-
-                        ellipseOut.point.x := ellipseCentreX;
-                        ellipseOut.point.y := ellipseCentreY;
-
-                    result := ellipseOut;
-                end;
-
         //draw to canvas
-            procedure TGraphicEllipse.drawGraphicToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
-                                                            var canvasInOut         : TDirect2DCanvas       );
-                var
-                    drawingEllipse : TD2D1Ellipse;
+            procedure TGraphicEllipse.drawShapeToCanvas(const axisConverterIn   : TDrawingAxisConverter;
+                                                        var canvasInOut         : TDirect2DXYEntityCanvas);
                 begin
-                    //get the drawing ellipse
-                        drawingEllipse := convertGraphicBoxToEllipse( axisConverterIn );
-
-                    //draw fill
-                        if ( filled ) then
-                            canvasInOut.FillEllipse( drawingEllipse );
-
-                    //draw line
-                        if ( outlined ) then
-                            canvasInOut.DrawEllipse( drawingEllipse );
+                    canvasInOut.drawXYEllipse(  filled, outlined,
+                                                ellipseWidth, ellipseHeight,
+                                                handlePointXY,
+                                                axisConverterIn,
+                                                horizontalAlignment,
+                                                verticalAlignment,
+                                                scaleType                   );
                 end;
 
     //public
@@ -137,13 +81,20 @@ implementation
                                         lineStyleIn,
                                         handlePointXYIn         );
 
-                    dimensionAndPositionGraphicBox( ellipseWidthIn, ellipseHeightIn );
+                    ellipseWidth    := ellipseWidthIn;
+                    ellipseHeight   := ellipseHeightIn;
                 end;
 
         //destructor
             destructor TGraphicEllipse.destroy();
                 begin
                     inherited destroy();
+                end;
+
+        //bounding box
+            function TGraphicEllipse.determineBoundingBox() : TGeomBox;
+                begin
+                    result := calculateShapeBoundingBox( ellipseWidth, ellipseHeight );
                 end;
 
 end.

@@ -4,12 +4,11 @@ interface
 
     uses
         //Delphi
-            system.SysUtils, system.types, system.UITypes, System.UIConsts, System.Classes,
-            Winapi.D2D1, Vcl.Direct2D,
+            system.SysUtils, system.types,
             vcl.Graphics,
         //custom
-            GraphicDrawingTypes,
             DrawingAxisConversionClass,
+            Direct2DXYEntityCanvasClass,
             GeometryTypes, GeomBox,
             GraphicEllipseClass,
             GraphicEntityGroupClass;

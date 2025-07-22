@@ -3,13 +3,12 @@ unit GraphicArrowClass;
 interface
 
     uses
-        Winapi.D2D1,
         system.SysUtils, system.UITypes,
-        Vcl.Direct2D, vcl.Graphics,
+        vcl.Graphics,
         GeomBox, GeometryTypes,
         GeometryBaseClass,
         GeomLineClass, GeomPolygonClass,
-        GraphicDrawingTypes,
+        GraphicEntityTypes,
         DrawingAxisConversionClass,
         GraphicLineClass, GraphicPolygonClass,
         GraphicEntityGroupClass
@@ -136,7 +135,7 @@ implementation
                         headGraphic := TGraphicPolygon.create( filledIn, lineThicknessIn, fillColourIn, lineColourIn, lineStyleIn, arrowHead );
                         tailGraphic := TGraphicLine.create( lineThicknessIn, lineColourIn, lineStyleIn, arrowTail );
 
-                        addGraphicEntitysToGroup( [headGraphic, tailGraphic] );
+                        addArrGraphicEntitysToGroup( [headGraphic, tailGraphic] );
 
                     //free geometry objects
                         FreeAndNil( arrowHead );

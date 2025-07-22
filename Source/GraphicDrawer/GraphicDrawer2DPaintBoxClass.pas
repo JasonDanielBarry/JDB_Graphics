@@ -3,13 +3,13 @@ unit GraphicDrawer2DPaintBoxClass;
 interface
 
     uses
-        Vcl.Direct2D, Winapi.D2D1,
         Winapi.Windows, Winapi.Messages,
         System.SysUtils, System.Classes,
         Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ExtCtrls, Vcl.Themes,
         GraphicTextClass,
         GraphicGridSettingsRecord,
-        GraphicEntityListBaseClass, GraphicDrawerDirect2DClass
+        GraphicEntityListBaseClass,
+        GraphicDrawerDirect2DClass
         ;
 
     type

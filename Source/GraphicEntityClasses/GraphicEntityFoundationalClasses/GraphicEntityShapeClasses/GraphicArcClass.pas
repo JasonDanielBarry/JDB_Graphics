@@ -17,11 +17,11 @@ interface
             ;
 
     type
-        TGraphicArc = class(TGraphicShape)
-            strict private
+        TGraphicArc = class( TGraphicShape )
+            private
                 var
                     startAngle, endAngle,
-                    arcXRadius, arcYRadius      : double;
+                    arcXRadius, arcYRadius : double;
                 //draw to canvas
                     procedure drawShapeToCanvas(const axisConverterIn   : TDrawingAxisConverter;
                                                 var canvasInOut         : TDirect2DXYEntityCanvas); override;
@@ -40,6 +40,8 @@ interface
                                         const   handlePointXYIn : TGeomPoint );
                 //destructor
                     destructor destroy(); override;
+                //bounding box
+                    function determineBoundingBox() : TGeomBox; override;
         end;
 
 implementation
@@ -97,6 +99,12 @@ implementation
             destructor TGraphicArc.destroy();
                 begin
                     inherited destroy();
+                end;
+
+        //bounding box
+            function TGraphicArc.determineBoundingBox() : TGeomBox;
+                begin
+                    result := calculateShapeBoundingBox( 2*arcXRadius, 2*arcYRadius );
                 end;
 
 end.

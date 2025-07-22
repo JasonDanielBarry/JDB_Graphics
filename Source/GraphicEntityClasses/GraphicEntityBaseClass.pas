@@ -22,7 +22,7 @@ interface
                                             var canvasInOut         : TDirect2DXYEntityCanvas       ); virtual; abstract;
                     class procedure drawAllToCanvas(const arrGraphicEntitiesIn  : TArray<TGraphicEntity>;
                                                     const axisConverterIn       : TDrawingAxisConverter;
-                                                    var canvasInOut             : TDirect2DXYEntityCanvas       ); static;
+                                                    var canvasInOut             : TDirect2DXYEntityCanvas); static;
                 //bounding box
                     function determineBoundingBox() : TGeomBox; overload; virtual; abstract;
                     class function determineBoundingBox(const arrGraphicEntitiesIn : TArray<TGraphicEntity>) : TGeomBox; overload; static;
@@ -46,7 +46,7 @@ implementation
         //draw to canvas
             class procedure TGraphicEntity.drawAllToCanvas( const arrGraphicEntitiesIn   : TArray<TGraphicEntity>;
                                                             const axisConverterIn       : TDrawingAxisConverter;
-                                                            var canvasInOut             : TDirect2DXYEntityCanvas           );
+                                                            var canvasInOut             : TDirect2DXYEntityCanvas   );
                 var
                     i, arrLen : integer;
                 begin

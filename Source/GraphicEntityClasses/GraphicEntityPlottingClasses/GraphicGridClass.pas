@@ -4,16 +4,16 @@ interface
 
     uses
         //Delphi
+            Winapi.D2D1,
             system.SysUtils, System.Math, system.types, system.UITypes, System.UIConsts, System.Classes,
-            Winapi.D2D1, Vcl.Direct2D,
             vcl.Graphics, Vcl.StdCtrls, Vcl.Themes,
         //custom
             RoundingMethods,
-            GraphicEntityBaseClass,
-            DrawingAxisConversionClass,
             GeometryTypes, GeomBox,
             GeomLineClass,
-            GraphicDrawingTypes,
+            DrawingAxisConversionClass,
+            Direct2DXYEntityCanvasClass,
+            GraphicEntityBaseClass,
             GraphicLineClass,
             GraphicTextClass,
             GraphicGridSettingsRecord
@@ -47,23 +47,23 @@ interface
                         procedure drawMinorHorizontalGridLinesForSingleIncrement(   const   yStartIn, xMinIn, xMaxIn,
                                                                                             minorIncrementIn            : double;
                                                                                     const   axisConverterIn             : TDrawingAxisConverter;
-                                                                                    var canvasInOut                     : TDirect2DCanvas       );
+                                                                                    var canvasInOut                     : TDirect2DXYEntityCanvas   );
 
                         procedure drawMinorHorizontalGridLines( const   yStartIn, yEndIn,
                                                                         xMinIn, xMaxIn,
                                                                         majorIncrementIn    : double;
                                                                 const   axisConverterIn     : TDrawingAxisConverter;
-                                                                var canvasInOut             : TDirect2DCanvas       );
+                                                                var canvasInOut             : TDirect2DXYEntityCanvas       );
                     //vertical
                         procedure drawMinorVerticalGridLinesForSingleIncrement( const   xStartIn, yMinIn, yMaxIn,
                                                                                         minorIncrementIn            : double;
                                                                                 const   axisConverterIn             : TDrawingAxisConverter;
-                                                                                var canvasInOut                     : TDirect2DCanvas       );
+                                                                                var canvasInOut                     : TDirect2DXYEntityCanvas );
                         procedure drawMinorVerticalGridLines(   const   xStartIn, xEndIn,
                                                                         yMinIn, yMaxIn,
                                                                         majorIncrementIn    : double;
                                                                 const   axisConverterIn     : TDrawingAxisConverter;
-                                                                var canvasInOut             : TDirect2DCanvas       );
+                                                                var canvasInOut             : TDirect2DXYEntityCanvas   );
 
 
                     procedure drawMinorGridLines(   const   xStartIn, yStartIn,
@@ -71,31 +71,31 @@ interface
                                                             horizontalIncrementIn,
                                                             verticalIncrementIn     : double;
                                                     const   axisConverterIn         : TDrawingAxisConverter;
-                                                    var canvasInOut                 : TDirect2DCanvas       );
+                                                    var canvasInOut                 : TDirect2DXYEntityCanvas   );
                 //draw major grid lines
                     //horizontal
                         procedure drawMajorHorizontalGridLines( const   yStartIn, yEndIn,
                                                                         xMinIn, xMaxIn,
                                                                         majorIncrementIn    : double;
                                                                 const   axisConverterIn     : TDrawingAxisConverter;
-                                                                var canvasInOut             : TDirect2DCanvas       );
+                                                                var canvasInOut             : TDirect2DXYEntityCanvas   );
                     //vertical
                         procedure drawMajorVerticalGridLines(   const   xStartIn, xEndIn,
                                                                         yMinIn, yMaxIn,
                                                                         majorIncrementIn    : double;
                                                                 const   axisConverterIn     : TDrawingAxisConverter;
-                                                                var canvasInOut             : TDirect2DCanvas       );
+                                                                var canvasInOut             : TDirect2DXYEntityCanvas   );
                     procedure drawMajorGridLines(   const   xStartIn, yStartIn,
                                                             xEndIn, yEndIn,
                                                             horizontalIncrementIn,
                                                             verticalIncrementIn     : double;
                                                     const   axisConverterIn         : TDrawingAxisConverter;
-                                                    var canvasInOut                 : TDirect2DCanvas       );
+                                                    var canvasInOut                 : TDirect2DXYEntityCanvas   );
                 //axis lines
                     procedure drawAxisLines(const   xStartIn, yStartIn,
                                                     xEndIn, yEndIn      : double;
                                             const   axisConverterIn     : TDrawingAxisConverter;
-                                                    var canvasInOut     : TDirect2DCanvas       );
+                                                    var canvasInOut     : TDirect2DXYEntityCanvas);
                 //draw axis labels
                     function determineLabelPosition(const axisMinIn, axisMaxIn : double) : double;
                     function determineLabelValueString(const valueIn, incrementIn : double) : string;
@@ -105,24 +105,24 @@ interface
                         procedure drawXAxisLabel(   const   incrementIn,
                                                             xValueIn, yValueIn  : double;
                                                     const   axisConverterIn     : TDrawingAxisConverter;
-                                                    var canvasInOut             : TDirect2DCanvas       );
+                                                    var canvasInOut             : TDirect2DXYEntityCanvas   );
                         procedure drawXAxisLabels(  const   incrementIn,
                                                             xStartIn, xEndIn,
                                                             yMinIn, yMaxIn      : double;
                                                     const   axisConverterIn     : TDrawingAxisConverter;
-                                                    var canvasInOut             : TDirect2DCanvas       );
+                                                    var canvasInOut             : TDirect2DXYEntityCanvas   );
                     //y-axis
                         procedure determineYAxisLabelPosition(  const xMinIn, xMaxIn    : double;
                                                                 out xOut                : double );
                         procedure drawYAxisLabel(   const   incrementIn,
                                                             xValueIn, yValueIn  : double;
                                                     const   axisConverterIn     : TDrawingAxisConverter;
-                                                    var canvasInOut             : TDirect2DCanvas           );
+                                                    var canvasInOut             : TDirect2DXYEntityCanvas   );
                         procedure drawYAxisLabels(  const   incrementIn,
                                                             yStartIn, yEndIn,
                                                             xMinIn, xMaxIn      : double;
                                                     const   axisConverterIn     : TDrawingAxisConverter;
-                                                    var canvasInOut             : TDirect2DCanvas       );
+                                                    var canvasInOut             : TDirect2DXYEntityCanvas   );
             public
                 //constructor
                     constructor create();
@@ -132,10 +132,10 @@ interface
                     procedure setGridSettings(const gridVisibilitySettingsIn : TGraphicGridSettings);
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DCanvas       ); override;
+                                            var canvasInOut         : TDirect2DXYEntityCanvas ); override;
                 //draw axis labels
-                    procedure drawAxisLabels(   const   axisConverterIn         : TDrawingAxisConverter;
-                                                var canvasInOut                 : TDirect2DCanvas       );
+                    procedure drawAxisLabels(   const   axisConverterIn : TDrawingAxisConverter;
+                                                var canvasInOut         : TDirect2DXYEntityCanvas   );
         end;
 
 implementation
@@ -248,7 +248,7 @@ implementation
                 procedure TGraphicGrid.drawMinorHorizontalGridLinesForSingleIncrement(  const   yStartIn, xMinIn, xMaxIn,
                                                                                                 minorIncrementIn            : double;
                                                                                         const   axisConverterIn             : TDrawingAxisConverter;
-                                                                                        var canvasInOut                     : TDirect2DCanvas       );
+                                                                                        var canvasInOut                     : TDirect2DXYEntityCanvas   );
                     var
                         start_i,
                         i       : integer;
@@ -274,7 +274,7 @@ implementation
                                                                             xMinIn, xMaxIn,
                                                                             majorIncrementIn    : double;
                                                                     const   axisConverterIn     : TDrawingAxisConverter;
-                                                                    var canvasInOut             : TDirect2DCanvas       );
+                                                                    var canvasInOut             : TDirect2DXYEntityCanvas);
                     var
                         y, minorIncrement : double;
                     begin
@@ -293,7 +293,7 @@ implementation
                 procedure TGraphicGrid.drawMinorVerticalGridLinesForSingleIncrement(const   xStartIn, yMinIn, yMaxIn,
                                                                                             minorIncrementIn            : double;
                                                                                     const   axisConverterIn             : TDrawingAxisConverter;
-                                                                                    var canvasInOut                     : TDirect2DCanvas       );
+                                                                                    var canvasInOut                     : TDirect2DXYEntityCanvas);
                     var
                         start_i,
                         i       : integer;
@@ -319,7 +319,7 @@ implementation
                                                                             yMinIn, yMaxIn,
                                                                             majorIncrementIn    : double;
                                                                     const   axisConverterIn     : TDrawingAxisConverter;
-                                                                    var canvasInOut             : TDirect2DCanvas       );
+                                                                    var canvasInOut             : TDirect2DXYEntityCanvas   );
                     var
                         x, minorIncrement : double;
                     begin
@@ -339,7 +339,7 @@ implementation
                                                                 horizontalIncrementIn,
                                                                 verticalIncrementIn     : double;
                                                         const   axisConverterIn         : TDrawingAxisConverter;
-                                                        var canvasInOut                 : TDirect2DCanvas       );
+                                                        var canvasInOut                 : TDirect2DXYEntityCanvas   );
                 begin
                     if NOT( gridSettings.minorGridLinesVisible ) then
                         exit();
@@ -355,7 +355,7 @@ implementation
                                                                             xMinIn, xMaxIn,
                                                                             majorIncrementIn    : double;
                                                                     const   axisConverterIn     : TDrawingAxisConverter;
-                                                                    var canvasInOut             : TDirect2DCanvas       );
+                                                                    var canvasInOut             : TDirect2DXYEntityCanvas);
                     var
                         y : double;
                     begin
@@ -389,7 +389,7 @@ implementation
                                                                             yMinIn, yMaxIn,
                                                                             majorIncrementIn    : double;
                                                                     const   axisConverterIn     : TDrawingAxisConverter;
-                                                                    var canvasInOut             : TDirect2DCanvas      );
+                                                                    var canvasInOut             : TDirect2DXYEntityCanvas   );
                     var
                         x : double;
                     begin
@@ -423,7 +423,7 @@ implementation
                                                                 horizontalIncrementIn,
                                                                 verticalIncrementIn     : double;
                                                         const   axisConverterIn         : TDrawingAxisConverter;
-                                                        var canvasInOut                 : TDirect2DCanvas       );
+                                                        var canvasInOut                 : TDirect2DXYEntityCanvas   );
                 begin
                     if NOT( gridSettings.majorGridLinesVisible ) then
                         exit();
@@ -437,7 +437,7 @@ implementation
             procedure TGraphicGrid.drawAxisLines(   const   xStartIn, yStartIn,
                                                             xEndIn, yEndIn      : double;
                                                     const   axisConverterIn     : TDrawingAxisConverter;
-                                                    var canvasInOut             : TDirect2DCanvas           );
+                                                    var canvasInOut             : TDirect2DXYEntityCanvas   );
                 begin
                     //x - axis
                         if ( gridSettings.xAxisVisible ) then
@@ -519,7 +519,7 @@ implementation
                 procedure TGraphicGrid.drawXAxisLabel(  const   incrementIn,
                                                                 xValueIn, yValueIn  : double;
                                                         const   axisConverterIn     : TDrawingAxisConverter;
-                                                        var canvasInOut             : TDirect2DCanvas       );
+                                                        var canvasInOut             : TDirect2DXYEntityCanvas   );
                     var
                         xValueString : string;
                     begin
@@ -535,7 +535,7 @@ implementation
                                                                 xStartIn, xEndIn,
                                                                 yMinIn, yMaxIn      : double;
                                                         const   axisConverterIn     : TDrawingAxisConverter;
-                                                        var canvasInOut             : TDirect2DCanvas       );
+                                                        var canvasInOut             : TDirect2DXYEntityCanvas   );
                     var
                         x, y : double;
                     begin
@@ -575,7 +575,7 @@ implementation
                 procedure TGraphicGrid.drawYAxisLabel(  const   incrementIn,
                                                                 xValueIn, yValueIn  : double;
                                                         const   axisConverterIn     : TDrawingAxisConverter;
-                                                        var canvasInOut             : TDirect2DCanvas           );
+                                                        var canvasInOut             : TDirect2DXYEntityCanvas   );
                     var
                         yValueString : string;
                     begin
@@ -591,7 +591,7 @@ implementation
                                                                 yStartIn, yEndIn,
                                                                 xMinIn, xMaxIn      : double;
                                                         const   axisConverterIn     : TDrawingAxisConverter;
-                                                        var canvasInOut             : TDirect2DCanvas       );
+                                                        var canvasInOut             : TDirect2DXYEntityCanvas   );
                     var
                         x, y : double;
                     begin
@@ -647,7 +647,7 @@ implementation
 
         //draw to canvas
             procedure TGraphicGrid.drawToCanvas(const axisConverterIn   : TDrawingAxisConverter;
-                                                var canvasInOut         : TDirect2DCanvas       );
+                                                var canvasInOut         : TDirect2DXYEntityCanvas);
                 begin
                     if ( gridSettings.allElementsDisabled() ) then
                         exit();
@@ -675,8 +675,8 @@ implementation
                 end;
 
         //draw axis labels
-            procedure TGraphicGrid.drawAxisLabels(  const   axisConverterIn         : TDrawingAxisConverter;
-                                                    var canvasInOut                 : TDirect2DCanvas       );
+            procedure TGraphicGrid.drawAxisLabels(  const   axisConverterIn : TDrawingAxisConverter;
+                                                    var canvasInOut         : TDirect2DXYEntityCanvas   );
                 var
                     xMin, xMax, yMin, yMax  : double;
                     drawingRegion           : TGeomBox;
@@ -694,6 +694,5 @@ implementation
                     if ( gridSettings.yAxisValuesVisible ) then
                         drawYAxisLabels( gridLineVerticalIncrement, yStart, yEnd, xMin, xMax, axisConverterIn, canvasInOut );
                 end;
-
 
 end.

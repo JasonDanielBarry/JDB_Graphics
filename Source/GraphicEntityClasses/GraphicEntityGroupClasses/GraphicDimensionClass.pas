@@ -3,11 +3,11 @@ unit GraphicDimensionClass;
 interface
 
     uses
-        System.SysUtils, system.UITypes, system.Math, System.Classes, System.Types,
+        System.SysUtils, system.Math, System.Types,
         vcl.Graphics,
         GeometryTypes,
         GeometryBaseClass, GeomLineClass,
-        GraphicDrawingTypes,
+        Direct2DXYEntityCanvasClass,
         GraphicLineClass, GraphicTextClass,
         GraphicEntityGroupClass
         ;

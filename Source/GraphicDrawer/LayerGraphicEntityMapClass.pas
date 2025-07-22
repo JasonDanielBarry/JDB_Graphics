@@ -4,12 +4,13 @@ interface
 
     uses
         //Delphi
-            Winapi.D2D1, Vcl.Direct2D,
             system.SysUtils, system.Generics.Collections,
         //custom
-            DrawingAxisConversionClass,
-            GraphicEntityBaseClass, GraphicEntityGroupClass,
             GeomBox,
+            DrawingAxisConversionClass,
+            Direct2DXYEntityCanvasClass,
+            GraphicEntityBaseClass,
+            GraphicEntityGroupClass,
             GraphicEntityListBaseClass
             ;
 
@@ -37,7 +38,7 @@ interface
                     function determineActiveBoundingBox() : TGeomBox;
                 //draw active graphic objects
                     procedure drawActiveGraphicEntitysToCanvas( const axisConverter : TDrawingAxisConverter;
-                                                                var D2DCanvasInOut : TDirect2DCanvas        );
+                                                                var D2DCanvasInOut  : TDirect2DXYEntityCanvas   );
         end;
 
 implementation
@@ -65,14 +66,14 @@ implementation
                 begin
                     activateAllDrawingLayers();
 
-                    activeGraphicEntities.clearGraphicEntitysGroup( True );
+                    activeGraphicEntities.clearGraphicEntityGroup( True );
 
                     inherited clear();
                 end;
 
         //add graphic drawing object
             procedure TLayerGraphicEntityMap.addGraphicEntity(  const layerIn           : string;
-                                                                const GraphicEntityIn   : TGraphicEntity    );
+                                                                const GraphicEntityIn   : TGraphicEntity );
                 var
                     GraphicEntityCount  : integer;
                     arrGraphicEntitys   : TArray<TGraphicEntity>;
@@ -110,7 +111,7 @@ implementation
                     arrGraphicEntitys   : TArray<TGraphicEntity>;
                 begin
                     //clear active graphic objects
-                        activeGraphicEntities.clearGraphicEntitysGroup( False );
+                        activeGraphicEntities.clearGraphicEntityGroup( False );
 
                     arrLen := length( arrDrawingLayersToActiveIn );
 
@@ -126,7 +127,7 @@ implementation
                                 if NOT( TryGetValue( layer, arrGraphicEntitys ) ) then
                                     Continue;
 
-                            activeGraphicEntities.addGraphicEntitysToGroup( arrGraphicEntitys );
+                            activeGraphicEntities.addArrGraphicEntitysToGroup( arrGraphicEntitys );
                         end;
                 end;
 
@@ -147,7 +148,7 @@ implementation
 
         //draw active graphic objects
             procedure TLayerGraphicEntityMap.drawActiveGraphicEntitysToCanvas(  const axisConverter : TDrawingAxisConverter;
-                                                                                var D2DCanvasInOut : TDirect2DCanvas        );
+                                                                                var D2DCanvasInOut  : TDirect2DXYEntityCanvas   );
                 begin
                     activeGraphicEntities.drawToCanvas( axisConverter, D2DCanvasInOut );
                 end;

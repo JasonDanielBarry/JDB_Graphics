@@ -3,13 +3,12 @@ unit GraphicMousePointTrackerClass;
 interface
 
     uses
-        Winapi.D2D1,
-        system.SysUtils, System.Math, system.Classes, system.UITypes, system.Types,
-        Vcl.Direct2D, vcl.Graphics, vcl.StdCtrls, vcl.Themes,
+        system.SysUtils, System.Math, system.Types,
+        vcl.Graphics, vcl.StdCtrls, vcl.Themes,
         InterpolatorClass,
         LinearAlgebraTypes, VectorMethods,
         GeometryTypes, GeomBox,
-        GraphicDrawingTypes,
+        Direct2DXYEntityCanvasClass,
         DrawingAxisConversionClass,
         GraphicEntityBaseClass,
         GraphicTextClass,
@@ -18,8 +17,10 @@ interface
     type
         TGraphicMousePointTracker = class(TGraphicEntity)
             private
+                type
+                    EMouseTrackMode = (mtmContinuous = 0, mtmDiscrete);
                 var
-                    contiuousTracking   : boolean;
+                    trackingMode        : EMouseTrackMode;
                     lineInterpolator    : TInterpolator;
                     graphicPointText    : TGraphicText;
                     graphicPointEllipse : TGraphicEllipse;
@@ -43,12 +44,12 @@ interface
             public
                 //constructor
                     constructor create( const continuousTrackingIn  : boolean;
-                                        const arrDataPointsIn       : TArray<TGeomPoint>    );
+                                        const arrDataPointsIn       : TArray<TGeomPoint> );
                 //destructor
                     destructor destroy(); override;
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DCanvas       ); override;
+                                            var canvasInOut         : TDirect2DXYEntityCanvas ); override;
         end;
 
 implementation
@@ -116,6 +117,7 @@ implementation
                                             Continue;
 
                                         minLength := lineLength;
+
                                         closestPointOut := lineInterpPoint;
                                     end;
                             end;
@@ -186,8 +188,10 @@ implementation
 
                     lineInterpolator := TInterpolator.create();
 
-                    contiuousTracking := continuousTrackingIn;
-
+                    if ( continuousTrackingIn ) then
+                        trackingMode := EMouseTrackMode.mtmContinuous
+                    else
+                        trackingMode := EMouseTrackMode.mtmDiscrete;
 
                     TGeomPoint.copyPoints( arrDataPointsIn, arrPlotPointsXY );
 
@@ -218,8 +222,6 @@ implementation
                                                                     TPenStyle.psSolid,
                                                                     TGeomPoint.create( 0, 0 )
                                                                  );
-
-                    graphicBox := TGeomBox.determineBoundingBox( arrDataPointsIn );
                 end;
 
         //destructor
@@ -233,7 +235,7 @@ implementation
 
         //draw to canvas
             procedure TGraphicMousePointTracker.drawToCanvas(   const axisConverterIn   : TDrawingAxisConverter;
-                                                                var canvasInOut         : TDirect2DCanvas       );
+                                                                var canvasInOut         : TDirect2DXYEntityCanvas   );
                 var
                     coordText       : string;
                     mousePointXY,
@@ -242,10 +244,13 @@ implementation
                     mousePointXY := axisConverterIn.getMouseCoordinatesXY();
 
                     //find closest point
-                        if ( contiuousTracking ) then
-                            closestPointXY := determineContinuousPlotPointClosestToMouse( mousePointXY, axisConverterIn )
-                        else
-                            closestPointXY := determineDiscretePlotPointClosestToMouse( mousePointXY, axisConverterIn );
+                        case ( trackingMode ) of
+                            EMouseTrackMode.mtmContinuous:
+                                closestPointXY := determineContinuousPlotPointClosestToMouse( mousePointXY, axisConverterIn );
+
+                            EMouseTrackMode.mtmDiscrete:
+                                closestPointXY := determineDiscretePlotPointClosestToMouse( mousePointXY, axisConverterIn );
+                        end;
 
                     //draw the tracking point
                         graphicPointEllipse.setHandlePoint( closestPointXY.x, closestPointXY.y );

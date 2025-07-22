@@ -8,7 +8,6 @@ interface
             Winapi.D2D1, Vcl.Direct2D,
             vcl.Graphics,
         //custom
-            GraphicDrawingTypes,
             DrawingAxisConversionClass,
             GeometryTypes, GeomPolyLineClass,
             GraphicEntityGroupClass,
@@ -45,7 +44,8 @@ implementation
                     inherited create();
 
                     //create line plot
-                        tempPolyline := TGeomPolyLine.create( arrPlotPointsIn );
+                        tempPolyline := TGeomPolyLine.create();
+                        tempPolyline.setVertices( arrPlotPointsIn );
 
                         linePlot := TGraphicPolyline.create( plotLineThicknessIn, plotColourIn, plotLineStyleIn, tempPolyline );
 
