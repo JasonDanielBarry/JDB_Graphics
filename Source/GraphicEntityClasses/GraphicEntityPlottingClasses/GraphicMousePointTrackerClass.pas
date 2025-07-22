@@ -50,6 +50,8 @@ interface
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
                                             var canvasInOut         : TDirect2DXYEntityCanvas ); override;
+                //bounding box
+                    function determineBoundingBox() : TGeomBox; override;
         end;
 
 implementation
@@ -64,6 +66,7 @@ implementation
                     i, arrLen           : integer;
                     pointDistance,
                     minPointDistance    : double;
+                    arrDelta            : array[0..1] of double;
                 begin
                     mousePointLT    := axisConverterIn.XY_to_LT( mousePointIn );
                     arrPointsLT     := axisConverterIn.arrXY_to_arrLT( arrPlotPointsXY );
@@ -74,7 +77,10 @@ implementation
 
                     for i := 0 to ( arrLen - 1 ) do
                         begin
-                            pointDistance := Norm( [mousePointLT.x - arrPointsLT[i].x, mousePointLT.y - arrPointsLT[i].y] );
+                            arrDelta[0] := mousePointLT.x - arrPointsLT[i].x;
+                            arrDelta[1] := mousePointLT.y - arrPointsLT[i].y;
+
+                            pointDistance := Norm( arrDelta );
 
                             if ( minPointDistance < pointDistance ) then
                                 Continue;
@@ -265,6 +271,12 @@ implementation
                         graphicPointText.setTextString( coordText );
 
                         graphicPointText.drawToCanvas( axisConverterIn, canvasInOut );
+                end;
+
+        //bounding box
+            function TGraphicMousePointTracker.determineBoundingBox() : TGeomBox;
+                begin
+                    result := TGeomBox.determineBoundingBox( arrPlotPointsXY );
                 end;
 
 end.
