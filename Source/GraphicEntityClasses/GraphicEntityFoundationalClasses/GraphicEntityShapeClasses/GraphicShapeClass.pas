@@ -79,7 +79,7 @@ implementation
                             end;
 
                     //dimension the box
-                        shapeBox.newBox( shapeWidthIn, shapeHeightIn );
+                        shapeBox := TGeomBox.newBox( shapeWidthIn, shapeHeightIn );
 
                     //determine the horizontal centre of the box
                         case (horizontalAlignment) of
