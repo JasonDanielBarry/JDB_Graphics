@@ -15,10 +15,10 @@ interface
 
     type
         TGraphicDrawerBase = class
-            strict protected
+            protected
                 var
                     graphicBackgroundColour : Tcolor;
-            strict protected
+            protected
                 var
                     axisConverter : TDrawingAxisConverter;
                     //these variables are declared here to be used in the drawAll() procedure
