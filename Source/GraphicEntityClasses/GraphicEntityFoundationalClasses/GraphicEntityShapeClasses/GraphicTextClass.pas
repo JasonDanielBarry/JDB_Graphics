@@ -108,10 +108,10 @@ implementation
                                         TPenStyle.psSolid,
                                         textHandlePointIn   );
 
-                    addTextUnderlay     := addTextUnderlayIn;
-                    textSize            := textSizeIn;
-                    textColour          := textColourIn;
-                    textFontStyles      := textFontStylesIn;
+                    addTextUnderlay := addTextUnderlayIn;
+                    textSize        := textSizeIn;
+                    textColour      := textColourIn;
+                    textFontStyles  := textFontStylesIn;
 
                     setTextString( textStringIn );
                 end;
