@@ -3,7 +3,8 @@ unit GraphicEntityListBaseClass;
 interface
 
     uses
-        System.Generics.Collections,
+        System.Generics.Collections, System.UITypes,
+        Vcl.Themes, Vcl.Graphics,
         GraphicEntityBaseClass
         ;
 
@@ -11,7 +12,8 @@ interface
         TGraphicEntityListBase = class(TList< TPair< string, TGraphicEntity > >)
             private
                 var
-                    currentDrawingLayer : string;
+                    currentDrawingLayer     : string;
+                    graphicBackgroundColour : TColor;
             protected
                 //add a graphic object to the list
                     procedure addGraphicEntity(const GraphicEntityIn : TGraphicEntity);
@@ -20,6 +22,7 @@ interface
                     constructor create();
                 //set the layer to which to send the graphic objects
                     procedure setcurrentDrawingLayer(const layerIn : string);
+                property BackgroundColour : TColor read graphicBackgroundColour;
         end;
 
 implementation
@@ -43,6 +46,8 @@ implementation
                     inherited create();
 
                     currentDrawingLayer := 'Default drawing layer';
+
+                    graphicBackgroundColour := TStyleManager.ActiveStyle.GetStyleColor( TStyleColor.scGenericBackground );
 
                     clear();
                 end;
