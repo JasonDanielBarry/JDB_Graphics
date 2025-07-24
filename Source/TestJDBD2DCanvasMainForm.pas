@@ -360,6 +360,12 @@ procedure TJDB_D2D_Form.PaintBoxXYPaint(Sender: TObject);
 
                 D2DCanvas.drawXYPolygon( True, True, polygonPoints, axisConverter );
 
+                testPolygon.setVertices( [0, 50, 25], [200, 200, 300] );
+
+                polygonPoints := testPolygon.getArrGeomPoints();
+
+                D2DCanvas.drawXYPolygon( True, True, polygonPoints, axisConverter );
+
                 FreeAndNil( testPolygon );
             end;
 
