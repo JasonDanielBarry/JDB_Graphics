@@ -6,7 +6,7 @@ interface
         system.SysUtils, System.Math, system.Types,
         vcl.Graphics, vcl.StdCtrls, vcl.Themes,
         InterpolatorClass,
-        LinearAlgebraTypes, VectorMethods,
+        LinearAlgebraTypes, LAVectorMethods,
         GeometryTypes, GeomBox,
         Direct2DXYEntityCanvasClass,
         DrawingAxisConversionClass,
