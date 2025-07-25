@@ -104,8 +104,22 @@ implementation
                                                                     const newMousePositionIn            : TPoint;
                                                                     const messageIn                     : Tmessage;
                                                                     out graphicBufferWasUpdatedOut      : boolean);
+                var
+                    graphicBufferMustBeUpdated : boolean;
                 begin
+                    //test if the buffer must be updated based on received windows messages
+                        graphicBufferMustBeUpdated := (messageIn.Msg = WM_USER_REDRAWGRAPHIC) OR windowsMessageRequiredRedraw( messageIn, newMousePositionIn );
 
+                        if NOT( graphicBufferMustBeUpdated ) then
+                            begin
+                                graphicBufferWasUpdatedOut := False;
+                                exit();
+                            end;
+
+                    //update the graphic buffer
+                        drawAll( canvasWidthIn, canvasHeightIn );
+
+                    graphicBufferWasUpdatedOut := True;
                 end;
 
 end.

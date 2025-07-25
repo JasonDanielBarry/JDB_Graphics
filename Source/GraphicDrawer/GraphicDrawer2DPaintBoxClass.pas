@@ -178,7 +178,7 @@ implementation
         //process windows messages
             procedure TPaintBox.processWindowsMessages(var messageInOut : TMessage; out graphicWasRedrawnOut : boolean);
                 var
-                    mouseInputRequiresRedraw        : boolean;
+                    graphicBufferWasUpdated        : boolean;
                     currentMousePositionOnPaintbox  : TPoint;
                 begin
                     //drawing graphic-----------------------------------------------------------------------------------------------
@@ -187,22 +187,27 @@ implementation
                                 currentMousePositionOnPaintbox := self.ScreenToClient( mouse.CursorPos );
 
                         //process windows message in axis converter
-                            mouseInputRequiresRedraw := D2DGraphicDrawer.windowsMessageRequiredRedraw( messageInOut, currentMousePositionOnPaintbox );
+                            D2DGraphicDrawer.processWindowsMessages( self.Width, self.Height, currentMousePositionOnPaintbox, messageInOut, graphicBufferWasUpdated );
 
-//                            D2DGraphicDrawer.processWindowsMessages( self.Width, self.Height, currentMousePositionOnPaintbox, messageInOut, mustRedrawGraphic );
+                        //DO NOT TOUCH!
 
-                        //render image off screen
-                            if ( mouseInputRequiresRedraw OR (messageInOut.Msg = TGraphicDrawerDirect2D.WM_USER_REDRAWGRAPHIC) ) then
-                                begin
-                                    //draw to the canvas
-                                        D2DGraphicDrawer.drawAll(
-                                                                    self.Width,
-                                                                    self.Height
-                                                                );
+                        //the variable mustRedrawGraphic is used in the paintbox onPaintEvent
+                        //to signify if the paintbox must update itself using the graphic buffer
+                        //and is set to false after the paintbox updates itself
 
-                                    //signify to wndProc() that the graphic must be redrawn
-                                        mustRedrawGraphic := True;
-                                end;
+                        //The processWindowsMessages has a special case where it can run multiple times
+                        //with mustRedrawGraphic = False
+                        //if the value of graphicBufferWasUpdated is assigned to mustRedrawGraphic
+                        //each time processWindowsMessages is called then the graphic flickers
+
+                        //The structure below prevents flickering
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                                    //
+                        //signify that the paintbot canvas must be update with the graphic buffer   //
+                            if ( graphicBufferWasUpdated ) then                                     //
+                                mustRedrawGraphic := True;                                          //
+                                                                                                    //
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
                         //paint rendered image to screen
                             if ( mustRedrawGraphic ) then
