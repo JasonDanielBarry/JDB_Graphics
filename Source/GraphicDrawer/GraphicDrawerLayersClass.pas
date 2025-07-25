@@ -35,7 +35,7 @@ interface
                 //destructor
                     destructor destroy(); override;
                 //add graphic drawing objects to the drawing object container
-                    procedure readGraphicEntityList(const GraphicEntityListIn : TGraphicEntityListBase);
+                    procedure updateGraphicEntitys(const GraphicEntityListIn : TGraphicEntityListBase);
                 //accessors
                     function getAllDrawingLayers() : TArray<string>;
                 //modifiers
@@ -103,9 +103,19 @@ implementation
                 end;
 
         //add graphic objects to the map
-            procedure TGraphicDrawerLayers.readGraphicEntityList(const GraphicEntityListIn : TGraphicEntityListBase);
+            procedure TGraphicDrawerLayers.updateGraphicEntitys(const GraphicEntityListIn : TGraphicEntityListBase);
                 begin
-                    layerGraphicEntityMap.readGraphicEntityList( GraphicEntityListIn );
+                    //set background to match theme
+                        updateBackgroundColour();
+
+                    //reset the stored graphics
+                        clearGraphicEntitys();
+
+                    //read the graphic entity list
+                        layerGraphicEntityMap.readGraphicEntityList( GraphicEntityListIn );
+
+                    //activate all drawing layers
+                        activateAllDrawingLayers();
                 end;
 
         //accessors

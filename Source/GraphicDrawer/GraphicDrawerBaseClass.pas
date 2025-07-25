@@ -28,7 +28,7 @@ interface
                 //drawing procedures
                     //draw all geometry
                         procedure drawAll(  const canvasWidthIn, canvasHeightIn : integer;
-                                            var D2DCanvasInOut                  : TDirect2DXYEntityCanvas);
+                                            var D2DCanvasInOut                  : TDirect2DXYEntityCanvas   );
             public
                 //constructor
                     constructor create(); virtual;
