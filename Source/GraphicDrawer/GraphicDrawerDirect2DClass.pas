@@ -32,8 +32,13 @@ interface
                 //graphic draw event
                     function getOnPostGraphicDrawEvent() : TOnPostGraphicDrawEvent;
                     procedure setOnPostGraphicDrawEvent(const onPostGraphicDrawEventIn : TOnPostGraphicDrawEvent);
-                //draw all geometry
+                //draw all graphic entities
                     procedure drawAll(const canvasWidthIn, canvasHeightIn : integer);
+                //process windows messages
+                    procedure processWindowsMessages(   const canvasWidthIn, canvasHeightIn : integer;
+                                                        const newMousePositionIn            : TPoint;
+                                                        const messageIn                     : Tmessage;
+                                                        out graphicBufferWasUpdatedOut      : boolean   );
                 property GraphicBuffer : TBitmap read currentGraphicBufferBMP;
         end;
 
@@ -70,7 +75,7 @@ implementation
                     onPostGraphicDrawEvent := onPostGraphicDrawEventIn;
                 end;
 
-        //draw all geometry
+        //draw all graphic entities
             procedure TGraphicDrawerDirect2D.drawAll(const canvasWidthIn, canvasHeightIn : integer);
                 var
                     D2DCanvas : TDirect2DXYEntityCanvas;
@@ -92,6 +97,15 @@ implementation
                             onPostGraphicDrawEvent( canvasWidthIn, canvasHeightIn, D2DCanvas );
 
                     FreeAndNil( D2DCanvas );
+                end;
+
+        //process windows messages
+            procedure TGraphicDrawerDirect2D.processWindowsMessages(const canvasWidthIn, canvasHeightIn : integer;
+                                                                    const newMousePositionIn            : TPoint;
+                                                                    const messageIn                     : Tmessage;
+                                                                    out graphicBufferWasUpdatedOut      : boolean);
+                begin
+
                 end;
 
 end.

@@ -189,6 +189,8 @@ implementation
                         //process windows message in axis converter
                             mouseInputRequiresRedraw := D2DGraphicDrawer.windowsMessageRequiredRedraw( messageInOut, currentMousePositionOnPaintbox );
 
+//                            D2DGraphicDrawer.processWindowsMessages( self.Width, self.Height, currentMousePositionOnPaintbox, messageInOut, mustRedrawGraphic );
+
                         //render image off screen
                             if ( mouseInputRequiresRedraw OR (messageInOut.Msg = TGraphicDrawerDirect2D.WM_USER_REDRAWGRAPHIC) ) then
                                 begin
