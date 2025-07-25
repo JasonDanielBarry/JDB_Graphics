@@ -43,8 +43,6 @@ interface
                     procedure setGridSettings(const gridSettingsIn : TGraphicGridSettings);
                     procedure setActiveDrawingLayers(const arrActiveDrawingLayersIn : TArray<string>);
                     procedure activateAllDrawingLayers();
-                //reset
-                    procedure clearGraphicEntitys();
         end;
 
 implementation
@@ -94,7 +92,7 @@ implementation
         //destructor
             destructor TGraphicDrawerLayers.destroy();
                 begin
-                    clearGraphicEntitys();
+                    layerGraphicEntityMap.clear();
 
                     FreeAndNil( graphicGrid );
                     FreeAndNil( layerGraphicEntityMap );
@@ -109,7 +107,7 @@ implementation
                         updateBackgroundColour();
 
                     //reset the stored graphics
-                        clearGraphicEntitys();
+                        layerGraphicEntityMap.clear();
 
                     //read the graphic entity list
                         layerGraphicEntityMap.readGraphicEntityList( GraphicEntityListIn );
@@ -147,12 +145,6 @@ implementation
                     layerGraphicEntityMap.activateAllDrawingLayers();
 
                     determineActiveBoundingBox();
-                end;
-
-        //reset drawing geometry by freeing all drawing geometry objects
-            procedure TGraphicDrawerLayers.clearGraphicEntitys();
-                begin
-                    layerGraphicEntityMap.clear();
                 end;
 
 end.

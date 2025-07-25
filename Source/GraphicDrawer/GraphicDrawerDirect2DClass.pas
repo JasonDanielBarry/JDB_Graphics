@@ -4,7 +4,7 @@ interface
 
     uses
         //Delphi
-            Winapi.D2D1,
+            Winapi.D2D1, Winapi.Messages,
             system.SysUtils, system.types,
             vcl.Graphics,
         //custom
@@ -20,8 +20,11 @@ interface
         TGraphicDrawerDirect2D = class(TGraphicDrawerAxisConversionInterface)
             private
                 var
-                    onPostGraphicDrawEvent : TOnPostGraphicDrawEvent;
+                    currentGraphicBufferBMP : TBitmap;
+                    onPostGraphicDrawEvent  : TOnPostGraphicDrawEvent;
             public
+                const
+                    WM_USER_REDRAWGRAPHIC = WM_USER + 1;
                 //constructor
                     constructor create(); override;
                 //destructor
@@ -30,8 +33,8 @@ interface
                     function getOnPostGraphicDrawEvent() : TOnPostGraphicDrawEvent;
                     procedure setOnPostGraphicDrawEvent(const onPostGraphicDrawEventIn : TOnPostGraphicDrawEvent);
                 //draw all geometry
-                    procedure drawAll(  const canvasWidthIn, canvasHeightIn : integer;
-                                        const canvasIn                      : TCanvas   );
+                    procedure drawAll(const canvasWidthIn, canvasHeightIn : integer);
+                property GraphicBuffer : TBitmap read currentGraphicBufferBMP;
         end;
 
 implementation
@@ -42,12 +45,17 @@ implementation
                 begin
                     inherited create();
 
+                    currentGraphicBufferBMP             := TBitmap.Create();
+                    currentGraphicBufferBMP.PixelFormat := TPixelFormat.pf32bit;
+
                     onPostGraphicDrawEvent := nil;
                 end;
 
         //destructor
             destructor TGraphicDrawerDirect2D.destroy();
                 begin
+                    FreeAndNil( currentGraphicBufferBMP );
+
                     inherited destroy();
                 end;
 
@@ -63,13 +71,15 @@ implementation
                 end;
 
         //draw all geometry
-            procedure TGraphicDrawerDirect2D.drawAll(   const canvasWidthIn, canvasHeightIn : integer;
-                                                        const canvasIn                      : TCanvas   );
+            procedure TGraphicDrawerDirect2D.drawAll(const canvasWidthIn, canvasHeightIn : integer);
                 var
                     D2DCanvas : TDirect2DXYEntityCanvas;
                 begin
+                    //size bitmap for drawing
+                        currentGraphicBufferBMP.SetSize( canvasWidthIn, canvasHeightIn );
+
                     //create D2D canvas
-                        D2DCanvas := TDirect2DXYEntityCanvas.Create( canvasIn, Rect(0, 0, canvasWidthIn, canvasHeightIn) );
+                        D2DCanvas := TDirect2DXYEntityCanvas.Create( currentGraphicBufferBMP.Canvas, Rect(0, 0, canvasWidthIn, canvasHeightIn) );
 
                     //draw to the D2D canvas
                         inherited drawAll(

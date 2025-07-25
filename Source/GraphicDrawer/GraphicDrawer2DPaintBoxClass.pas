@@ -15,11 +15,8 @@ interface
     type
         TPaintBox = class(Vcl.ExtCtrls.TPaintBox)
             private
-                const
-                    WM_USER_REDRAWGRAPHIC = WM_USER + 1;
                 var
                     mustRedrawGraphic       : boolean;
-                    currentGraphicBuffer    : TBitmap;
                     D2DGraphicDrawer        : TGraphicDrawerDirect2D;
                 //events
                     procedure PaintBoxDrawer2DPaint(Sender: TObject);
@@ -27,8 +24,6 @@ interface
                     procedure PaintBoxGraphicMouseLeave(Sender: TObject);
                 //mouse cursor
                     procedure setMouseCursor(const messageIn : TMessage);
-                //update buffer
-                    procedure updateGraphicBuffer();
             protected
                 //
             public
@@ -60,7 +55,7 @@ implementation
             procedure TPaintBox.PaintBoxDrawer2DPaint(Sender: TObject);
                 begin
                     //draw buffer to screen
-                        self.Canvas.Draw( 0, 0, currentGraphicBuffer );
+                        self.Canvas.Draw( 0, 0, D2DGraphicDrawer.GraphicBuffer );
 
                     mustRedrawGraphic := False;
                 end;
@@ -98,29 +93,6 @@ implementation
                         end;
                 end;
 
-        //update buffer
-            procedure TPaintBox.updateGraphicBuffer();
-                var
-                    canvasWidth, canvasHeight : integer;
-                begin
-                    //cache the canvas dimensions
-                        canvasWidth     := self.Width;
-                        canvasHeight    := self.Height;
-
-                    //set graphic buffer size
-                        currentGraphicBuffer.SetSize( canvasWidth, canvasHeight );
-
-                    //draw to the canvas
-                        D2DGraphicDrawer.drawAll(
-                                                    canvasWidth,
-                                                    canvasHeight,
-                                                    currentGraphicBuffer.Canvas
-                                                );
-
-                    //signify to wndProc() that the graphic must be redrawn
-                        mustRedrawGraphic := True;
-                end;
-
     //protected
         //
 
@@ -131,10 +103,7 @@ implementation
                     inherited Create( AOwner );
 
                     //create required classes
-                        currentGraphicBuffer    := TBitmap.create();
-                        D2DGraphicDrawer        := TGraphicDrawerDirect2D.create();
-
-                        currentGraphicBuffer.PixelFormat := TPixelFormat.pf32bit;
+                        D2DGraphicDrawer := TGraphicDrawerDirect2D.create();
 
                     //assign events
                         self.OnPaint        := PaintBoxDrawer2DPaint;
@@ -155,7 +124,6 @@ implementation
             destructor TPaintBox.destroy();
                 begin
                     //free classes
-                        FreeAndNil( currentGraphicBuffer );
                         FreeAndNil( D2DGraphicDrawer );
 
                     inherited destroy();
@@ -188,7 +156,7 @@ implementation
                 begin
                     //this message is sent to callingControlIn.wndProc() where the graphic is updated and redrawn
                     //the self.processWindowsMessages() method must be called in callingControlIn.wndProc()
-                        PostMessage( callingControlIn.Handle, WM_USER_REDRAWGRAPHIC, 0, 0 );
+                        PostMessage( callingControlIn.Handle, TGraphicDrawerDirect2D.WM_USER_REDRAWGRAPHIC, 0, 0 );
                 end;
 
             procedure TPaintBox.updateBackgroundColour(const callingControlIn : TWinControl);
@@ -200,17 +168,8 @@ implementation
             procedure TPaintBox.updateGraphics( const callingControlIn      : TWinControl;
                                                 const GraphicEntityListIn   : TGraphicEntityListBase );
                 begin
-                    //set background to match theme
-                        D2DGraphicDrawer.updateBackgroundColour();
-
-                    //reset the stored graphics
-                        D2DGraphicDrawer.clearGraphicEntitys();
-
                     //update the D2DGraphicDrawer graphics
-                        D2DGraphicDrawer.readGraphicEntityList( GraphicEntityListIn );
-
-                    //activate all drawing layers
-                        D2DGraphicDrawer.activateAllDrawingLayers();
+                        D2DGraphicDrawer.updateGraphicEntitys( GraphicEntityListIn );
 
                     //send message to redraw
                         postRedrawGraphicMessage( callingControlIn );
@@ -231,8 +190,17 @@ implementation
                             mouseInputRequiresRedraw := D2DGraphicDrawer.windowsMessageRequiredRedraw( messageInOut, currentMousePositionOnPaintbox );
 
                         //render image off screen
-                            if ( mouseInputRequiresRedraw OR (messageInOut.Msg = WM_USER_REDRAWGRAPHIC) ) then
-                                updateGraphicBuffer();
+                            if ( mouseInputRequiresRedraw OR (messageInOut.Msg = TGraphicDrawerDirect2D.WM_USER_REDRAWGRAPHIC) ) then
+                                begin
+                                    //draw to the canvas
+                                        D2DGraphicDrawer.drawAll(
+                                                                    self.Width,
+                                                                    self.Height
+                                                                );
+
+                                    //signify to wndProc() that the graphic must be redrawn
+                                        mustRedrawGraphic := True;
+                                end;
 
                         //paint rendered image to screen
                             if ( mustRedrawGraphic ) then
