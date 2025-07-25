@@ -54,7 +54,7 @@ implementation
         //events
             procedure TPaintBox.PaintBoxDrawer2DPaint(Sender: TObject);
                 begin
-                    //draw buffer to screen
+                    //draw buffer to paintbox
                         self.Canvas.Draw( 0, 0, D2DGraphicDrawer.GraphicBuffer );
 
                     mustRedrawGraphic := False;
@@ -190,26 +190,26 @@ implementation
                             D2DGraphicDrawer.processWindowsMessages( self.Width, self.Height, currentMousePositionOnPaintbox, messageInOut, graphicBufferWasUpdated );
 
                         //DO NOT TOUCH!
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        //the variable mustRedrawGraphic is used in the paintbox onPaintEvent           //
+                        //to signify if the paintbox must update itself using the graphic buffer        //
+                        //and is set to false after the paintbox updates itself                         //
+                                                                                                        //
+                        //The processWindowsMessages has a special case where it can run multiple times //
+                        //with mustRedrawGraphic = False                                                //
+                                                                                                        //
+                        //If the value of graphicBufferWasUpdated is assigned to mustRedrawGraphic      //
+                        //each time processWindowsMessages is called then the graphic flickers          //
+                                                                                                        //
+                        //The structure below prevents flickering                                       //
+                                                                                                        //
+                        //signify that the paintbot canvas must be update with the graphic buffer       //
+                            if ( graphicBufferWasUpdated ) then                                         //
+                                mustRedrawGraphic := True;                                              //
+                                                                                                        //
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                        //the variable mustRedrawGraphic is used in the paintbox onPaintEvent
-                        //to signify if the paintbox must update itself using the graphic buffer
-                        //and is set to false after the paintbox updates itself
-
-                        //The processWindowsMessages has a special case where it can run multiple times
-                        //with mustRedrawGraphic = False
-                        //if the value of graphicBufferWasUpdated is assigned to mustRedrawGraphic
-                        //each time processWindowsMessages is called then the graphic flickers
-
-                        //The structure below prevents flickering
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                                                                    //
-                        //signify that the paintbot canvas must be update with the graphic buffer   //
-                            if ( graphicBufferWasUpdated ) then                                     //
-                                mustRedrawGraphic := True;                                          //
-                                                                                                    //
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                        //paint rendered image to screen
+                        //paint buffer to paintbox
                             if ( mustRedrawGraphic ) then
                                 begin
                                     self.Repaint();
