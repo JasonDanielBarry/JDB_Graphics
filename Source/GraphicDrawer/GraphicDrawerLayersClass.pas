@@ -5,6 +5,7 @@ interface
     uses
         //Delphi
             system.SysUtils, system.UITypes, system.Generics.Collections,
+            Vcl.Controls,
         //custom
             GeomBox,
             Direct2DXYEntityCanvasClass,
@@ -35,7 +36,8 @@ interface
                 //destructor
                     destructor destroy(); override;
                 //add graphic drawing objects to the drawing object container
-                    procedure updateGraphicEntitys(const GraphicEntityListIn : TGraphicEntityListBase);
+                    procedure updateGraphicEntitys( const callingControlIn      : TWinControl;
+                                                    const GraphicEntityListIn   : TGraphicEntityListBase );
                 //accessors
                     function getAllDrawingLayers() : TArray<string>;
                 //modifiers
@@ -62,7 +64,7 @@ implementation
         //drawing procedures
             //draw all geometry
                 procedure TGraphicDrawerLayers.drawAll( const canvasWidthIn, canvasHeightIn : integer;
-                                                        var D2DCanvasInOut                  : TDirect2DXYEntityCanvas);
+                                                        var D2DCanvasInOut                  : TDirect2DXYEntityCanvas );
                     begin
                         inherited drawAll(  canvasWidthIn, canvasHeightIn,
                                             D2DCanvasInOut                  );
@@ -101,11 +103,9 @@ implementation
                 end;
 
         //add graphic objects to the map
-            procedure TGraphicDrawerLayers.updateGraphicEntitys(const GraphicEntityListIn : TGraphicEntityListBase);
+            procedure TGraphicDrawerLayers.updateGraphicEntitys(const callingControlIn      : TWinControl;
+                                                                const GraphicEntityListIn   : TGraphicEntityListBase);
                 begin
-                    //set background to match theme
-                        updateBackgroundColour();
-
                     //reset the stored graphics
                         layerGraphicEntityMap.clear();
 
@@ -114,6 +114,9 @@ implementation
 
                     //activate all drawing layers
                         activateAllDrawingLayers();
+
+                    //set background to match theme
+                        updateBackgroundColour( callingControlIn );
                 end;
 
         //accessors

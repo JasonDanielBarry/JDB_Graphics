@@ -22,9 +22,10 @@ interface
                 var
                     currentGraphicBufferBMP : TBitmap;
                     onPostGraphicDrawEvent  : TOnPostGraphicDrawEvent;
+                //draw all graphic entities
+                    procedure drawAll(const canvasWidthIn, canvasHeightIn : integer);
             public
-                const
-                    WM_USER_REDRAWGRAPHIC = WM_USER + 1;
+
                 //constructor
                     constructor create(); override;
                 //destructor
@@ -32,8 +33,6 @@ interface
                 //graphic draw event
                     function getOnPostGraphicDrawEvent() : TOnPostGraphicDrawEvent;
                     procedure setOnPostGraphicDrawEvent(const onPostGraphicDrawEventIn : TOnPostGraphicDrawEvent);
-                //draw all graphic entities
-                    procedure drawAll(const canvasWidthIn, canvasHeightIn : integer);
                 //process windows messages
                     procedure processWindowsMessages(   const canvasWidthIn, canvasHeightIn : integer;
                                                         const newMousePositionIn            : TPoint;
@@ -43,6 +42,31 @@ interface
         end;
 
 implementation
+
+    //private
+        //draw all graphic entities
+            procedure TGraphicDrawerDirect2D.drawAll(const canvasWidthIn, canvasHeightIn : integer);
+                var
+                    D2DCanvas : TDirect2DXYEntityCanvas;
+                begin
+                    //size bitmap for drawing
+                        currentGraphicBufferBMP.SetSize( canvasWidthIn, canvasHeightIn );
+
+                    //create D2D canvas
+                        D2DCanvas := TDirect2DXYEntityCanvas.Create( currentGraphicBufferBMP.Canvas, Rect(0, 0, canvasWidthIn, canvasHeightIn) );
+
+                    //draw to the D2D canvas
+                        inherited drawAll(
+                                            canvasWidthIn,
+                                            canvasHeightIn,
+                                            D2DCanvas
+                                         );
+
+                        if ( Assigned( onPostGraphicDrawEvent ) ) then
+                            onPostGraphicDrawEvent( canvasWidthIn, canvasHeightIn, D2DCanvas );
+
+                    FreeAndNil( D2DCanvas );
+                end;
 
     //public
         //constructor
@@ -75,30 +99,6 @@ implementation
                     onPostGraphicDrawEvent := onPostGraphicDrawEventIn;
                 end;
 
-        //draw all graphic entities
-            procedure TGraphicDrawerDirect2D.drawAll(const canvasWidthIn, canvasHeightIn : integer);
-                var
-                    D2DCanvas : TDirect2DXYEntityCanvas;
-                begin
-                    //size bitmap for drawing
-                        currentGraphicBufferBMP.SetSize( canvasWidthIn, canvasHeightIn );
-
-                    //create D2D canvas
-                        D2DCanvas := TDirect2DXYEntityCanvas.Create( currentGraphicBufferBMP.Canvas, Rect(0, 0, canvasWidthIn, canvasHeightIn) );
-
-                    //draw to the D2D canvas
-                        inherited drawAll(
-                                            canvasWidthIn,
-                                            canvasHeightIn,
-                                            D2DCanvas
-                                         );
-
-                        if ( Assigned( onPostGraphicDrawEvent ) ) then
-                            onPostGraphicDrawEvent( canvasWidthIn, canvasHeightIn, D2DCanvas );
-
-                    FreeAndNil( D2DCanvas );
-                end;
-
         //process windows messages
             procedure TGraphicDrawerDirect2D.processWindowsMessages(const canvasWidthIn, canvasHeightIn : integer;
                                                                     const newMousePositionIn            : TPoint;
@@ -108,7 +108,10 @@ implementation
                     graphicBufferMustBeUpdated : boolean;
                 begin
                     //test if the buffer must be updated based on received windows messages
-                        graphicBufferMustBeUpdated := (messageIn.Msg = WM_USER_REDRAWGRAPHIC) OR windowsMessageRequiredRedraw( messageIn, newMousePositionIn );
+                        if ( messageIn.Msg = WM_USER_REDRAW_GRAPHIC ) then
+                            graphicBufferMustBeUpdated := True
+                        else
+                            graphicBufferMustBeUpdated := axisConverter.windowsMessageRequiredRedraw( messageIn, newMousePositionIn );
 
                         if NOT( graphicBufferMustBeUpdated ) then
                             begin

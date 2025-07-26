@@ -46,9 +46,6 @@ interface
                     procedure deactivateMouseControl();
                     function getMouseControlActive() : boolean;
                     procedure setRedrawOnMouseMoveActive(const isActiveIn : boolean);
-                //process windows messages
-                    function windowsMessageRequiredRedraw(  const messageIn             : Tmessage;
-                                                            const newMousePositionIn    : TPoint    ) : boolean;
         end;
 
 implementation
@@ -189,19 +186,6 @@ implementation
             procedure TGraphicDrawerAxisConversionInterface.setRedrawOnMouseMoveActive(const isActiveIn : boolean);
                 begin
                     axisConverter.setRedrawOnMouseMoveActive( isActiveIn );
-                end;
-
-        //process windows messages
-            function TGraphicDrawerAxisConversionInterface.windowsMessageRequiredRedraw(const messageIn             : Tmessage;
-                                                                                        const newMousePositionIn    : TPoint    ) : boolean;
-                begin
-                    if (self = nil) then
-                        begin
-                            result := false;
-                            exit();
-                        end;
-
-                    result := axisConverter.windowsMessageRequiredRedraw( messageIn, newMousePositionIn );
                 end;
 
 end.

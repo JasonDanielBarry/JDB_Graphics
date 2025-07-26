@@ -4,8 +4,9 @@ interface
 
     uses
         //Delphi
+            Winapi.Windows, Winapi.Messages,
             system.SysUtils, System.Math, system.types, system.UITypes, system.Generics.Collections,
-            vcl.Graphics, Vcl.Themes,
+            vcl.Controls, vcl.Graphics, Vcl.Themes,
         //custom
             ColourMethods,
             GeometryTypes,
@@ -19,6 +20,8 @@ interface
                 var
                     graphicBackgroundColour : Tcolor;
             protected
+                const
+                    WM_USER_REDRAW_GRAPHIC = WM_USER + 1;
                 var
                     axisConverter : TDrawingAxisConverter;
                     //these variables are declared here to be used in the drawAll() procedure
@@ -34,8 +37,10 @@ interface
                     constructor create(); virtual;
                 //destructor
                     destructor destroy(); override;
+                //post redraw message
+                    procedure postRedrawGraphicMessage(const callingControlIn : TWinControl);
                 //update background colour
-                    procedure updateBackgroundColour();
+                    procedure updateBackgroundColour(const callingControlIn : TWinControl);
         end;
 
 implementation
@@ -64,8 +69,6 @@ implementation
                 begin
                     inherited create();
 
-                    updateBackgroundColour();
-
                     axisConverter := TDrawingAxisConverter.create();
                 end;
 
@@ -77,11 +80,26 @@ implementation
                     inherited destroy();
                 end;
 
+        //post redraw message
+            procedure TGraphicDrawerBase.postRedrawGraphicMessage(const callingControlIn: TWinControl);
+                begin
+                    if NOT( Assigned( callingControlIn ) ) then
+                        exit();
+
+                    PostMessage( callingControlIn.Handle, WM_USER_REDRAW_GRAPHIC, 0, 0 );
+                end;
+
         //update background colour
-            procedure TGraphicDrawerBase.updateBackgroundColour();
+            procedure TGraphicDrawerBase.updateBackgroundColour(const callingControlIn : TWinControl);
                 begin
                     //set the background colour to match the style
                         graphicBackgroundColour := TStyleManager.ActiveStyle.GetStyleColor( TStyleColor.scGenericBackground );
+
+                        if NOT( Assigned( callingControlIn ) ) then
+                            exit();
+
+                    //post redraw message
+                        postRedrawGraphicMessage( callingControlIn );
                 end;
 
 end.
