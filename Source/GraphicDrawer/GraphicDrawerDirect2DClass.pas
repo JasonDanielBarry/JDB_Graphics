@@ -111,7 +111,7 @@ implementation
                         if ( messageIn.Msg = WM_USER_REDRAW_GRAPHIC ) then
                             graphicBufferMustBeUpdated := True
                         else
-                            graphicBufferMustBeUpdated := axisConverter.windowsMessageRequiredRedraw( messageIn, newMousePositionIn );
+                            graphicBufferMustBeUpdated := axisConverter.windowsMessageRequiredRedraw( newMousePositionIn, messageIn );
 
                         if NOT( graphicBufferMustBeUpdated ) then
                             begin

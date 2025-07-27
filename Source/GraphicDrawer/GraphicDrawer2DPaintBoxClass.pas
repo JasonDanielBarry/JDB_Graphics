@@ -20,11 +20,8 @@ interface
                     D2DGraphicDrawer    : TGraphicDrawerDirect2D;
                 //events
                     procedure PaintBoxDrawer2DPaint(Sender: TObject);
-                    procedure PaintBoxGraphicMouseEnter(Sender: TObject);
-                    procedure PaintBoxGraphicMouseLeave(Sender: TObject);
                 //mouse cursor
-                    procedure setMouseCursor(const messageIn : TMessage);
-            protected
+                    procedure setMouseCursor(const messageIn : TMessage);           
                 //
             public
                 //constructor
@@ -49,17 +46,7 @@ implementation
                     mustRedrawGraphic := False;
                 end;
 
-            procedure TPaintBox.PaintBoxGraphicMouseEnter(Sender: TObject);
-                begin
-                    D2DGraphicDrawer.activateMouseControl();
-                end;
-
-            procedure TPaintBox.PaintBoxGraphicMouseLeave(Sender: TObject);
-                begin
-                    D2DGraphicDrawer.deactivateMouseControl();
-                end;
-
-        //mouse cursor
+		//mouse cursor
             procedure TPaintBox.setMouseCursor(const messageIn : TMessage);
                 begin
                     //if the graphic drawer is nil then nothing can happen
@@ -80,9 +67,7 @@ implementation
                             WM_MBUTTONUP:
                                 self.Cursor := crDefault;
                         end;
-                end;
-
-    //protected
+                end;    
         //
 
     //public
@@ -96,8 +81,8 @@ implementation
 
                     //assign events
                         self.OnPaint        := PaintBoxDrawer2DPaint;
-                        self.OnMouseEnter   := PaintBoxGraphicMouseEnter;
-                        self.OnMouseLeave   := PaintBoxGraphicMouseLeave;
+                        self.OnMouseEnter   := D2DGraphicDrawer.DrawingControlMouseEnter;
+                        self.OnMouseLeave   := D2DGraphicDrawer.DrawingControlMouseLeave;
 
                     //for design time to ensure the colour is not black on the form builder
                         D2DGraphicDrawer.updateBackgroundColour( nil );

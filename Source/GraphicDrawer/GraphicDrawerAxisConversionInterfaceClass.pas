@@ -5,7 +5,6 @@ interface
     uses
         Winapi.Messages,
         system.SysUtils, system.Math, system.Types,
-        vcl.Controls,
         GeometryTypes,
         GeomBox,
         DrawingAxisConversionClass,
@@ -42,10 +41,13 @@ interface
                         procedure zoomOut(const percentageIn : double);
                         procedure zoomAll();
                 //general mouse control
-                    procedure activateMouseControl();
-                    procedure deactivateMouseControl();
                     function getMouseControlActive() : boolean;
                     procedure setRedrawOnMouseMoveActive(const isActiveIn : boolean);
+                //events for drawing control
+                    //mouse enter
+                        procedure DrawingControlMouseEnter(Sender: TObject);
+                    //mouse leave
+                        procedure DrawingControlMouseLeave(Sender: TObject);
         end;
 
 implementation
@@ -168,16 +170,6 @@ implementation
                     end;
 
         //general mouse control
-            procedure TGraphicDrawerAxisConversionInterface.activateMouseControl();
-                begin
-                    axisConverter.activateMouseControl();
-                end;
-
-            procedure TGraphicDrawerAxisConversionInterface.deactivateMouseControl();
-                begin
-                    axisConverter.deactivateMouseControl();
-                end;
-
             function TGraphicDrawerAxisConversionInterface.getMouseControlActive() : boolean;
                 begin
                     result := axisConverter.MouseControlActive;
@@ -187,5 +179,18 @@ implementation
                 begin
                     axisConverter.setRedrawOnMouseMoveActive( isActiveIn );
                 end;
+
+        //events for drawing control
+            //mouse enter
+                procedure TGraphicDrawerAxisConversionInterface.DrawingControlMouseEnter(Sender: TObject);
+                    begin
+                        axisConverter.activateMouseControl();
+                    end;
+
+            //mouse leave
+                procedure TGraphicDrawerAxisConversionInterface.DrawingControlMouseLeave(Sender: TObject);
+                    begin
+                        axisConverter.deactivateMouseControl();
+                    end;
 
 end.
