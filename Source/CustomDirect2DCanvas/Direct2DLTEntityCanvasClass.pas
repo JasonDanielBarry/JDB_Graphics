@@ -17,6 +17,8 @@ interface
                                         const rectIn    : TRect     );
                 //destructor
                     destructor destroy(); override;
+                //background colour
+                    class function getBackgroundColour() : Tcolor; static;
                 //canvas rotation
                     procedure rotateCanvasLT(   const rotationAngleIn           : double;
                                                 const rotationReferencePointIn  : TPointF );
@@ -89,6 +91,12 @@ implementation
                     EndDraw();
 
                     inherited destroy();
+                end;
+
+        //background colour
+            class function TDirect2DLTEntityCanvas.getBackgroundColour() : Tcolor;
+                begin
+                    result := TStyleManager.ActiveStyle.GetStyleColor( TStyleColor.scGenericBackground );
                 end;
 
         //canvas rotation

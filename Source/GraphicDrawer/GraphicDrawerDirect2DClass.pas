@@ -10,18 +10,17 @@ interface
         //custom
             DrawingAxisConversionClass,
             Direct2DXYEntityCanvasClass,
+            GraphicDrawerTypes,
             GraphicGeometryClass,
             GraphicDrawerAxisConversionInterfaceClass,
             GeometryBaseClass;
 
     type
-        TOnPostGraphicDrawEvent = procedure(const AWidth, AHeight : integer; const AD2DCanvas : TDirect2DXYEntityCanvas) of object;
-
         TGraphicDrawerDirect2D = class(TGraphicDrawerAxisConversionInterface)
             private
                 var
                     currentGraphicBufferBMP : TBitmap;
-                    onPostGraphicDrawEvent  : TOnPostGraphicDrawEvent;
+                    onPostGraphicDrawEvent  : TPostGraphicDrawEvent;
                 //draw all graphic entities
                     procedure drawAll(const canvasWidthIn, canvasHeightIn : integer);
             public
@@ -31,8 +30,8 @@ interface
                 //destructor
                     destructor destroy(); override;
                 //graphic draw event
-                    function getOnPostGraphicDrawEvent() : TOnPostGraphicDrawEvent;
-                    procedure setOnPostGraphicDrawEvent(const onPostGraphicDrawEventIn : TOnPostGraphicDrawEvent);
+                    function getOnPostGraphicDrawEvent() : TPostGraphicDrawEvent;
+                    procedure setOnPostGraphicDrawEvent(const onPostGraphicDrawEventIn : TPostGraphicDrawEvent);
                 //process windows messages
                     procedure processWindowsMessages(   const canvasWidthIn, canvasHeightIn : integer;
                                                         const newMousePositionIn            : TPoint;
@@ -89,12 +88,12 @@ implementation
                 end;
 
         //graphic draw event
-            function TGraphicDrawerDirect2D.getOnPostGraphicDrawEvent() : TOnPostGraphicDrawEvent;
+            function TGraphicDrawerDirect2D.getOnPostGraphicDrawEvent() : TPostGraphicDrawEvent;
                 begin
                     result := onPostGraphicDrawEvent;
                 end;
 
-            procedure TGraphicDrawerDirect2D.setOnPostGraphicDrawEvent(const onPostGraphicDrawEventIn : TOnPostGraphicDrawEvent);
+            procedure TGraphicDrawerDirect2D.setOnPostGraphicDrawEvent(const onPostGraphicDrawEventIn : TPostGraphicDrawEvent);
                 begin
                     onPostGraphicDrawEvent := onPostGraphicDrawEventIn;
                 end;

@@ -93,7 +93,7 @@ implementation
             procedure TGraphicDrawerBase.updateBackgroundColour(const callingControlIn : TWinControl);
                 begin
                     //set the background colour to match the style
-                        graphicBackgroundColour := TStyleManager.ActiveStyle.GetStyleColor( TStyleColor.scGenericBackground );
+                        graphicBackgroundColour := TDirect2DXYEntityCanvas.getBackgroundColour();
 
                         if NOT( Assigned( callingControlIn ) ) then
                             exit();

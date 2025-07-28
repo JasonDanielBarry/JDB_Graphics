@@ -44,7 +44,8 @@ uses
   GraphicMousePointTrackerClass in 'Source\GraphicEntityClasses\GraphicEntityPlottingClasses\GraphicMousePointTrackerClass.pas',
   GraphicScatterPlotClass in 'Source\GraphicEntityClasses\GraphicEntityPlottingClasses\GraphicScatterPlotClass.pas',
   GraphicEntityBaseClass in 'Source\GraphicEntityClasses\GraphicEntityBaseClass.pas',
-  GraphicEntityTypes in 'Source\GraphicEntityClasses\GraphicEntityTypes.pas';
+  GraphicEntityTypes in 'Source\GraphicEntityClasses\GraphicEntityTypes.pas',
+  GraphicDrawerTypes in 'Source\GraphicDrawer\GraphicDrawerTypes.pas';
 
 { keep comment here to protect the following conditional from being removed by the IDE when adding a unit }
 {$IFNDEF TESTINSIGHT}

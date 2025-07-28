@@ -5,6 +5,7 @@ interface
     uses
         System.Generics.Collections, System.UITypes,
         Vcl.Themes, Vcl.Graphics,
+        Direct2DXYEntityCanvasClass,
         GraphicEntityBaseClass
         ;
 
@@ -47,7 +48,7 @@ implementation
 
                     currentDrawingLayer := 'Default drawing layer';
 
-                    graphicBackgroundColour := TStyleManager.ActiveStyle.GetStyleColor( TStyleColor.scGenericBackground );
+                    graphicBackgroundColour := TDirect2DXYEntityCanvas.getBackgroundColour();
 
                     clear();
                 end;
