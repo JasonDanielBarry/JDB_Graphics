@@ -18,9 +18,6 @@ interface
                     fillColour,
                     lineColour      : TColor;
                     lineStyle       : TPenStyle;
-                //set canvas properties for drawing
-                    procedure setFillProperties(var canvasInOut : TDirect2DXYEntityCanvas);
-                    procedure setLineProperties(var canvasInOut : TDirect2DXYEntityCanvas);
             protected
                 var
                     filled, outlined : boolean;
@@ -39,34 +36,6 @@ interface
         end;
 
 implementation
-
-    //private
-        //set canvas properties for drawing
-        procedure TFoundationalGraphicEntity.setFillProperties(var canvasInOut : TDirect2DXYEntityCanvas);
-                begin
-                    //hollow object
-                        if NOT( filled ) then
-                            begin
-                                canvasInOut.Brush.Style := TBrushStyle.bsClear;
-                                exit();
-                            end;
-
-                    canvasInOut.Brush.Color := TStyleManager.ActiveStyle.GetSystemColor( fillColour );
-                    canvasInOut.Brush.Style := TBrushStyle.bsSolid;
-                end;
-
-            procedure TFoundationalGraphicEntity.setLineProperties(var canvasInOut : TDirect2DXYEntityCanvas);
-                begin
-                    if NOT( outlined ) then
-                        begin
-                            canvasInOut.Pen.Style := TPenStyle.psClear;
-                            exit();
-                        end;
-
-                    canvasInOut.Pen.Color := TStyleManager.ActiveStyle.GetSystemColor( lineColour );
-                    canvasInOut.Pen.Style := lineStyle;
-                    canvasInOut.Pen.Width := lineThickness;
-                end;
 
     //public
         //constructor
@@ -97,10 +66,10 @@ implementation
                                                                 var canvasInOut         : TDirect2DXYEntityCanvas   );
                 begin
                     //fill properties
-                        setFillProperties( canvasInOut );
+                        canvasInOut.setBrushFillProperties( filled, fillColour );
 
                     //line properties
-                        setLineProperties( canvasInOut );
+                        canvasInOut.setPenLineProperties( lineThickness, lineColour, lineStyle );
                 end;
 
 end.

@@ -54,11 +54,9 @@ implementation
     //private
         //set font properties
             procedure TGraphicText.setFontProperties(   const axisConverterIn   : TDrawingAxisConverter;
-                                                        var canvasInOut         : TDirect2DXYEntityCanvas       );
+                                                        var canvasInOut         : TDirect2DXYEntityCanvas   );
                 begin
-                    canvasInOut.Font.Color  := TStyleManager.ActiveStyle.GetSystemColor( textColour );
-                    canvasInOut.Font.Name   := fontName;
-                    canvasInOut.Font.Style  := textFontStyles;
+                    canvasInOut.setFontTextProperties( TStyleManager.ActiveStyle.GetSystemColor( textColour ), textFontStyles, fontName );
 
                     if ( addTextUnderlay ) then
                         canvasInOut.Brush.Style := TBrushStyle.bsSolid

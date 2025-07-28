@@ -4,7 +4,7 @@ interface
 
     uses
         Winapi.D2D1,
-        System.SysUtils, system.Math, system.Types,
+        System.SysUtils, system.Math, system.Types, System.UITypes,
         Vcl.Direct2D, Vcl.Graphics, vcl.Themes,
         Direct2DDrawingEntityMethods
         ;
@@ -19,6 +19,20 @@ interface
                     destructor destroy(); override;
                 //background colour
                     class function getBackgroundColour() : Tcolor; static;
+                //set brush properties
+                    procedure setBrushFillProperties(const solidIn : boolean; const colourIn : TColor);
+                //set pen properties
+                    procedure setPenLineProperties( const widthIn   : integer = 1;
+                                                const colourIn  : TColor = TColors.SysWindowText;
+                                                const styleIn   : TPenStyle = TPenStyle.psSolid );
+                //set font properties
+                    procedure setFontTextProperties(const colourIn  : TColor = TColors.SysWindowText;
+                                                    const stylesIn  : TFontStyles = [];
+                                                    const nameIn    : string = 'Segoe UI'           ); overload;
+                    procedure setFontTextProperties(const sizeIn    : integer = 9;
+                                                    const colourIn  : TColor = TColors.SysWindowText;
+                                                    const stylesIn  : TFontStyles = [];
+                                                    const nameIn    : string = 'Segoe UI'           ); overload;
                 //canvas rotation
                     procedure rotateCanvasLT(   const rotationAngleIn           : double;
                                                 const rotationReferencePointIn  : TPointF );
@@ -97,6 +111,55 @@ implementation
             class function TDirect2DLTEntityCanvas.getBackgroundColour() : Tcolor;
                 begin
                     result := TStyleManager.ActiveStyle.GetStyleColor( TStyleColor.scGenericBackground );
+                end;
+
+        //set brush properties
+            procedure TDirect2DLTEntityCanvas.setBrushFillProperties(const solidIn : boolean; const colourIn : TColor);
+                begin
+                    if NOT( solidIn ) then
+                        begin
+                            brush.Style := TBrushStyle.bsClear;
+                            exit();
+                        end;
+
+                    Brush.Style := TBrushStyle.bsSolid;
+                    Brush.Color := colourIn;
+                end;
+
+        //set pen properties
+            procedure TDirect2DLTEntityCanvas.setPenLineProperties( const widthIn   : integer = 1;
+                                                                    const colourIn  : TColor = TColors.SysWindowText;
+                                                                    const styleIn   : TPenStyle = TPenStyle.psSolid );
+                begin
+                    if ( widthIn < 1 ) then
+                        begin
+                            pen.Style := TPenStyle.psClear;
+                            exit();
+                        end;
+
+                    Pen.Width := widthIn;
+                    Pen.Color := colourIn;
+                    Pen.Style := styleIn;
+                end;
+
+        //set font properties
+            procedure TDirect2DLTEntityCanvas.setFontTextProperties(const colourIn  : TColor = TColors.SysWindowText;
+                                                                    const stylesIn  : TFontStyles = [];
+                                                                    const nameIn    : string = 'Segoe UI'           );
+                begin
+                    Font.Color  := colourIn;
+                    Font.Name   := nameIn;
+                    Font.Style  := stylesIn;
+                end;
+
+            procedure TDirect2DLTEntityCanvas.setFontTextProperties(const sizeIn    : integer = 9;
+                                                                    const colourIn  : TColor = TColors.SysWindowText;
+                                                                    const stylesIn  : TFontStyles = [];
+                                                                    const nameIn    : string = 'Segoe UI'           );
+                begin
+                    Font.Size := sizeIn;
+
+                    setFontTextProperties( colourIn, stylesIn, nameIn );
                 end;
 
         //canvas rotation
