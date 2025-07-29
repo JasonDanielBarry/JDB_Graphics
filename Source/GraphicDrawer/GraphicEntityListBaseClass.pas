@@ -48,7 +48,7 @@ implementation
 
                     currentDrawingLayer := 'Default drawing layer';
 
-                    graphicBackgroundColour := TDirect2DXYEntityCanvas.getBackgroundColour();
+                    graphicBackgroundColour := TDirect2DXYEntityCanvas.BackgroundColour;
 
                     clear();
                 end;

@@ -59,7 +59,7 @@ implementation
                                 axisConverter.setDrawingSpaceRatio( drawingSpaceRatio );
 
                         //clear the canvas
-                            D2DCanvasInOut.Brush.Color := graphicBackgroundColour;
+                            D2DCanvasInOut.setBrushFillProperties( True, graphicBackgroundColour );
                             D2DCanvasInOut.FillRect( Rect(0, 0, canvasWidthIn, canvasHeightIn) );
                     end;
 
@@ -93,7 +93,7 @@ implementation
             procedure TGraphicDrawerBase.updateBackgroundColour(const callingControlIn : TWinControl);
                 begin
                     //set the background colour to match the style
-                        graphicBackgroundColour := TDirect2DXYEntityCanvas.getBackgroundColour();
+                        graphicBackgroundColour := TDirect2DXYEntityCanvas.BackgroundColour;
 
                         if NOT( Assigned( callingControlIn ) ) then
                             exit();

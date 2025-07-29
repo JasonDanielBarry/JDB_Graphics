@@ -11,14 +11,16 @@ interface
 
     type
         TDirect2DLTEntityCanvas = class( TDirect2DCanvas )
+            private
+                //background colour
+                    class function getBackgroundColour() : Tcolor; static;
             public
                 //constructor
                     constructor create( const canvasIn  : TCanvas;
                                         const rectIn    : TRect     );
                 //destructor
                     destructor destroy(); override;
-                //background colour
-                    class function getBackgroundColour() : Tcolor; static;
+
                 //set brush properties
                     procedure setBrushFillProperties(const solidIn : boolean; const colourIn : TColor);
                 //set pen properties
@@ -81,9 +83,17 @@ interface
                                                 const drawTextUnderlayIn    : boolean = False;
                                                 const horizontalAlignmentIn : THorzRectAlign = THorzRectAlign.Left;
                                                 const verticalAlignmentIn   : TVertRectAlign = TVertRectAlign.Top   );
+            class property BackgroundColour : TColor read getBackgroundColour;
         end;
 
 implementation
+
+    //private
+        //background colour
+            class function TDirect2DLTEntityCanvas.getBackgroundColour() : Tcolor;
+                begin
+                    result := TStyleManager.ActiveStyle.GetStyleColor( TStyleColor.scGenericBackground );
+                end;
 
     //public
         //constructor
@@ -105,12 +115,6 @@ implementation
                     EndDraw();
 
                     inherited destroy();
-                end;
-
-        //background colour
-            class function TDirect2DLTEntityCanvas.getBackgroundColour() : Tcolor;
-                begin
-                    result := TStyleManager.ActiveStyle.GetStyleColor( TStyleColor.scGenericBackground );
                 end;
 
         //set brush properties
