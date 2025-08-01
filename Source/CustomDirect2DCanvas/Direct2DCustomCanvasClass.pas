@@ -13,7 +13,6 @@ interface
             private
                 const
                     EMPTY_STRING : string = '';
-                    EMPTY_STYLES : TFontStyles = [];
                 //background colour
                     class function determineBackgroundColour() : Tcolor; static;
             protected
@@ -115,9 +114,7 @@ implementation
             begin
                 Font.Size   := sizeIn;
                 Font.Color  := colourIn;
-
-                if ( stylesIn <> EMPTY_STYLES ) then
-                    Font.Style := stylesIn;
+                Font.Style  := stylesIn;
 
                 if ( nameIn <> EMPTY_STRING ) then
                     Font.Name := nameIn;
@@ -138,9 +135,7 @@ implementation
                     tempBitmap := TBitmap.Create( 100, 100 );
 
                     tempBitmap.Canvas.font.Size := textSizeIn;
-
-                    if ( textFontStylesIn <> EMPTY_STYLES ) then
-                        tempBitmap.Canvas.font.Style := textFontStylesIn;
+                    tempBitmap.Canvas.font.Style := textFontStylesIn;
 
                     if ( textNameIn <> EMPTY_STRING ) then
                         tempBitmap.Canvas.font.Name := textNameIn;

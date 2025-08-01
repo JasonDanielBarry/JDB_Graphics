@@ -74,17 +74,17 @@ interface
                                                     const   verticalAlignmentIn         : TVertRectAlign = TVertRectAlign.Center;
                                                     const   scaleTypeIn                 : EScaleType = EScaleType.scDrawing         ); overload;
                     //text
-                        procedure printXYText(  const   textSizeIn              : double;
-                                                const   textStringIn,
-                                                        textFontNameIn          : string;
-                                                const   textColourIn            : TColor;
-                                                const   textStylesIn            : TFontStyles;
+                        procedure printXYText(  const   textStringIn            : string;
                                                 const   textHandlePointIn       : TGeomPoint;
                                                 const   axisConverterIn         : TDrawingAxisConverter;
                                                 const   drawTextUnderlayIn      : boolean = False;
+                                                const   textSizeIn              : double = 9.0;
                                                 const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
                                                 const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top;
-                                                const   scaleTypeIn             : EScaleType = EScaleType.scCanvas      );
+                                                const   scaleTypeIn             : EScaleType = EScaleType.scCanvas;
+                                                const   textColourIn            : TColor = clWindowText;
+                                                const   textStylesIn            : TFontStyles = [];
+                                                const   textFontNameIn          : string = ''                           );
         end;
 
 implementation
@@ -281,17 +281,17 @@ implementation
                     end;
 
             //text
-                procedure TDirect2DXYEntityCanvas.printXYText(  const   textSizeIn              : double;
-                                                                const   textStringIn,
-                                                                        textFontNameIn          : string;
-                                                                const   textColourIn            : TColor;
-                                                                const   textStylesIn            : TFontStyles;
+                procedure TDirect2DXYEntityCanvas.printXYText(  const   textStringIn            : string;
                                                                 const   textHandlePointIn       : TGeomPoint;
                                                                 const   axisConverterIn         : TDrawingAxisConverter;
                                                                 const   drawTextUnderlayIn      : boolean = False;
+                                                                const   textSizeIn              : double = 9.0;
                                                                 const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
                                                                 const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top;
-                                                                const   scaleTypeIn             : EScaleType = EScaleType.scCanvas      );
+                                                                const   scaleTypeIn             : EScaleType = EScaleType.scCanvas;
+                                                                const   textColourIn            : TColor = clWindowText;
+                                                                const   textStylesIn            : TFontStyles = [];
+                                                                const   textFontNameIn          : string = ''                           );
                     var
                         textSizeInteger : integer;
                         textSizeLT      : double;

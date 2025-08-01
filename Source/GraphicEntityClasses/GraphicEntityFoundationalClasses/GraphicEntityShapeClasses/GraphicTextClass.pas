@@ -54,17 +54,17 @@ implementation
                                                         var canvasInOut         : TDirect2DXYEntityCanvas   );
                 begin
                     //draw text to canvas
-                        canvasInOut.printXYText(    textSize,
-                                                    textString,
-                                                    fontName,
-                                                    textColour,
-                                                    textFontStyles,
+                        canvasInOut.printXYText(    textString,
                                                     handlePointXY,
                                                     axisConverterIn,
                                                     addTextUnderlay,
+                                                    textSize,
                                                     horizontalAlignment,
                                                     verticalAlignment,
-                                                    scaleType               );
+                                                    scaleType,
+                                                    textColour,
+                                                    textFontStyles,
+                                                    fontName,           );
                 end;
 
     //public

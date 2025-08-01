@@ -269,7 +269,7 @@ procedure TJDB_D2D_Form.PaintBoxXYPaint(Sender: TObject);
 
                 var textPoint : TGeomPoint := TGeomPoint.create( 500, 525 );
 
-                D2DCanvas.printXYText( 'Arc XY entities', textPoint, axisConverter, False, 12, THorzRectAlign.Center, TVertRectAlign.Bottom, EScaleType.scDrawing );
+                D2DCanvas.printXYText(  'Arc XY entities', textPoint, axisConverter, False, 12, THorzRectAlign.Center, TVertRectAlign.Bottom, EScaleType.scDrawing, clRed, [TFontStyle.fsUnderline] );
 
                 D2DCanvas.printXYText( 'Arc Centre ', centrePoint, axisConverter, False, 16, THorzRectAlign.Right, TVertRectAlign.Center, EScaleType.scDrawing );
 
