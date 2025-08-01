@@ -153,6 +153,7 @@
         <DCCReference Include="Source\GraphicEntityClasses\GraphicEntityBaseClass.pas"/>
         <DCCReference Include="Source\GraphicEntityClasses\GraphicEntityTypes.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawerTypes.pas"/>
+        <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DCustomCanvasClass.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

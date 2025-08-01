@@ -45,7 +45,8 @@ uses
   GraphicScatterPlotClass in 'Source\GraphicEntityClasses\GraphicEntityPlottingClasses\GraphicScatterPlotClass.pas',
   GraphicEntityBaseClass in 'Source\GraphicEntityClasses\GraphicEntityBaseClass.pas',
   GraphicEntityTypes in 'Source\GraphicEntityClasses\GraphicEntityTypes.pas',
-  GraphicDrawerTypes in 'Source\GraphicDrawer\GraphicDrawerTypes.pas';
+  GraphicDrawerTypes in 'Source\GraphicDrawer\GraphicDrawerTypes.pas',
+  Direct2DCustomCanvasClass in 'Source\CustomDirect2DCanvas\Direct2DCustomCanvasClass.pas';
 
 { keep comment here to protect the following conditional from being removed by the IDE when adding a unit }
 {$IFNDEF TESTINSIGHT}

@@ -172,6 +172,36 @@ implementation
 
     //ELLIPSE---------------------------------------------------------------------------------------------------------
         //create ellipse geometry
+            procedure calculateEllipseCentreCoordinates(const horizontalAlignmentIn : THorzRectAlign;
+                                                        const verticalAlignmentIn   : TVertRectAlign;
+                                                        const ellipseIn             : TD2D1Ellipse;
+                                                        const handlePointIn         : TPointF;
+                                                        out ellipseCentreXOut,
+                                                            ellipseCentreYOut       : double        );
+                begin
+                    case ( horizontalAlignmentIn ) of
+                        THorzRectAlign.Left: //centre to the right of handle point
+                            ellipseCentreXOut := handlePointIn.X + ellipseIn.radiusX;
+
+                        THorzRectAlign.Center:
+                            ellipseCentreXOut := handlePointIn.X;
+
+                        THorzRectAlign.Right: //centre to the left of handle point
+                            ellipseCentreXOut := handlePointIn.X - ellipseIn.radiusX;
+                    end;
+
+                    case ( verticalAlignmentIn ) of
+                        TVertRectAlign.Bottom: //centre above handle point
+                            ellipseCentreYOut := handlePointIn.y - ellipseIn.radiusY;
+
+                        TVertRectAlign.Center:
+                            ellipseCentreYOut := handlePointIn.y;
+
+                        TVertRectAlign.Top: //centre below handle point
+                            ellipseCentreYOut := handlePointIn.y + ellipseIn.radiusY;
+                    end;
+                end;
+
             function createEllipseGeometry( const   ellipseWidthIn,
                                                     ellipseHeightIn         : double;
                                             const   horizontalAlignmentIn   : THorzRectAlign;
@@ -187,27 +217,12 @@ implementation
                         ellipseOut.radiusY := ellipseHeightIn / 2;
 
                     //alignment
-                        case ( horizontalAlignmentIn ) of
-                            THorzRectAlign.Left: //centre to the right of handle point
-                                ellipseCentreX := handlePointIn.X + ellipseOut.radiusX;
-
-                            THorzRectAlign.Center:
-                                ellipseCentreX := handlePointIn.X;
-
-                            THorzRectAlign.Right: //centre to the left of handle point
-                                ellipseCentreX := handlePointIn.X - ellipseOut.radiusX;
-                        end;
-
-                        case ( verticalAlignmentIn ) of
-                            TVertRectAlign.Bottom: //centre above handle point
-                                ellipseCentreY := handlePointIn.y - ellipseOut.radiusY;
-
-                            TVertRectAlign.Center:
-                                ellipseCentreY := handlePointIn.y;
-
-                            TVertRectAlign.Top: //centre below handle point
-                                ellipseCentreY := handlePointIn.y + ellipseOut.radiusY;
-                        end;
+                        calculateEllipseCentreCoordinates(  horizontalAlignmentIn,
+                                                            verticalAlignmentIn,
+                                                            ellipseOut,
+                                                            handlePointIn,
+                                                            ellipseCentreX,
+                                                            ellipseCentreY          );
 
                         ellipseOut.point.x := ellipseCentreX;
                         ellipseOut.point.y := ellipseCentreY;
@@ -221,6 +236,7 @@ implementation
                                                 const figureEndIn           : D2D1_FIGURE_END;
                                                 const arrDrawingPointsIn    : TArray<TPointF>   ) : ID2D1PathGeometry;
                 var
+                    i, arrLen       : integer;
                     geometrySink    : ID2D1GeometrySink;
                     pathGeometryOut : ID2D1PathGeometry;
                 begin
@@ -234,19 +250,15 @@ implementation
                         geometrySink.BeginFigure( D2D1PointF( arrDrawingPointsIn[0].x, arrDrawingPointsIn[0].y ), figureBeginIn );
 
                     //add lines
+                        arrLen := length(arrDrawingPointsIn);
+
                         //single line
-                            if ( length(arrDrawingPointsIn) < 3 ) then
+                            if ( arrLen < 3 ) then
                                 geometrySink.AddLine( D2D1PointF( arrDrawingPointsIn[1].x, arrDrawingPointsIn[1].y ) )
                         //polyline
                             else
-                                begin
-                                    var i, arrLen : integer;
-
-                                    arrLen := length( arrDrawingPointsIn );
-
-                                    for i := 1 to ( arrLen - 1 ) do
-                                        geometrySink.AddLine( D2D1PointF( arrDrawingPointsIn[i].x, arrDrawingPointsIn[i].y ) );
-                                end;
+                                for i := 1 to ( arrLen - 1 ) do
+                                    geometrySink.AddLine( D2D1PointF( arrDrawingPointsIn[i].x, arrDrawingPointsIn[i].y ) );
 
                     //end geometry
                         geometrySink.EndFigure( figureEndIn );

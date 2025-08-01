@@ -1,57 +1,46 @@
 unit Direct2DLTEntityCanvasClass;
 
+{
+The fundamental drawing entities from which all 2D graphics can be created are
+    1. Arcs
+    2. Ellipses
+    3. Lines
+    4. Polylines
+    5. Polygons
+    6. Rectangles (with rounded corners, corner radius of 0 is a standard rectangle)
+    7. Text
+}
+
 interface
 
     uses
         Winapi.D2D1,
         System.SysUtils, system.Math, system.Types, System.UITypes,
         Vcl.Direct2D, Vcl.Graphics, vcl.Themes,
+        Direct2DCustomCanvasClass,
         Direct2DDrawingEntityMethods
         ;
 
     type
-        TDirect2DLTEntityCanvas = class( TDirect2DCanvas )
-            private
-                //background colour
-                    class function getBackgroundColour() : Tcolor; static;
+        TDirect2DLTEntityCanvas = class( TDirect2DCustomCanvas )
             public
-                //constructor
-                    constructor create( const canvasIn  : TCanvas;
-                                        const rectIn    : TRect     );
-                //destructor
-                    destructor destroy(); override;
-
-                //set brush properties
-                    procedure setBrushFillProperties(const solidIn : boolean; const colourIn : TColor);
-                //set pen properties
-                    procedure setPenLineProperties( const widthIn   : integer = 1;
-                                                const colourIn  : TColor = TColors.SysWindowText;
-                                                const styleIn   : TPenStyle = TPenStyle.psSolid );
-                //set font properties
-                    procedure setFontTextProperties(const colourIn  : TColor = TColors.SysWindowText;
-                                                    const stylesIn  : TFontStyles = [];
-                                                    const nameIn    : string = 'Segoe UI'           ); overload;
-                    procedure setFontTextProperties(const sizeIn    : integer = 9;
-                                                    const colourIn  : TColor = TColors.SysWindowText;
-                                                    const stylesIn  : TFontStyles = [];
-                                                    const nameIn    : string = 'Segoe UI'           ); overload;
                 //canvas rotation
                     procedure rotateCanvasLT(   const rotationAngleIn           : double;
-                                                const rotationReferencePointIn  : TPointF );
+                                                const rotationReferencePointIn  : TPointF   );
                     procedure resetCanvasRotation();
                 //drawing entities
                     //arc
                         procedure drawLTArcF(   const   filledIn, outlinedIn            : boolean;
                                                 const   startAngleIn, endAngleIn,
                                                         arcHorRadiusIn, arcVertRadiusIn : double;
-                                                const   centrePointIn                   : TPointF );
+                                                const   centrePointIn                   : TPointF   );
                     //ellipse
                         procedure drawLTEllipseF(   const   filledIn, outlinedIn    : boolean;
                                                     const   ellipseWidthIn,
                                                             ellipseHeightIn         : double;
                                                     const   handlePointIn           : TPointF;
                                                     const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
-                                                    const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center );
+                                                    const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    );
                     //line
                         procedure drawLTLineF(const arrDrawingPointsIn : TArray<TPointF>); overload;
                         procedure drawLTLineF(const startPointIn, endPointIn : TPointF); overload;
@@ -75,97 +64,25 @@ interface
                                                     const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
                                                     const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    ); overload;
                     //text
-                        class function measureTextExtent(   const textStringIn      : string;
-                                                            const textSizeIn        : integer = 9;
-                                                            const textFontStylesIn  : TFontStyles = []  ) : TSize; static;
                         procedure printLTTextF( const textStringIn          : string;
                                                 const textHandlePointIn     : TPointF;
                                                 const drawTextUnderlayIn    : boolean = False;
                                                 const horizontalAlignmentIn : THorzRectAlign = THorzRectAlign.Left;
-                                                const verticalAlignmentIn   : TVertRectAlign = TVertRectAlign.Top   );
-            class property BackgroundColour : TColor read getBackgroundColour;
+                                                const verticalAlignmentIn   : TVertRectAlign = TVertRectAlign.Top   ); overload;
+                        procedure printLTTextF( const   textSizeIn              : integer;
+                                                const   textStringIn,
+                                                        textFontNameIn          : string;
+                                                const   textColourIn            : TColor;
+                                                const   textStylesIn            : TFontStyles;
+                                                const   textHandlePointIn       : TPointF;
+                                                const   drawTextUnderlayIn      : boolean = False;
+                                                const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
+                                                const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top   ); overload;
         end;
 
 implementation
 
-    //private
-        //background colour
-            class function TDirect2DLTEntityCanvas.getBackgroundColour() : Tcolor;
-                begin
-                    result := TStyleManager.ActiveStyle.GetStyleColor( TStyleColor.scGenericBackground );
-                end;
-
     //public
-        //constructor
-            constructor TDirect2DLTEntityCanvas.create( const canvasIn  : TCanvas;
-                                                        const rectIn    : TRect     );
-                begin
-                    inherited create( canvasIn, rectIn );
-
-                    RenderTarget.SetAntialiasMode( TD2D1AntiAliasMode.D2D1_ANTIALIAS_MODE_PER_PRIMITIVE );
-
-                    RenderTarget.SetTextAntialiasMode( TD2D1TextAntiAliasMode.D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE );
-
-                    BeginDraw();
-                end;
-
-        //destructor
-            destructor TDirect2DLTEntityCanvas.destroy();
-                begin
-                    EndDraw();
-
-                    inherited destroy();
-                end;
-
-        //set brush properties
-            procedure TDirect2DLTEntityCanvas.setBrushFillProperties(const solidIn : boolean; const colourIn : TColor);
-                begin
-                    if NOT( solidIn ) then
-                        begin
-                            brush.Style := TBrushStyle.bsClear;
-                            exit();
-                        end;
-
-                    Brush.Style := TBrushStyle.bsSolid;
-                    Brush.Color := colourIn;
-                end;
-
-        //set pen properties
-            procedure TDirect2DLTEntityCanvas.setPenLineProperties( const widthIn   : integer = 1;
-                                                                    const colourIn  : TColor = TColors.SysWindowText;
-                                                                    const styleIn   : TPenStyle = TPenStyle.psSolid );
-                begin
-                    if ( widthIn < 1 ) then
-                        begin
-                            pen.Style := TPenStyle.psClear;
-                            exit();
-                        end;
-
-                    Pen.Width := widthIn;
-                    Pen.Color := colourIn;
-                    Pen.Style := styleIn;
-                end;
-
-        //set font properties
-            procedure TDirect2DLTEntityCanvas.setFontTextProperties(const colourIn  : TColor = TColors.SysWindowText;
-                                                                    const stylesIn  : TFontStyles = [];
-                                                                    const nameIn    : string = 'Segoe UI'           );
-                begin
-                    Font.Color  := colourIn;
-                    Font.Name   := nameIn;
-                    Font.Style  := stylesIn;
-                end;
-
-            procedure TDirect2DLTEntityCanvas.setFontTextProperties(const sizeIn    : integer = 9;
-                                                                    const colourIn  : TColor = TColors.SysWindowText;
-                                                                    const stylesIn  : TFontStyles = [];
-                                                                    const nameIn    : string = 'Segoe UI'           );
-                begin
-                    Font.Size := sizeIn;
-
-                    setFontTextProperties( colourIn, stylesIn, nameIn );
-                end;
-
         //canvas rotation
             procedure TDirect2DLTEntityCanvas.rotateCanvasLT(   const rotationAngleIn           : double;
                                                                 const rotationReferencePointIn  : TPointF   );
@@ -334,48 +251,6 @@ implementation
                     end;
 
             //text
-                class function TDirect2DLTEntityCanvas.measureTextExtent(   const textStringIn      : string;
-                                                                            const textSizeIn        : integer = 9;
-                                                                            const textFontStylesIn  : TFontStyles = [] ) : TSize;
-                    var
-                        i, arrLen       : integer;
-                        textExtentOut   : TSize;
-                        tempBitmap      : TBitmap;
-                        stringArray     : TArray<string>;
-                    begin
-                        //create a temp bitmap to use the canvas
-                            tempBitmap := TBitmap.Create( 100, 100 );
-
-                            tempBitmap.Canvas.font.Size     := textSizeIn;
-                            tempBitmap.Canvas.font.Style    := textFontStylesIn;
-
-                        //split the string using line breaks as delimiter
-                            stringArray := textStringIn.Split( [sLineBreak] );
-                            arrLen := length( stringArray );
-
-                        //calculate the extent (size) of the text
-                            if ( 1 < arrLen ) then
-                                begin
-                                    textExtentOut.Width     := 0;
-                                    textExtentOut.Height    := 0;
-
-                                    for i := 0 to (arrLen - 1) do
-                                        begin
-                                            var tempSize : TSize := tempBitmap.Canvas.TextExtent( stringArray[i] );
-
-                                            textExtentOut.Width     := max( tempSize.Width, textExtentOut.Width );
-                                            textExtentOut.Height    := textExtentOut.Height + tempSize.Height;
-                                        end;
-                                end
-                            else
-                                textExtentOut := tempBitmap.Canvas.TextExtent( textStringIn );
-
-                        //free bitmap memory
-                            FreeAndNil( tempBitmap );
-
-                        result := textExtentOut;
-                    end;
-
                 procedure TDirect2DLTEntityCanvas.printLTTextF( const textStringIn          : string;
                                                                 const textHandlePointIn     : TPointF;
                                                                 const drawTextUnderlayIn    : boolean = False;
@@ -386,15 +261,15 @@ implementation
                         textExtent                  : TSize;
                         drawingPoint                : TPoint;
                     begin
-                        //check if drawing point must be calculated
-                            //true alignment is NOT top left
-                                mustCalculateDrawingPoint := NOT( ( horizontalAlignmentIn = THorzRectAlign.Left ) AND ( verticalAlignmentIn = TVertRectAlign.Top ) );
+                        //check if drawing point must be calculated - True if alignment is NOT top left
+                        // NOT( A AND B ) = NOT(A) OR NOT(B)
+                            mustCalculateDrawingPoint := ( horizontalAlignmentIn <> THorzRectAlign.Left ) OR ( verticalAlignmentIn <> TVertRectAlign.Top );
 
                         //calculate the drawing point
                             if ( mustCalculateDrawingPoint ) then
                                 begin
                                     //measure text extent
-                                        textExtent := measureTextExtent( textStringIn, font.Size, font.Style );
+                                        textExtent := measureTextExtent( textStringIn, Font.Size, Font.Style, Font.Name );
 
                                     //calculate drawing point
                                         drawingPoint := calculateTextDrawingPoint(  textExtent,
@@ -411,11 +286,7 @@ implementation
                         //adjust canvas for underlay box
                             if ( drawTextUnderlayIn ) then
                                 begin
-                                    var underlayColour : TColor;
-
-                                    underlayColour := TStyleManager.ActiveStyle.GetStyleColor( TStyleColor.scGenericBackground );
-
-                                    Brush.Color := underlayColour;
+                                    Brush.Color := localBackgroundColour;
                                     Brush.Style := TBrushStyle.bsSolid;
                                 end
                             else
@@ -423,5 +294,24 @@ implementation
 
                         TextOut( drawingPoint.x, drawingPoint.y, textStringIn );
                     end;
+
+            procedure TDirect2DLTEntityCanvas.printLTTextF( const   textSizeIn              : integer;
+                                                            const   textStringIn,
+                                                                    textFontNameIn          : string;
+                                                            const   textColourIn            : TColor;
+                                                            const   textStylesIn            : TFontStyles;
+                                                            const   textHandlePointIn       : TPointF;
+                                                            const   drawTextUnderlayIn      : boolean = False;
+                                                            const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
+                                                            const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top   );
+                begin
+                    setFontTextProperties( textSizeIn, textColourIn, textStylesIn, textFontNameIn );
+
+                    printLTTextF(   textStringIn,
+                                    textHandlePointIn,
+                                    drawTextUnderlayIn,
+                                    horizontalAlignmentIn,
+                                    verticalAlignmentIn     );
+                end;
 
 end.

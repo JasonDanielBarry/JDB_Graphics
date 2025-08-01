@@ -21,9 +21,6 @@ interface
                     textString      : string;
                     textColour      : TColor;
                     textFontStyles  : TFontStyles;
-                //set font properties
-                    procedure setFontProperties(const axisConverterIn   : TDrawingAxisConverter;
-                                                var canvasInOut         : TDirect2DXYEntityCanvas);
                 //draw to canvas
                     procedure drawShapeToCanvas(const axisConverterIn   : TDrawingAxisConverter;
                                                 var canvasInOut         : TDirect2DXYEntityCanvas); override;
@@ -52,31 +49,19 @@ interface
 implementation
 
     //private
-        //set font properties
-            procedure TGraphicText.setFontProperties(   const axisConverterIn   : TDrawingAxisConverter;
-                                                        var canvasInOut         : TDirect2DXYEntityCanvas   );
-                begin
-                    canvasInOut.setFontTextProperties( TStyleManager.ActiveStyle.GetSystemColor( textColour ), textFontStyles, fontName );
-
-                    if ( addTextUnderlay ) then
-                        canvasInOut.Brush.Style := TBrushStyle.bsSolid
-                    else
-                        canvasInOut.Brush.Style := TBrushStyle.bsClear;
-                end;
-
         //draw to canvas
             procedure TGraphicText.drawShapeToCanvas(   const axisConverterIn   : TDrawingAxisConverter;
                                                         var canvasInOut         : TDirect2DXYEntityCanvas   );
                 begin
-                    //set the canvas font properties
-                        setFontProperties( axisConverterIn, canvasInOut );
-
                     //draw text to canvas
-                        canvasInOut.printXYText(    textString,
+                        canvasInOut.printXYText(    textSize,
+                                                    textString,
+                                                    fontName,
+                                                    textColour,
+                                                    textFontStyles,
                                                     handlePointXY,
                                                     axisConverterIn,
                                                     addTextUnderlay,
-                                                    textSize,
                                                     horizontalAlignment,
                                                     verticalAlignment,
                                                     scaleType               );

@@ -181,7 +181,8 @@ implementation
                 var
                     canvasWasRotated : boolean;
                 begin
-                    inherited drawToCanvas( axisConverterIn, canvasInOut );
+                    if ( filled OR outlined ) then
+                        inherited drawToCanvas( axisConverterIn, canvasInOut );
 
                     //rotate canvas
                         if ( mustRotateCanvas ) then

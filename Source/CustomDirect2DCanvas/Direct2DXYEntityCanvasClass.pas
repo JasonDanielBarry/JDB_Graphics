@@ -4,6 +4,7 @@ interface
 
     uses
         System.Types, System.Math,
+        vcl.Graphics,
         DrawingAxisConversionClass,
         GeometryTypes,
         Direct2DLTEntityCanvasClass;
@@ -73,14 +74,17 @@ interface
                                                     const   verticalAlignmentIn         : TVertRectAlign = TVertRectAlign.Center;
                                                     const   scaleTypeIn                 : EScaleType = EScaleType.scDrawing         ); overload;
                     //text
-                        procedure printXYText(  const textStringIn          : string;
-                                                const textHandlePointIn     : TGeomPoint;
-                                                const axisConverterIn       : TDrawingAxisConverter;
-                                                const drawTextUnderlayIn    : boolean = False;
-                                                const textSizeIn            : double = 9.0;
-                                                const horizontalAlignmentIn : THorzRectAlign = THorzRectAlign.Left;
-                                                const verticalAlignmentIn   : TVertRectAlign = TVertRectAlign.Top;
-                                                const scaleTypeIn           : EScaleType = EScaleType.scCanvas      );
+                        procedure printXYText(  const   textSizeIn              : double;
+                                                const   textStringIn,
+                                                        textFontNameIn          : string;
+                                                const   textColourIn            : TColor;
+                                                const   textStylesIn            : TFontStyles;
+                                                const   textHandlePointIn       : TGeomPoint;
+                                                const   axisConverterIn         : TDrawingAxisConverter;
+                                                const   drawTextUnderlayIn      : boolean = False;
+                                                const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
+                                                const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top;
+                                                const   scaleTypeIn             : EScaleType = EScaleType.scCanvas      );
         end;
 
 implementation
@@ -277,32 +281,43 @@ implementation
                     end;
 
             //text
-                procedure TDirect2DXYEntityCanvas.printXYText(  const textStringIn          : string;
-                                                                const textHandlePointIn     : TGeomPoint;
-                                                                const axisConverterIn       : TDrawingAxisConverter;
-                                                                const drawTextUnderlayIn    : boolean = False;
-                                                                const textSizeIn            : double = 9.0;
-                                                                const horizontalAlignmentIn : THorzRectAlign = THorzRectAlign.Left;
-                                                                const verticalAlignmentIn   : TVertRectAlign = TVertRectAlign.Top;
-                                                                const scaleTypeIn           : EScaleType = EScaleType.scCanvas      );
+                procedure TDirect2DXYEntityCanvas.printXYText(  const   textSizeIn              : double;
+                                                                const   textStringIn,
+                                                                        textFontNameIn          : string;
+                                                                const   textColourIn            : TColor;
+                                                                const   textStylesIn            : TFontStyles;
+                                                                const   textHandlePointIn       : TGeomPoint;
+                                                                const   axisConverterIn         : TDrawingAxisConverter;
+                                                                const   drawTextUnderlayIn      : boolean = False;
+                                                                const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
+                                                                const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top;
+                                                                const   scaleTypeIn             : EScaleType = EScaleType.scCanvas      );
                     var
+                        textSizeInteger : integer;
                         textSizeLT      : double;
                         handlePointLT   : TPointF;
                     begin
                         //convert XY to LT
-                            case ( scaleTypeIn ) of
-                                EScaleType.scCanvas:
-                                    textSizeLT := textSizeIn;
+                            //text size
+                                case ( scaleTypeIn ) of
+                                    EScaleType.scCanvas:
+                                        textSizeLT := textSizeIn;
 
-                                EScaleType.scDrawing:
-                                    textSizeLT := abs( axisConverterIn.dY_To_dT( textSizeIn ) );
-                            end;
+                                    EScaleType.scDrawing:
+                                        textSizeLT := abs( axisConverterIn.dY_To_dT( textSizeIn ) );
+                                end;
 
-                            font.Size := max( 1, round( textSizeLT ) );
+                                textSizeLT      := max( 1,  textSizeLT );
+                                textSizeInteger := round( textSizeLT );
 
-                            handlePointLT := axisConverterIn.XY_to_LT( textHandlePointIn );
+                            //handle point
+                                handlePointLT := axisConverterIn.XY_to_LT( textHandlePointIn );
 
-                        printLTTextF(   textStringIn,
+                        printLTTextF(   textSizeInteger,
+                                        textStringIn,
+                                        textFontNameIn,
+                                        textColourIn,
+                                        textStylesIn,
                                         handlePointLT,
                                         drawTextUnderlayIn,
                                         horizontalAlignmentIn,
