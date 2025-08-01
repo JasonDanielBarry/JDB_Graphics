@@ -23,6 +23,17 @@ interface
 
     type
         TDirect2DLTEntityCanvas = class( TDirect2DCustomCanvas )
+            protected
+                //draw text
+                    procedure printLTTextF( const   textSizeIn              : integer;
+                                            const   textStringIn,
+                                                    textFontNameIn          : string;
+                                            const   textColourIn            : TColor;
+                                            const   textStylesIn            : TFontStyles;
+                                            const   textHandlePointIn       : TPointF;
+                                            const   drawTextUnderlayIn      : boolean = False;
+                                            const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
+                                            const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top   ); overload;
             public
                 //canvas rotation
                     procedure rotateCanvasLT(   const rotationAngleIn           : double;
@@ -69,18 +80,32 @@ interface
                                                 const drawTextUnderlayIn    : boolean = False;
                                                 const horizontalAlignmentIn : THorzRectAlign = THorzRectAlign.Left;
                                                 const verticalAlignmentIn   : TVertRectAlign = TVertRectAlign.Top   ); overload;
-                        procedure printLTTextF( const   textSizeIn              : integer;
-                                                const   textStringIn,
-                                                        textFontNameIn          : string;
-                                                const   textColourIn            : TColor;
-                                                const   textStylesIn            : TFontStyles;
-                                                const   textHandlePointIn       : TPointF;
-                                                const   drawTextUnderlayIn      : boolean = False;
-                                                const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
-                                                const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top   ); overload;
+
         end;
 
 implementation
+
+    //protected
+        //draw text
+            procedure TDirect2DLTEntityCanvas.printLTTextF( const   textSizeIn              : integer;
+                                                            const   textStringIn,
+                                                                    textFontNameIn          : string;
+                                                            const   textColourIn            : TColor;
+                                                            const   textStylesIn            : TFontStyles;
+                                                            const   textHandlePointIn       : TPointF;
+                                                            const   drawTextUnderlayIn      : boolean = False;
+                                                            const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
+                                                            const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top   );
+                begin
+                    setFontTextProperties( textSizeIn, textColourIn, textStylesIn, textFontNameIn );
+
+                    printLTTextF(   textStringIn,
+                                    textHandlePointIn,
+                                    drawTextUnderlayIn,
+                                    horizontalAlignmentIn,
+                                    verticalAlignmentIn     );
+                end;
+
 
     //public
         //canvas rotation
@@ -294,24 +319,5 @@ implementation
 
                         TextOut( drawingPoint.x, drawingPoint.y, textStringIn );
                     end;
-
-            procedure TDirect2DLTEntityCanvas.printLTTextF( const   textSizeIn              : integer;
-                                                            const   textStringIn,
-                                                                    textFontNameIn          : string;
-                                                            const   textColourIn            : TColor;
-                                                            const   textStylesIn            : TFontStyles;
-                                                            const   textHandlePointIn       : TPointF;
-                                                            const   drawTextUnderlayIn      : boolean = False;
-                                                            const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
-                                                            const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top   );
-                begin
-                    setFontTextProperties( textSizeIn, textColourIn, textStylesIn, textFontNameIn );
-
-                    printLTTextF(   textStringIn,
-                                    textHandlePointIn,
-                                    drawTextUnderlayIn,
-                                    horizontalAlignmentIn,
-                                    verticalAlignmentIn     );
-                end;
 
 end.
