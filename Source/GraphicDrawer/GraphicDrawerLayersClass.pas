@@ -57,7 +57,7 @@ implementation
                 begin
                     activeBoundingBox := layerGraphicEntityMap.determineActiveBoundingBox();
 
-                    axisConverter.setGeometryBoundary( activeBoundingBox );
+                    axisConverter.setGraphicBoundary( activeBoundingBox );
                 end;
 
     //protected

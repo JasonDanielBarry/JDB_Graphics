@@ -24,7 +24,7 @@ interface
                         procedure setDrawingRegion( const bufferIn : double;
                                                     const regionIn : TGeomBox );
                     //geometry boundary percentage
-                        procedure setGeometryBorderPercentage(const geometryBorderPercentageIn : double);
+                        procedure setGraphicBorderPercentage(const graphicBorderPercentageIn : double);
                     //draw space ratio
                         procedure setDrawingSpaceRatioEnabled(const drawingSpaceRatioEnabledIn : boolean);
                         procedure setDrawingSpaceRatio(const drawingSpaceRatioIn : double);
@@ -81,9 +81,9 @@ implementation
                     end;
 
             //geometry boundary percentage
-                procedure TGraphicDrawerAxisConversionInterface.setGeometryBorderPercentage(const geometryBorderPercentageIn : double);
+                procedure TGraphicDrawerAxisConversionInterface.setGraphicBorderPercentage(const graphicBorderPercentageIn : double);
                     begin
-                        axisConverter.setGeometryBorderPercentage( geometryBorderPercentageIn );
+                        axisConverter.setGraphicBorderPercentage( graphicBorderPercentageIn );
                     end;
 
             //draw space ratio
@@ -166,7 +166,7 @@ implementation
 
                 procedure TGraphicDrawerAxisConversionInterface.zoomAll();
                     begin
-                        axisConverter.resetDrawingRegionToGeometryBoundary();
+                        axisConverter.resetDrawingRegionToGraphicBoundary();
                     end;
 
         //general mouse control

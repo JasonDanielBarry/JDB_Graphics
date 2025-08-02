@@ -8,6 +8,7 @@ interface
             system.SysUtils, system.types,
             vcl.Graphics,
         //custom
+            BitmapHelperClass,
             DrawingAxisConversionClass,
             Direct2DXYEntityCanvasClass,
             GraphicDrawerTypes,
@@ -24,11 +25,12 @@ interface
                 //draw all graphic entities
                     procedure drawAll(const canvasWidthIn, canvasHeightIn : integer);
             public
-
                 //constructor
                     constructor create(); override;
                 //destructor
                     destructor destroy(); override;
+                //save bitmap to image
+                    procedure saveGraphicToFile(const fileNameIn : string);
                 //graphic draw event
                     function getOnPostGraphicDrawEvent() : TPostGraphicDrawEvent;
                     procedure setOnPostGraphicDrawEvent(const onPostGraphicDrawEventIn : TPostGraphicDrawEvent);
@@ -85,6 +87,30 @@ implementation
                     FreeAndNil( currentGraphicBufferBMP );
 
                     inherited destroy();
+                end;
+
+        //save bitmap to image
+            procedure TGraphicDrawerDirect2D.saveGraphicToFile(const fileNameIn : string);
+                const
+                    BMP_EXT : string    = '.bmp';
+                    JPEG_EXT : string   = '.jpg';
+                    PNG_EXT : string    = '.png';
+                var
+                    fileExtension : string;
+                begin
+                    if NOT( fileNameIn.Contains('.') ) then
+                        exit();
+
+                    fileExtension := ExtractFileExt( fileNameIn );
+
+                    if ( fileExtension = BMP_EXT ) then
+                        currentGraphicBufferBMP.SaveToFile( fileNameIn )
+
+                    else if ( fileExtension = JPEG_EXT ) then
+                        currentGraphicBufferBMP.saveToJPegFile( fileNameIn )
+
+                    else if (fileExtension = PNG_EXT ) then
+                        currentGraphicBufferBMP.saveToPngFile( fileNameIn );
                 end;
 
         //graphic draw event
