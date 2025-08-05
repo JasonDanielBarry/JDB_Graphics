@@ -1,0 +1,96 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{160A8C4E-52F1-4254-9C8C-A1A893CDDD7C}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="..\JDB_Mathematics\JDB_Mathematics.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="JDB_Graphics.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="TestJDBD2DCanvas.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="GraphicDrawerVCL.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="TestGraphic2D.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="TestGraphXY.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="JDB_Mathematics">
+        <MSBuild Projects="..\JDB_Mathematics\JDB_Mathematics.dproj"/>
+    </Target>
+    <Target Name="JDB_Mathematics:Clean">
+        <MSBuild Projects="..\JDB_Mathematics\JDB_Mathematics.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="JDB_Mathematics:Make">
+        <MSBuild Projects="..\JDB_Mathematics\JDB_Mathematics.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="JDB_Graphics">
+        <MSBuild Projects="JDB_Graphics.dproj"/>
+    </Target>
+    <Target Name="JDB_Graphics:Clean">
+        <MSBuild Projects="JDB_Graphics.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="JDB_Graphics:Make">
+        <MSBuild Projects="JDB_Graphics.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TestJDBD2DCanvas">
+        <MSBuild Projects="TestJDBD2DCanvas.dproj"/>
+    </Target>
+    <Target Name="TestJDBD2DCanvas:Clean">
+        <MSBuild Projects="TestJDBD2DCanvas.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TestJDBD2DCanvas:Make">
+        <MSBuild Projects="TestJDBD2DCanvas.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="GraphicDrawerVCL">
+        <MSBuild Projects="GraphicDrawerVCL.dproj"/>
+    </Target>
+    <Target Name="GraphicDrawerVCL:Clean">
+        <MSBuild Projects="GraphicDrawerVCL.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="GraphicDrawerVCL:Make">
+        <MSBuild Projects="GraphicDrawerVCL.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TestGraphic2D">
+        <MSBuild Projects="TestGraphic2D.dproj"/>
+    </Target>
+    <Target Name="TestGraphic2D:Clean">
+        <MSBuild Projects="TestGraphic2D.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TestGraphic2D:Make">
+        <MSBuild Projects="TestGraphic2D.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TestGraphXY">
+        <MSBuild Projects="TestGraphXY.dproj"/>
+    </Target>
+    <Target Name="TestGraphXY:Clean">
+        <MSBuild Projects="TestGraphXY.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TestGraphXY:Make">
+        <MSBuild Projects="TestGraphXY.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="JDB_Mathematics;JDB_Graphics;TestJDBD2DCanvas;GraphicDrawerVCL;TestGraphic2D;TestGraphXY"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="JDB_Mathematics:Clean;JDB_Graphics:Clean;TestJDBD2DCanvas:Clean;GraphicDrawerVCL:Clean;TestGraphic2D:Clean;TestGraphXY:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="JDB_Mathematics:Make;JDB_Graphics:Make;TestJDBD2DCanvas:Make;GraphicDrawerVCL:Make;TestGraphic2D:Make;TestGraphXY:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

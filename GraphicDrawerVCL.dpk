@@ -1,0 +1,49 @@
+package GraphicDrawerVCL;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS ON}
+{$RANGECHECKS ON}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vcl,
+  vclimg,
+  vclx,
+  Skia.Package.RTL;
+
+contains
+  CustomComponentPanelClass in 'Source\GraphicDrawerVCLComponents\CustomComponentPanelClass.pas',
+  GraphPlotsListClass in 'Source\GraphicDrawerVCLComponents\GraphXYUnits\GraphPlotsListClass.pas',
+  GraphXYComponent in 'Source\GraphicDrawerVCLComponents\GraphXYUnits\GraphXYComponent.pas',
+  GraphXYFrame in 'Source\GraphicDrawerVCLComponents\GraphXYUnits\GraphXYFrame.pas' {CustomGraphXY: TFrame},
+  GraphXYTypes in 'Source\GraphicDrawerVCLComponents\GraphXYUnits\GraphXYTypes.pas',
+  Graphic2DComponent in 'Source\GraphicDrawerVCLComponents\Graphic2DUnits\Graphic2DComponent.pas',
+  Graphic2DFrame in 'Source\GraphicDrawerVCLComponents\Graphic2DUnits\Graphic2DFrame.pas' {CustomGraphic2D: TFrame},
+  Graphic2DListClass in 'Source\GraphicDrawerVCLComponents\Graphic2DUnits\Graphic2DListClass.pas',
+  Graphic2DTypes in 'Source\GraphicDrawerVCLComponents\Graphic2DUnits\Graphic2DTypes.pas',
+  GraphicComponentsRegistrationUnit in 'Source\GraphicDrawerVCLComponents\GraphicComponentsRegistrationUnit.pas';
+
+end.

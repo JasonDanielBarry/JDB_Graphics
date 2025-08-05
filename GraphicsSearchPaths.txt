@@ -6,6 +6,9 @@
 ..\JDB_Graphics\Source;
 ..\JDB_Graphics\Source\CustomDirect2DCanvas;
 ..\JDB_Graphics\Source\GraphicDrawer;
+..\JDB_Graphics\Source\GraphicDrawerVCLComponents
+..\JDB_Graphics\Source\GraphicDrawerVCLComponents\Graphic2DUnits
+..\JDB_Graphics\Source\GraphicDrawerVCLComponents\GraphXYUnits
 ..\JDB_Graphics\Source\GraphicEntityClasses;
 ..\JDB_Graphics\Source\GraphicEntityClasses\GraphicEntityFoundationalClasses;
 ..\JDB_Graphics\Source\GraphicEntityClasses\GraphicEntityFoundationalClasses\GraphicEntityGeometryClasses;
