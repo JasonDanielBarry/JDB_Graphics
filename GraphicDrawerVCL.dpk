@@ -44,6 +44,7 @@ contains
   Graphic2DFrame in 'Source\GraphicDrawerVCLComponents\Graphic2DUnits\Graphic2DFrame.pas' {CustomGraphic2D: TFrame},
   Graphic2DListClass in 'Source\GraphicDrawerVCLComponents\Graphic2DUnits\Graphic2DListClass.pas',
   Graphic2DTypes in 'Source\GraphicDrawerVCLComponents\Graphic2DUnits\Graphic2DTypes.pas',
-  GraphicComponentsRegistrationUnit in 'Source\GraphicDrawerVCLComponents\GraphicComponentsRegistrationUnit.pas';
+  GraphicComponentsRegistrationUnit in 'Source\GraphicDrawerVCLComponents\GraphicComponentsRegistrationUnit.pas',
+  GraphicDrawer2DPaintBoxClass in 'Source\GraphicDrawerVCLComponents\GraphicDrawer2DPaintBoxClass.pas';
 
 end.

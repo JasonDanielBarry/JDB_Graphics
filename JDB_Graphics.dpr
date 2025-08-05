@@ -20,7 +20,6 @@ uses
   GraphicDrawerLayersClass in 'Source\GraphicDrawer\GraphicDrawerLayersClass.pas',
   GraphicEntityListBaseClass in 'Source\GraphicDrawer\GraphicEntityListBaseClass.pas',
   LayerGraphicEntityMapClass in 'Source\GraphicDrawer\LayerGraphicEntityMapClass.pas',
-  GraphicDrawer2DPaintBoxClass in 'Source\GraphicDrawer\GraphicDrawer2DPaintBoxClass.pas',
   Direct2DLTEntityCanvasClass in 'Source\CustomDirect2DCanvas\Direct2DLTEntityCanvasClass.pas',
   Direct2DDrawingEntityFactoryClass in 'Source\CustomDirect2DCanvas\Direct2DDrawingEntityFactoryClass.pas',
   Direct2DXYEntityCanvasClass in 'Source\CustomDirect2DCanvas\Direct2DXYEntityCanvasClass.pas',

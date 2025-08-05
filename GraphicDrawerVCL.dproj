@@ -142,6 +142,7 @@
         <DCCReference Include="Source\GraphicDrawerVCLComponents\Graphic2DUnits\Graphic2DListClass.pas"/>
         <DCCReference Include="Source\GraphicDrawerVCLComponents\Graphic2DUnits\Graphic2DTypes.pas"/>
         <DCCReference Include="Source\GraphicDrawerVCLComponents\GraphicComponentsRegistrationUnit.pas"/>
+        <DCCReference Include="Source\GraphicDrawerVCLComponents\GraphicDrawer2DPaintBoxClass.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

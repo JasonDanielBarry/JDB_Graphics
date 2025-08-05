@@ -127,7 +127,6 @@
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawerLayersClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicEntityListBaseClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\LayerGraphicEntityMapClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawer\GraphicDrawer2DPaintBoxClass.pas"/>
         <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DLTEntityCanvasClass.pas"/>
         <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DDrawingEntityFactoryClass.pas"/>
         <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DXYEntityCanvasClass.pas"/>
