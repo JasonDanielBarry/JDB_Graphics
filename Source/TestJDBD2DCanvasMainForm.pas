@@ -33,7 +33,8 @@ type
   private
     { Private declarations }
     var
-        axisConverter : TDrawingAxisConverter;
+        bitmap          : TBitmap;
+        axisConverter   : TDrawingAxisConverter;
     procedure paintAllBoxes();
   public
     { Public declarations }
@@ -56,6 +57,7 @@ procedure TJDB_D2D_Form.paintAllBoxes();
 
 procedure TJDB_D2D_Form.FormClose(Sender: TObject; var Action: TCloseAction);
     begin
+        FreeAndNil( bitmap );
         FreeAndNil( axisConverter );
 
         action := TCloseAction.caFree;
@@ -63,6 +65,7 @@ procedure TJDB_D2D_Form.FormClose(Sender: TObject; var Action: TCloseAction);
 
 procedure TJDB_D2D_Form.FormCreate(Sender: TObject);
     begin
+        bitmap := TBitmap.Create();
         axisConverter := TDrawingAxisConverter.create();
 
         paintAllBoxes();
@@ -79,9 +82,13 @@ procedure TJDB_D2D_Form.PaintBoxArcEntityPaint(Sender: TObject);
         canvasRect  : TRect;
         D2DCanvas   : TDirect2DXYEntityCanvas;
     begin
-        canvasRect  := PaintBoxArcEntity.ClientRect;
+        canvasRect := PaintBoxArcEntity.ClientRect;
 
-        D2DCanvas := TDirect2DXYEntityCanvas.Create( PaintBoxArcEntity.Canvas, canvasRect );
+        bitmap.SetSize( canvasRect.Width, canvasRect.Height );
+        bitmap.canvas.Brush.Color := TDirect2DXYEntityCanvas.BackgroundColour;
+        bitmap.canvas.FillRect( canvasRect );
+
+        D2DCanvas := TDirect2DXYEntityCanvas.Create( bitmap );
 
         D2DCanvas.Brush.Color := TColors.Deepskyblue;
 
@@ -107,6 +114,8 @@ procedure TJDB_D2D_Form.PaintBoxArcEntityPaint(Sender: TObject);
         D2DCanvas.printLTTextF( 'Text Test', PointF( 1, 1 ), False );
 
         FreeAndNil( D2DCanvas );
+
+        PaintBoxArcEntity.Canvas.Draw( 0, 0, bitmap );
     end;
 
 procedure TJDB_D2D_Form.PaintBoxEllipseEntityPaint(Sender: TObject);
@@ -117,7 +126,11 @@ procedure TJDB_D2D_Form.PaintBoxEllipseEntityPaint(Sender: TObject);
     begin
         canvasRect  := PaintBoxEllipseEntity.ClientRect;
 
-        D2DCanvas := TDirect2DXYEntityCanvas.Create( PaintBoxEllipseEntity.Canvas, canvasRect );
+        bitmap.SetSize( canvasRect.Width, canvasRect.Height );
+        bitmap.canvas.Brush.Color := TDirect2DXYEntityCanvas.BackgroundColour;
+        bitmap.canvas.FillRect( canvasRect );
+
+        D2DCanvas := TDirect2DXYEntityCanvas.Create( bitmap );
 
         D2DCanvas.Pen.Color := TColors.Black;
         D2DCanvas.Pen.Width := 3;
@@ -144,6 +157,8 @@ procedure TJDB_D2D_Form.PaintBoxEllipseEntityPaint(Sender: TObject);
         D2DCanvas.printLTTextF( 'Text Test', PointF( canvasRect.Width/2, canvasRect.Height/2 ), True, THorzRectAlign.Center, TVertRectAlign.Center );
 
         FreeAndNil( D2DCanvas );
+
+        PaintBoxEllipseEntity.Canvas.Draw( 0, 0, bitmap );
     end;
 
 procedure TJDB_D2D_Form.PaintBoxPathGeometryPaint(Sender: TObject);
@@ -151,9 +166,13 @@ procedure TJDB_D2D_Form.PaintBoxPathGeometryPaint(Sender: TObject);
         canvasRect  : TRect;
         D2DCanvas   : TDirect2DXYEntityCanvas;
     begin
-        canvasRect  := PaintBoxPathGeometry.ClientRect;
+        canvasRect := PaintBoxPathGeometry.ClientRect;
 
-        D2DCanvas := TDirect2DXYEntityCanvas.Create( PaintBoxPathGeometry.Canvas, canvasRect );
+        bitmap.SetSize( canvasRect.Width, canvasRect.Height );
+        bitmap.canvas.Brush.Color := TDirect2DXYEntityCanvas.BackgroundColour;
+        bitmap.canvas.FillRect( canvasRect );
+
+        D2DCanvas := TDirect2DXYEntityCanvas.Create( bitmap );
 
         D2DCanvas.Pen.Width := 4;
 
@@ -201,6 +220,8 @@ procedure TJDB_D2D_Form.PaintBoxPathGeometryPaint(Sender: TObject);
         D2DCanvas.printLTTextF( 'Path Geometry Entities', PointF( canvasRect.Width/2, 1 ), False, THorzRectAlign.Center, TVertRectAlign.Top );
 
         FreeAndNil( D2DCanvas );
+
+        PaintBoxPathGeometry.Canvas.Draw( 0, 0, bitmap );
     end;
 
 procedure TJDB_D2D_Form.PaintBoxRectanglePaint(Sender: TObject);
@@ -211,7 +232,11 @@ procedure TJDB_D2D_Form.PaintBoxRectanglePaint(Sender: TObject);
     begin
         canvasRect  := PaintBoxRectangle.ClientRect;
 
-        D2DCanvas := TDirect2DXYEntityCanvas.Create( PaintBoxRectangle.Canvas, canvasRect );
+        bitmap.SetSize( canvasRect.Width, canvasRect.Height );
+        bitmap.canvas.Brush.Color := TDirect2DXYEntityCanvas.BackgroundColour;
+        bitmap.canvas.FillRect( canvasRect );
+
+        D2DCanvas := TDirect2DXYEntityCanvas.Create( bitmap );
 
         D2DCanvas.Pen.Color := TColors.Black;
         D2DCanvas.Pen.Width := 3;
@@ -234,6 +259,8 @@ procedure TJDB_D2D_Form.PaintBoxRectanglePaint(Sender: TObject);
         D2DCanvas.printLTTextF( 'Rectangle Entities', PointF( canvasRect.Width/2, 1 ), False, THorzRectAlign.Center, TVertRectAlign.Top );
 
         FreeAndNil( D2DCanvas );
+
+        PaintBoxRectangle.Canvas.Draw( 0, 0, bitmap );
     end;
 
 procedure TJDB_D2D_Form.PaintBoxXYPaint(Sender: TObject);
@@ -243,12 +270,16 @@ procedure TJDB_D2D_Form.PaintBoxXYPaint(Sender: TObject);
     begin
         canvasRect  := PaintBoxXY.ClientRect;
 
-        D2DCanvas := TDirect2DXYEntityCanvas.Create( PaintBoxXY.Canvas, canvasRect );
+        bitmap.SetSize( canvasRect.Width, canvasRect.Height );
+        bitmap.canvas.Brush.Color := TDirect2DXYEntityCanvas.BackgroundColour;
+        bitmap.canvas.FillRect( canvasRect );
+
+        D2DCanvas := TDirect2DXYEntityCanvas.Create( bitmap );
 
         D2DCanvas.Pen.Width := 3;
 
-        axisConverter.setGeometryBoundary( TGeomBox.newBox( (2/3) * canvasRect.Width, (2/3) * canvasRect.Height ) );
-        axisConverter.resetDrawingRegionToGeometryBoundary();
+        axisConverter.setGraphicBoundary( TGeomBox.newBox( (2/3) * canvasRect.Width, (2/3) * canvasRect.Height ) );
+        axisConverter.resetDrawingRegionToGraphicBoundary();
 
         axisConverter.setCanvasDimensions( canvasRect.Width, canvasRect.Height );
         axisConverter.setDrawingSpaceRatio( 1 );
@@ -399,6 +430,8 @@ procedure TJDB_D2D_Form.PaintBoxXYPaint(Sender: TObject);
             end;
 
         FreeAndNil( D2DCanvas );
+
+        PaintBoxXY.Canvas.Draw( 0, 0, bitmap );
     end;
 
 end.

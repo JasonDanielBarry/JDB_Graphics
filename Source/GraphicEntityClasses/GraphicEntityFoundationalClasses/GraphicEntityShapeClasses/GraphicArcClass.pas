@@ -87,8 +87,8 @@ implementation
                                     );
 
                     //calculate start and end angles
-                        startAngle  := startAngleIn;
-                        endAngle    := endAngleIn;
+                        startAngle  := FMod( startAngleIn, 360 );
+                        endAngle    := FMod( endAngleIn, 360);
 
                     //determine the graphic box
                         arcXRadius := arcXRadiusIn;

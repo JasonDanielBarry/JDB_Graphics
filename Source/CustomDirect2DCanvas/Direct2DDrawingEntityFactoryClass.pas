@@ -1,47 +1,76 @@
-unit Direct2DDrawingEntityMethods;
+unit Direct2DDrawingEntityFactoryClass;
 
 interface
 
     uses
         Winapi.D2D1,
-        system.SysUtils, system.Math, system.Types,
+        System.Threading, system.SysUtils, system.Math, system.Types,
         Vcl.Direct2D;
 
-    //create arc geometry
-        function createArcPathGeometry( const   filledIn                        : boolean;
-                                        const   startAngleIn, endAngleIn,
-                                                arcHorRadiusIn, arcVertRadiusIn : double;
-                                        const   centrePointIn                   : TPointF ) : ID2D1PathGeometry;
+    type
+        TDirect2DDrawingEntityFactory = class
+            private
+                var
+                    D2DGeometryFactory : ID2D1Factory;
+                //create generic path geometry
+                    function createGenericPathGeometry( const figureBeginIn         : D2D1_FIGURE_BEGIN;
+                                                        const figureEndIn           : D2D1_FIGURE_END;
+                                                        const arrDrawingPointsIn    : TArray<TPointF>   ) : ID2D1PathGeometry;
+            public
+                //constructor
+                    constructor create();
+                //destructor
+                    destructor destroy(); override;
+                //create arc geometry
+                    function createArcPathGeometry( const   filledIn                        : boolean;
+                                                    const   startAngleIn, endAngleIn,
+                                                            arcHorRadiusIn, arcVertRadiusIn : double;
+                                                    const   centrePointIn                   : TPointF ) : ID2D1PathGeometry;
+                //create ellipse geometry
+                    function createEllipseGeometry( const   ellipseWidthIn,
+                                                            ellipseHeightIn         : double;
+                                                    const   horizontalAlignmentIn   : THorzRectAlign;
+                                                    const   verticalAlignmentIn     : TVertRectAlign;
+                                                    const   handlePointIn           : TPointF       ) : TD2D1Ellipse;
+                //generic path geometry
+                    //create closed geometry
+                        function createClosedPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
 
-    //create ellipse geometry
-        function createEllipseGeometry( const   ellipseWidthIn,
-                                                ellipseHeightIn         : double;
-                                        const   horizontalAlignmentIn   : THorzRectAlign;
-                                        const   verticalAlignmentIn     : TVertRectAlign;
-                                        const   handlePointIn           : TPointF       ) : TD2D1Ellipse;
+                    //create open geometry
+                        function createOpenPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
 
-    //generic path geometry
-        //create closed geometry
-            function createClosedPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
+                //create rectangle geometry
+                    function createRectangleGeometry(   const   widthIn, heightIn,
+                                                                cornerRadiusHorIn,
+                                                                cornerRadiusVertIn      : double;
+                                                        const   horizontalAlignmentIn   : THorzRectAlign;
+                                                        const   verticalAlignmentIn     : TVertRectAlign;
+                                                        const   handlePointIn           : TPointF           ) : TD2D1RoundedRect;
 
-        //create open geometry
-            function createOpenPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
+                //calculate text drawing point
+                    function calculateTextDrawingPoint( const textExtentIn              : TSize;
+                                                        const horizontalAlignmentIn     : THorzRectAlign;
+                                                        const verticalAlignmentIn       : TVertRectAlign;
+                                                        const textHandlePointIn         : TPointF           ) : TPoint;
+    end;
 
-    //create rectangle geometry
-        function createRectangleGeometry(   const   widthIn, heightIn,
-                                                    cornerRadiusHorIn,
-                                                    cornerRadiusVertIn      : double;
-                                            const   horizontalAlignmentIn   : THorzRectAlign;
-                                            const   verticalAlignmentIn     : TVertRectAlign;
-                                            const   handlePointIn           : TPointF           ) : TD2D1RoundedRect;
-
-    //calculate text drawing point
-        function calculateTextDrawingPoint( const textExtentIn              : TSize;
-                                            const horizontalAlignmentIn     : THorzRectAlign;
-                                            const verticalAlignmentIn       : TVertRectAlign;
-                                            const textHandlePointIn         : TPointF           ) : TPoint;
                 
 implementation
+
+    //public
+        //constructor
+            constructor TDirect2DDrawingEntityFactory.create();
+                begin
+                    inherited create();
+
+                    D2DGeometryFactory := D2DFactory( D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_MULTI_THREADED );
+                end;
+
+        //destructor
+            destructor TDirect2DDrawingEntityFactory.destroy();
+                begin
+                    inherited destroy();
+                end;
 
     //ARC-------------------------------------------------------------------------------------------------------------
         //calculate the point on an ellipse given an angle
@@ -107,10 +136,18 @@ implementation
                 end;
 
         //create arc geometry
-            function createArcPathGeometry( const   filledIn                        : boolean;
-                                            const   startAngleIn, endAngleIn,
-                                                    arcHorRadiusIn, arcVertRadiusIn : double;
-                                            const   centrePointIn                   : TPointF ) : ID2D1PathGeometry;
+            function normaliseAngle(const angleIn : double) : double;
+                begin
+                    if ( 360 < abs( angleIn ) ) then
+                        result := FMod( angleIn, 360 )
+                    else
+                        result := angleIn;
+                end;
+
+            function TDirect2DDrawingEntityFactory.createArcPathGeometry(   const   filledIn                        : boolean;
+                                                                            const   startAngleIn, endAngleIn,
+                                                                                    arcHorRadiusIn, arcVertRadiusIn : double;
+                                                                            const   centrePointIn                   : TPointF   ) : ID2D1PathGeometry;
                 var
                     normStartAngle,
                     normEndAngle            : double;
@@ -119,10 +156,11 @@ implementation
                     pathGeometryOut         : ID2D1PathGeometry;
                     startPoint, endPoint    : TPointF;
                     arcSegment              : TD2D1ArcSegment;
+
                 begin
                     //normalise start and end angles
-                        normStartAngle  := FMod( startAngleIn, 360 );
-                        normEndAngle    := FMod( endAngleIn, 360 );
+                        normStartAngle  := normaliseAngle( startAngleIn );
+                        normEndAngle    := normaliseAngle( endAngleIn );
 
                         if ( SameValue( normStartAngle, normEndAngle, 1e-3 ) ) then
                             exit();
@@ -137,7 +175,7 @@ implementation
                         arcSegment := createArcSegment( normStartAngle, normEndAngle, arcHorRadiusIn, arcVertRadiusIn, endPoint );
 
                     //create path geometry
-                        D2DFactory( D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_MULTI_THREADED ).CreatePathGeometry( pathGeometryOut );
+                        D2DGeometryFactory.CreatePathGeometry( pathGeometryOut );
 
                         //open geometry
                             pathGeometryOut.Open( geometrySink );
@@ -202,11 +240,11 @@ implementation
                     end;
                 end;
 
-            function createEllipseGeometry( const   ellipseWidthIn,
-                                                    ellipseHeightIn         : double;
-                                            const   horizontalAlignmentIn   : THorzRectAlign;
-                                            const   verticalAlignmentIn     : TVertRectAlign;
-                                            const   handlePointIn           : TPointF       ) : TD2D1Ellipse;
+            function TDirect2DDrawingEntityFactory.createEllipseGeometry(   const   ellipseWidthIn,
+                                                                                    ellipseHeightIn         : double;
+                                                                            const   horizontalAlignmentIn   : THorzRectAlign;
+                                                                            const   verticalAlignmentIn     : TVertRectAlign;
+                                                                            const   handlePointIn           : TPointF           ) : TD2D1Ellipse;
                 var
                     ellipseCentreX,
                     ellipseCentreY  : double;
@@ -232,16 +270,16 @@ implementation
 
     //GEOMETRY--------------------------------------------------------------------------------------------------------
         //create generic path geometry
-            function createGenericPathGeometry( const figureBeginIn         : D2D1_FIGURE_BEGIN;
-                                                const figureEndIn           : D2D1_FIGURE_END;
-                                                const arrDrawingPointsIn    : TArray<TPointF>   ) : ID2D1PathGeometry;
+            function TDirect2DDrawingEntityFactory.createGenericPathGeometry(   const figureBeginIn         : D2D1_FIGURE_BEGIN;
+                                                                                const figureEndIn           : D2D1_FIGURE_END;
+                                                                                const arrDrawingPointsIn    : TArray<TPointF>       ) : ID2D1PathGeometry;
                 var
                     i, arrLen       : integer;
                     geometrySink    : ID2D1GeometrySink;
                     pathGeometryOut : ID2D1PathGeometry;
                 begin
                     //create path geometry
-                        D2DFactory( D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_MULTI_THREADED ).CreatePathGeometry( pathGeometryOut );
+                        D2DGeometryFactory.CreatePathGeometry( pathGeometryOut );
 
                     //open path geometry
                         pathGeometryOut.Open( geometrySink );
@@ -269,7 +307,7 @@ implementation
                 end;
 
         //create closed geometry
-            function createClosedPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
+            function TDirect2DDrawingEntityFactory.createClosedPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
                 begin
                     result := createGenericPathGeometry(
                                                             D2D1_FIGURE_BEGIN.D2D1_FIGURE_BEGIN_FILLED,
@@ -279,7 +317,7 @@ implementation
                 end;
 
         //create open geometry
-            function createOpenPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
+            function TDirect2DDrawingEntityFactory.createOpenPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
                 begin
                     result := createGenericPathGeometry(
                                                             D2D1_FIGURE_BEGIN.D2D1_FIGURE_BEGIN_HOLLOW,
@@ -289,12 +327,12 @@ implementation
                 end;
 
     //RECTANGLE-------------------------------------------------------------------------------------------------------
-        function createRectangleGeometry(   const   widthIn, heightIn,
-                                                    cornerRadiusHorIn,
-                                                    cornerRadiusVertIn      : double;
-                                            const   horizontalAlignmentIn   : THorzRectAlign;
-                                            const   verticalAlignmentIn     : TVertRectAlign;
-                                            const   handlePointIn           : TPointF           ) : TD2D1RoundedRect;
+        function TDirect2DDrawingEntityFactory.createRectangleGeometry( const   widthIn, heightIn,
+                                                                                cornerRadiusHorIn,
+                                                                                cornerRadiusVertIn      : double;
+                                                                        const   horizontalAlignmentIn   : THorzRectAlign;
+                                                                        const   verticalAlignmentIn     : TVertRectAlign;
+                                                                        const   handlePointIn           : TPointF           ) : TD2D1RoundedRect;
             var
                 roundRectOut : TD2D1RoundedRect;
             begin
@@ -381,10 +419,10 @@ implementation
                 end;
 
         //text top left point for drawing
-            function calculateTextDrawingPoint( const textExtentIn              : TSize;
-                                                const horizontalAlignmentIn     : THorzRectAlign;
-                                                const verticalAlignmentIn       : TVertRectAlign;
-                                                const textHandlePointIn         : TPointF           ) : TPoint;
+            function TDirect2DDrawingEntityFactory.calculateTextDrawingPoint(   const textExtentIn              : TSize;
+                                                                                const horizontalAlignmentIn     : THorzRectAlign;
+                                                                                const verticalAlignmentIn       : TVertRectAlign;
+                                                                                const textHandlePointIn         : TPointF           ) : TPoint;
                 var
                     horShift, vertShift : double;
                     pointOut            : TPoint;

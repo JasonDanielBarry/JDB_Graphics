@@ -22,7 +22,7 @@ uses
   LayerGraphicEntityMapClass in 'Source\GraphicDrawer\LayerGraphicEntityMapClass.pas',
   GraphicDrawer2DPaintBoxClass in 'Source\GraphicDrawer\GraphicDrawer2DPaintBoxClass.pas',
   Direct2DLTEntityCanvasClass in 'Source\CustomDirect2DCanvas\Direct2DLTEntityCanvasClass.pas',
-  Direct2DDrawingEntityMethods in 'Source\CustomDirect2DCanvas\Direct2DDrawingEntityMethods.pas',
+  Direct2DDrawingEntityFactoryClass in 'Source\CustomDirect2DCanvas\Direct2DDrawingEntityFactoryClass.pas',
   Direct2DXYEntityCanvasClass in 'Source\CustomDirect2DCanvas\Direct2DXYEntityCanvasClass.pas',
   GraphicGeometryClass in 'Source\GraphicEntityClasses\GraphicEntityFoundationalClasses\GraphicEntityGeometryClasses\GraphicGeometryClass.pas',
   GraphicLineClass in 'Source\GraphicEntityClasses\GraphicEntityFoundationalClasses\GraphicEntityGeometryClasses\GraphicLineClass.pas',

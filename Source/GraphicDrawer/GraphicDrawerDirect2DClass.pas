@@ -54,7 +54,7 @@ implementation
                         currentGraphicBufferBMP.SetSize( canvasWidthIn, canvasHeightIn );
 
                     //create D2D canvas
-                        D2DCanvas := TDirect2DXYEntityCanvas.Create( currentGraphicBufferBMP.Canvas, Rect(0, 0, canvasWidthIn, canvasHeightIn) );
+                        D2DCanvas := TDirect2DXYEntityCanvas.Create( currentGraphicBufferBMP );
 
                     //draw to the D2D canvas
                         inherited drawAll(
@@ -75,6 +75,8 @@ implementation
                 begin
                     inherited create();
 
+                    TDirect2DXYEntityCanvas.initialiseEntityFactory();
+
                     currentGraphicBufferBMP             := TBitmap.Create();
                     currentGraphicBufferBMP.PixelFormat := TPixelFormat.pf32bit;
 
@@ -84,6 +86,7 @@ implementation
         //destructor
             destructor TGraphicDrawerDirect2D.destroy();
                 begin
+                    TDirect2DXYEntityCanvas.finaliseEntityFactory();
                     FreeAndNil( currentGraphicBufferBMP );
 
                     inherited destroy();

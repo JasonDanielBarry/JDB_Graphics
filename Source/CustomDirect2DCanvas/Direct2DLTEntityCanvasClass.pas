@@ -18,11 +18,16 @@ interface
         System.SysUtils, system.Math, system.Types, System.UITypes,
         Vcl.Direct2D, Vcl.Graphics, vcl.Themes,
         Direct2DCustomCanvasClass,
-        Direct2DDrawingEntityMethods
+        Direct2DDrawingEntityFactoryClass
         ;
 
     type
         TDirect2DLTEntityCanvas = class( TDirect2DCustomCanvas )
+            private
+                class var
+                    D2DEntityFactory : TDirect2DDrawingEntityFactory;
+                var
+                    entityFactoryBelongsToClass : boolean;
             protected
                 //draw text
                     procedure printLTTextF( const   textSizeIn              : integer;
@@ -35,6 +40,13 @@ interface
                                             const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
                                             const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top   ); overload;
             public
+                //constructor
+                    constructor create(const bitmapIn : TBitmap);
+                //destructor
+                    destructor destroy(); override;
+                //entity factory
+                    class procedure initialiseEntityFactory(); static;
+                    class procedure finaliseEntityFactory(); static;
                 //canvas rotation
                     procedure rotateCanvasLT(   const rotationAngleIn           : double;
                                                 const rotationReferencePointIn  : TPointF   );
@@ -108,6 +120,41 @@ implementation
 
 
     //public
+        //constructor
+            constructor TDirect2DLTEntityCanvas.create(const bitmapIn : TBitmap);
+                begin
+                    inherited create( bitmapIn );
+
+                    if ( Assigned( D2DEntityFactory ) )then
+                        begin
+                            entityFactoryBelongsToClass := False;
+                            exit();
+                        end;
+
+                    entityFactoryBelongsToClass := True;
+                    initialiseEntityFactory();
+                end;
+
+        //destructor
+            destructor TDirect2DLTEntityCanvas.destroy();
+                begin
+                    if ( entityFactoryBelongsToClass ) then
+                        finaliseEntityFactory();
+
+                    inherited destroy();
+                end;
+
+        //entity factory
+            class procedure TDirect2DLTEntityCanvas.initialiseEntityFactory();
+                begin
+                    D2DEntityFactory := TDirect2DDrawingEntityFactory.create();
+                end;
+
+            class procedure TDirect2DLTEntityCanvas.finaliseEntityFactory();
+                begin
+                    FreeAndNil( D2DEntityFactory );
+                end;
+
         //canvas rotation
             procedure TDirect2DLTEntityCanvas.rotateCanvasLT(   const rotationAngleIn           : double;
                                                                 const rotationReferencePointIn  : TPointF   );
@@ -141,10 +188,10 @@ implementation
                         if NOT( filledIn OR outlinedIn ) then
                             exit();
 
-                        arcPathGeometry := createArcPathGeometry(   filledIn,
-                                                                    startAngleIn, endAngleIn,
-                                                                    arcHorRadiusIn, arcVertRadiusIn,
-                                                                    centrePointIn               );
+                        arcPathGeometry := D2DEntityFactory.createArcPathGeometry(  filledIn,
+                                                                                    startAngleIn, endAngleIn,
+                                                                                    arcHorRadiusIn, arcVertRadiusIn,
+                                                                                    centrePointIn                   );
 
                         //fill arc shape
                             if ( filledIn ) then
@@ -169,9 +216,9 @@ implementation
                             exit();
 
                         //create drawing ellipse
-                            drawingEllipse := createEllipseGeometry(    ellipseWidthIn, ellipseHeightIn,
-                                                                        horizontalAlignmentIn, verticalAlignmentIn,
-                                                                        handlePointIn                               );
+                            drawingEllipse := D2DEntityFactory.createEllipseGeometry(   ellipseWidthIn, ellipseHeightIn,
+                                                                                        horizontalAlignmentIn, verticalAlignmentIn,
+                                                                                        handlePointIn                               );
 
                         //draw fill
                             if ( filledIn ) then
@@ -187,7 +234,7 @@ implementation
                     var
                         lineGeometry : ID2D1PathGeometry;
                     begin
-                        lineGeometry := createOpenPathGeometry( arrDrawingPointsIn );
+                        lineGeometry := D2DEntityFactory.createOpenPathGeometry( arrDrawingPointsIn );
 
                         DrawGeometry( lineGeometry );
                     end;
@@ -209,7 +256,7 @@ implementation
                     var
                         polylineGeometry : ID2D1PathGeometry;
                     begin
-                        polylineGeometry := createOpenPathGeometry( arrDrawingPointsIn );
+                        polylineGeometry := D2DEntityFactory.createOpenPathGeometry( arrDrawingPointsIn );
 
                         DrawGeometry( polylineGeometry );
                     end;
@@ -223,7 +270,7 @@ implementation
                         if NOT( filledIn OR outlinedIn ) then
                             exit();
 
-                        polygonGeometry := createClosedPathGeometry( arrDrawingPointsIn );
+                        polygonGeometry := D2DEntityFactory.createClosedPathGeometry( arrDrawingPointsIn );
 
                         if ( filledIn ) then
                             FillGeometry( polygonGeometry );
@@ -246,12 +293,12 @@ implementation
                         if NOT( filledIn OR outlinedIn ) then
                             exit();
 
-                        drawingRect := createRectangleGeometry( widthIn, heightIn,
-                                                                cornerRadiusHorIn,
-                                                                cornerRadiusVertIn,
-                                                                horizontalAlignmentIn,
-                                                                verticalAlignmentIn,
-                                                                handlePointIn           );
+                        drawingRect := D2DEntityFactory.createRectangleGeometry(    widthIn, heightIn,
+                                                                                    cornerRadiusHorIn,
+                                                                                    cornerRadiusVertIn,
+                                                                                    horizontalAlignmentIn,
+                                                                                    verticalAlignmentIn,
+                                                                                    handlePointIn           );
 
                         if ( filledIn ) then
                             FillRoundedRectangle( drawingRect );
@@ -297,10 +344,10 @@ implementation
                                         textExtent := measureTextExtent( textStringIn, Font.Size, Font.Style, Font.Name );
 
                                     //calculate drawing point
-                                        drawingPoint := calculateTextDrawingPoint(  textExtent,
-                                                                                    horizontalAlignmentIn,
-                                                                                    verticalAlignmentIn,
-                                                                                    textHandlePointIn       );
+                                        drawingPoint := D2DEntityFactory.calculateTextDrawingPoint( textExtent,
+                                                                                                    horizontalAlignmentIn,
+                                                                                                    verticalAlignmentIn,
+                                                                                                    textHandlePointIn       );
                                 end
                             else
                                 begin

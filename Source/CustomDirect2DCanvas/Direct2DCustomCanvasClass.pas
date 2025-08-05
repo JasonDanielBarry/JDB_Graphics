@@ -20,8 +20,7 @@ interface
                     localBackgroundColour : TColor; //used for member functions of the class while it is instatiated - DO NOT WRITE TO
             public
                 //constructor
-                    constructor create( const canvasIn  : TCanvas;
-                                        const rectIn    : TRect     );
+                    constructor create(const bitmapIn : TBitmap);
                 //destructor
                     destructor destroy(); override;
                 //set brush properties
@@ -53,10 +52,13 @@ implementation
                 end;
 
     //constructor
-        constructor TDirect2DCustomCanvas.create(   const canvasIn  : TCanvas;
-                                                    const rectIn    : TRect     );
+        constructor TDirect2DCustomCanvas.create(const bitmapIn : TBitmap);
+            var
+                bitmapRect : TRect;
             begin
-                inherited create( canvasIn, rectIn );
+                bitmapRect := Rect( 0, 0, bitmapIn.Width, bitmapIn.Height );
+
+                inherited create( bitmapIn.Canvas, bitmapRect );
 
                 localBackgroundColour := determineBackgroundColour();
 
