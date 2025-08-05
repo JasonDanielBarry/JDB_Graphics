@@ -77,7 +77,7 @@ interface
             ActionSaveGraphicToFile: TAction;
             N5: TMenuItem;
             ExportGraphic1: TMenuItem;
-    FileSaveGraphicDialog: TFileSaveDialog;
+            FileSaveGraphicDialog: TFileSaveDialog;
             //events
                 procedure ComboBoxZoomPercentChange(Sender: TObject);
                 procedure FrameResize(Sender: TObject);
@@ -212,7 +212,7 @@ implementation
                     GridPanelAxisOptions.Visible    := axisSettingsVisible;
 
                 //early return
-                    if NOT(axisSettingsVisible) then
+                    if NOT( axisSettingsVisible ) then
                         begin
                             SpeedButtonAxisSettings.Down := False;
                             exit();
@@ -238,7 +238,7 @@ implementation
                     positionComponents();
                     CheckListBoxLayerTable.Visible  := layerTableVisible;
 
-                if (NOT(layerTableVisible)) then
+                if NOT( layerTableVisible ) then
                     begin
                         SpeedButtonLayerTable.Down := False;
                         exit();
@@ -572,6 +572,13 @@ implementation
                             GridPanelDirectionalPan.Left    := PanelGraphicControls.Width - GridPanelDirectionalPan.Width;
                             GridPanelDirectionalPan.top     := PanelGraphicControls.Height;
                             GridPanelDirectionalPan.BringToFront();
+
+                        //speed buttons - this is to ensure that the speed buttons can correctly enter the down state when clicked
+                            SpeedButtonLayerTable.AllowAllUp := True;
+                            SpeedButtonLayerTable.GroupIndex := 1;
+
+                            SpeedButtonAxisSettings.AllowAllUp := True;
+                            SpeedButtonAxisSettings.GroupIndex := 1;
 
                         //axis settings
                             axisSettingsVisible             := False;
