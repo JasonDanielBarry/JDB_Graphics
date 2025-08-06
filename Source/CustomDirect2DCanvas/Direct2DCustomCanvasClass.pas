@@ -87,7 +87,7 @@ implementation
                     end;
 
                 Brush.Style := TBrushStyle.bsSolid;
-                Brush.Color := colourIn;
+                Brush.Color := TStyleManager.ActiveStyle.GetSystemColor( colourIn );
             end;
 
 
@@ -104,7 +104,7 @@ implementation
                     end;
 
                 Pen.Width := widthIn;
-                Pen.Color := colourIn;
+                Pen.Color := TStyleManager.ActiveStyle.GetSystemColor( colourIn );
                 Pen.Style := styleIn;
             end;
 
@@ -115,7 +115,7 @@ implementation
                                                                 const nameIn    : string = ''       );
             begin
                 Font.Size   := sizeIn;
-                Font.Color  := colourIn;
+                Font.Color  := TStyleManager.ActiveStyle.GetSystemColor( colourIn );
                 Font.Style  := stylesIn;
 
                 if ( nameIn <> EMPTY_STRING ) then
