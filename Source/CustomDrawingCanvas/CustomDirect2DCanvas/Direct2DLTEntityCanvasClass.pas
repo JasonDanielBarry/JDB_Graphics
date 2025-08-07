@@ -1,45 +1,18 @@
 unit Direct2DLTEntityCanvasClass;
 
-{
-The fundamental drawing entities from which all 2D graphics can be created are
-    1. Arcs
-    2. Ellipses
-    3. Lines
-    4. Polylines
-    5. Polygons
-    6. Rectangles (with rounded corners, corner radius of 0 is a standard rectangle)
-    7. Text
-}
-
 interface
 
     uses
         Winapi.D2D1,
         System.SysUtils, system.Math, system.Types, System.UITypes,
         Vcl.Direct2D, Vcl.Graphics, vcl.Themes,
+        GenericLTEntityCanvasAbstractClass,
         Direct2DCustomCanvasClass,
         Direct2DDrawingEntityFactoryClass
         ;
 
     type
         TDirect2DLTEntityCanvas = class( TDirect2DCustomCanvas )
-            private
-                class var
-                    D2DEntityFactory : TDirect2DDrawingEntityFactory;
-                //entity factory create and destroy
-                    class procedure initialiseEntityFactory(); static;
-                    class procedure finaliseEntityFactory(); static;
-            protected
-                //draw text
-                    procedure printLTTextF( const   textSizeIn              : integer;
-                                            const   textStringIn,
-                                                    textFontNameIn          : string;
-                                            const   textColourIn            : TColor;
-                                            const   textStylesIn            : TFontStyles;
-                                            const   textHandlePointIn       : TPointF;
-                                            const   drawTextUnderlayIn      : boolean = False;
-                                            const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
-                                            const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top   ); overload;
             public
                 //canvas rotation
                     procedure rotateCanvasLT(   const rotationAngleIn           : double;
@@ -86,44 +59,9 @@ interface
                                                 const drawTextUnderlayIn    : boolean = False;
                                                 const horizontalAlignmentIn : THorzRectAlign = THorzRectAlign.Left;
                                                 const verticalAlignmentIn   : TVertRectAlign = TVertRectAlign.Top   ); overload;
-
         end;
 
 implementation
-
-    //private
-        //entity factory
-            class procedure TDirect2DLTEntityCanvas.initialiseEntityFactory();
-                begin
-                    D2DEntityFactory := TDirect2DDrawingEntityFactory.create();
-                end;
-
-            class procedure TDirect2DLTEntityCanvas.finaliseEntityFactory();
-                begin
-                    FreeAndNil( D2DEntityFactory );
-                end;
-
-    //protected
-        //draw text
-            procedure TDirect2DLTEntityCanvas.printLTTextF( const   textSizeIn              : integer;
-                                                            const   textStringIn,
-                                                                    textFontNameIn          : string;
-                                                            const   textColourIn            : TColor;
-                                                            const   textStylesIn            : TFontStyles;
-                                                            const   textHandlePointIn       : TPointF;
-                                                            const   drawTextUnderlayIn      : boolean = False;
-                                                            const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
-                                                            const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top   );
-                begin
-                    setFontTextProperties( textSizeIn, textColourIn, textStylesIn, textFontNameIn );
-
-                    printLTTextF(   textStringIn,
-                                    textHandlePointIn,
-                                    drawTextUnderlayIn,
-                                    horizontalAlignmentIn,
-                                    verticalAlignmentIn     );
-                end;
-
 
     //public
         //canvas rotation
@@ -159,10 +97,10 @@ implementation
                         if NOT( filledIn OR outlinedIn ) then
                             exit();
 
-                        arcPathGeometry := D2DEntityFactory.createArcPathGeometry(  filledIn,
-                                                                                    startAngleIn, endAngleIn,
-                                                                                    arcHorRadiusIn, arcVertRadiusIn,
-                                                                                    centrePointIn                   );
+                        arcPathGeometry := TDirect2DDrawingEntityFactory.createArcPathGeometry( filledIn,
+                                                                                                startAngleIn, endAngleIn,
+                                                                                                arcHorRadiusIn, arcVertRadiusIn,
+                                                                                                centrePointIn                   );
 
                         //fill arc shape
                             if ( filledIn ) then
@@ -187,9 +125,9 @@ implementation
                             exit();
 
                         //create drawing ellipse
-                            drawingEllipse := D2DEntityFactory.createEllipseGeometry(   ellipseWidthIn, ellipseHeightIn,
-                                                                                        horizontalAlignmentIn, verticalAlignmentIn,
-                                                                                        handlePointIn                               );
+                            drawingEllipse := TDirect2DDrawingEntityFactory.createEllipseGeometry(  ellipseWidthIn, ellipseHeightIn,
+                                                                                                    horizontalAlignmentIn, verticalAlignmentIn,
+                                                                                                    handlePointIn                               );
 
                         //draw fill
                             if ( filledIn ) then
@@ -205,7 +143,7 @@ implementation
                     var
                         lineGeometry : ID2D1PathGeometry;
                     begin
-                        lineGeometry := D2DEntityFactory.createOpenPathGeometry( arrDrawingPointsIn );
+                        lineGeometry := TDirect2DDrawingEntityFactory.createOpenPathGeometry( arrDrawingPointsIn );
 
                         DrawGeometry( lineGeometry );
                     end;
@@ -227,7 +165,7 @@ implementation
                     var
                         polylineGeometry : ID2D1PathGeometry;
                     begin
-                        polylineGeometry := D2DEntityFactory.createOpenPathGeometry( arrDrawingPointsIn );
+                        polylineGeometry := TDirect2DDrawingEntityFactory.createOpenPathGeometry( arrDrawingPointsIn );
 
                         DrawGeometry( polylineGeometry );
                     end;
@@ -241,7 +179,7 @@ implementation
                         if NOT( filledIn OR outlinedIn ) then
                             exit();
 
-                        polygonGeometry := D2DEntityFactory.createClosedPathGeometry( arrDrawingPointsIn );
+                        polygonGeometry := TDirect2DDrawingEntityFactory.createClosedPathGeometry( arrDrawingPointsIn );
 
                         if ( filledIn ) then
                             FillGeometry( polygonGeometry );
@@ -264,12 +202,12 @@ implementation
                         if NOT( filledIn OR outlinedIn ) then
                             exit();
 
-                        drawingRect := D2DEntityFactory.createRectangleGeometry(    widthIn, heightIn,
-                                                                                    cornerRadiusHorIn,
-                                                                                    cornerRadiusVertIn,
-                                                                                    horizontalAlignmentIn,
-                                                                                    verticalAlignmentIn,
-                                                                                    handlePointIn           );
+                        drawingRect := TDirect2DDrawingEntityFactory.createRectangleGeometry(   widthIn, heightIn,
+                                                                                                cornerRadiusHorIn,
+                                                                                                cornerRadiusVertIn,
+                                                                                                horizontalAlignmentIn,
+                                                                                                verticalAlignmentIn,
+                                                                                                handlePointIn           );
 
                         if ( filledIn ) then
                             FillRoundedRectangle( drawingRect );
@@ -304,27 +242,9 @@ implementation
                         textExtent                  : TSize;
                         drawingPoint                : TPoint;
                     begin
-                        //check if drawing point must be calculated - True if alignment is NOT top left
-                        // NOT( A AND B ) = NOT(A) OR NOT(B)
-                            mustCalculateDrawingPoint := ( horizontalAlignmentIn <> THorzRectAlign.Left ) OR ( verticalAlignmentIn <> TVertRectAlign.Top );
 
-                        //calculate the drawing point
-                            if ( mustCalculateDrawingPoint ) then
-                                begin
-                                    //measure text extent
-                                        textExtent := measureTextExtent( textStringIn, Font.Size, Font.Style, Font.Name );
 
-                                    //calculate drawing point
-                                        drawingPoint := D2DEntityFactory.calculateTextDrawingPoint( textExtent,
-                                                                                                    horizontalAlignmentIn,
-                                                                                                    verticalAlignmentIn,
-                                                                                                    textHandlePointIn       );
-                                end
-                            else
-                                begin
-                                    drawingPoint.X := round( textHandlePointIn.X );
-                                    drawingPoint.Y := round( textHandlePointIn.Y );
-                                end;
+                        
 
                         //adjust canvas for underlay box
                             if ( drawTextUnderlayIn ) then
@@ -337,13 +257,5 @@ implementation
 
                         TextOut( drawingPoint.x, drawingPoint.y, textStringIn );
                     end;
-
-initialization
-
-    TDirect2DLTEntityCanvas.initialiseEntityFactory();
-
-finalization
-
-    TDirect2DLTEntityCanvas.finaliseEntityFactory();
 
 end.

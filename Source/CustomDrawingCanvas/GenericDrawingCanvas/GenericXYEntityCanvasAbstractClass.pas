@@ -1,20 +1,22 @@
-unit Direct2DXYEntityCanvasClass;
+unit GenericXYEntityCanvasAbstractClass;
 
 interface
 
     uses
-        System.Types, System.Math,
+        System.Math,
+        System.Types,
         vcl.Graphics,
-        DrawingAxisConversionClass,
         GeometryTypes,
-        Direct2DLTEntityCanvasClass;
+        DrawingAxisConversionClass,
+        GenericLTEntityCanvasAbstractClass
+        ;
 
     type
         {$SCOPEDENUMS ON}
             EScaleType = (scCanvas = 0, scDrawing);
         {$SCOPEDENUMS OFF}
 
-        TDirect2DXYEntityCanvas = class( TDirect2DLTEntityCanvas )
+        TGenericXYEntityCanvasAbstract = class( TGenericLTEntityCanvas )
             private
                 //convert the height, width and handle point of entites from XY to LT based on drawing scale option
                     class procedure convertWidthHeightAndHandlePoint(   const   widthXYIn, heightXYIn   : double;
@@ -91,7 +93,7 @@ implementation
 
     //private
         //convert the height, width and handle point of entites based on drawing scale option
-            class procedure TDirect2DXYEntityCanvas.convertWidthHeightAndHandlePoint(   const   widthXYIn, heightXYIn   : double;
+            class procedure TGenericXYEntityCanvasAbstract.convertWidthHeightAndHandlePoint(   const   widthXYIn, heightXYIn   : double;
                                                                                         const   handlePointXYIn         : TGeomPoint;
                                                                                         const   scaleTypeIn             : EScaleType;
                                                                                         const   axisConverterIn         : TDrawingAxisConverter;
@@ -117,9 +119,9 @@ implementation
 
     //public
         //canvas rotation
-            procedure TDirect2DXYEntityCanvas.rotateCanvasXY(   const rotationAngleIn           : double;
-                                                                const rotationReferencePointIn  : TGeomPoint;
-                                                                const axisConverterIn           : TDrawingAxisConverter );
+            procedure TGenericXYEntityCanvasAbstract.rotateCanvasXY(const rotationAngleIn           : double;
+                                                                    const rotationReferencePointIn  : TGeomPoint;
+                                                                    const axisConverterIn           : TDrawingAxisConverter);
                 var
                     rotationReferencePointLT : TPointF;
                 begin
@@ -130,12 +132,12 @@ implementation
 
         //drawing entities
             //arc
-                procedure TDirect2DXYEntityCanvas.drawXYArc(const   filledIn, outlinedIn            : boolean;
-                                                            const   startAngleIn, endAngleIn,
-                                                                    arcXRadiusInIn, arcYRadiusIn    : double;
-                                                            const   centrePointIn                   : TGeomPoint;
-                                                            const   axisConverterIn                 : TDrawingAxisConverter;
-                                                            const   scaleTypeIn                     : EScaleType = EScaleType.scDrawing);
+                procedure TGenericXYEntityCanvasAbstract.drawXYArc( const   filledIn, outlinedIn            : boolean;
+                                                                    const   startAngleIn, endAngleIn,
+                                                                            arcXRadiusInIn, arcYRadiusIn    : double;
+                                                                    const   centrePointIn                   : TGeomPoint;
+                                                                    const   axisConverterIn                 : TDrawingAxisConverter;
+                                                                    const   scaleTypeIn                     : EScaleType = EScaleType.scDrawing);
                     var
                         horRadiusLT, VertRadiusLT   : double;
                         centrePointLT               : TPointF;
@@ -145,7 +147,7 @@ implementation
                                                             scaleTypeIn,
                                                             axisConverterIn,
                                                             horRadiusLT, VertRadiusLT,
-                                                            centrePointLT           );
+                                                            centrePointLT                   );
 
                         drawLTArcF( filledIn, outlinedIn,
                                     startAngleIn, endAngleIn,
@@ -154,14 +156,14 @@ implementation
                     end;
 
             //ellipse
-                procedure TDirect2DXYEntityCanvas.drawXYEllipse(const   filledIn, outlinedIn    : boolean;
-                                                                const   ellipseWidthIn,
-                                                                        ellipseHeightIn         : double;
-                                                                const   handlePointIn           : TGeomPoint;
-                                                                const   axisConverterIn         : TDrawingAxisConverter;
-                                                                const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
-                                                                const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center;
-                                                                const   scaleTypeIn             : EScaleType = EScaleType.scDrawing     );
+                procedure TGenericXYEntityCanvasAbstract.drawXYEllipse( const   filledIn, outlinedIn    : boolean;
+                                                                        const   ellipseWidthIn,
+                                                                                ellipseHeightIn         : double;
+                                                                        const   handlePointIn           : TGeomPoint;
+                                                                        const   axisConverterIn         : TDrawingAxisConverter;
+                                                                        const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
+                                                                        const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center;
+                                                                        const   scaleTypeIn             : EScaleType = EScaleType.scDrawing     );
                     var
                         widthLT, heightLT   : double;
                         handlePointLT       : TPointF;
@@ -181,8 +183,8 @@ implementation
                     end;
 
             //line
-                procedure TDirect2DXYEntityCanvas.drawXYLine(   const arrLinePointsIn   : TArray<TGeomPoint>;
-                                                                const axisConverterIn   : TDrawingAxisConverter );
+                procedure TGenericXYEntityCanvasAbstract.drawXYLine(const arrLinePointsIn   : TArray<TGeomPoint>;
+                                                                    const axisConverterIn   : TDrawingAxisConverter);
                     var
                         arrDrawingPoints : TArray<TPointF>;
                     begin
@@ -195,8 +197,8 @@ implementation
                     end;
 
             //polyline
-                procedure TDirect2DXYEntityCanvas.drawXYPolyline(   const arrPolylinePointsIn   : TArray<TGeomPoint>;
-                                                                    const axisConverterIn       : TDrawingAxisConverter );
+                procedure TGenericXYEntityCanvasAbstract.drawXYPolyline(const arrPolylinePointsIn   : TArray<TGeomPoint>;
+                                                                        const axisConverterIn       : TDrawingAxisConverter);
 
                     var
                         arrDrawingPoints : TArray<TPointF>;
@@ -210,9 +212,9 @@ implementation
                     end;
 
             //polygon
-                procedure TDirect2DXYEntityCanvas.drawXYPolygon(const filledIn, outlinedIn  : boolean;
-                                                                const arrPolygonPointsIn    : TArray<TGeomPoint>;
-                                                                const axisConverterIn       : TDrawingAxisConverter);
+                procedure TGenericXYEntityCanvasAbstract.drawXYPolygon( const filledIn, outlinedIn  : boolean;
+                                                                        const arrPolygonPointsIn    : TArray<TGeomPoint>;
+                                                                        const axisConverterIn       : TDrawingAxisConverter );
                     var
                         arrDrawingPoints : TArray<TPointF>;
                     begin
@@ -225,15 +227,15 @@ implementation
                     end;
 
             //rectangle
-                procedure TDirect2DXYEntityCanvas.drawXYRectangle(  const   filledIn, outlinedIn        : boolean;
-                                                                    const   rectWidthIn, rectHeightIn,
-                                                                            cornerRadiusXIn,
-                                                                            cornerRadiusYIn             : double;
-                                                                    const   handlePointIn               : TGeomPoint;
-                                                                    const   axisConverterIn             : TDrawingAxisConverter;
-                                                                    const   horizontalAlignmentIn       : THorzRectAlign = THorzRectAlign.Center;
-                                                                    const   verticalAlignmentIn         : TVertRectAlign = TVertRectAlign.Center;
-                                                                    const   scaleTypeIn                 : EScaleType = EScaleType.scDrawing         );
+                procedure TGenericXYEntityCanvasAbstract.drawXYRectangle(   const   filledIn, outlinedIn        : boolean;
+                                                                            const   rectWidthIn, rectHeightIn,
+                                                                                    cornerRadiusXIn,
+                                                                                    cornerRadiusYIn             : double;
+                                                                            const   handlePointIn               : TGeomPoint;
+                                                                            const   axisConverterIn             : TDrawingAxisConverter;
+                                                                            const   horizontalAlignmentIn       : THorzRectAlign = THorzRectAlign.Center;
+                                                                            const   verticalAlignmentIn         : TVertRectAlign = TVertRectAlign.Center;
+                                                                            const   scaleTypeIn                 : EScaleType = EScaleType.scDrawing         );
                     var
                         widthLT, heightLT,
                         cornerRadiusHor,
@@ -261,7 +263,7 @@ implementation
                                             verticalAlignmentIn                 );
                     end;
 
-                procedure TDirect2DXYEntityCanvas.drawXYRectangle(  const   filledIn, outlinedIn        : boolean;
+                procedure TGenericXYEntityCanvasAbstract.drawXYRectangle(  const   filledIn, outlinedIn        : boolean;
                                                                     const   rectWidthIn, rectHeightIn,
                                                                             cornerRadiusIn              : double;
                                                                     const   handlePointIn               : TGeomPoint;
@@ -281,17 +283,17 @@ implementation
                     end;
 
             //text
-                procedure TDirect2DXYEntityCanvas.printXYText(  const   textStringIn            : string;
-                                                                const   textHandlePointIn       : TGeomPoint;
-                                                                const   axisConverterIn         : TDrawingAxisConverter;
-                                                                const   drawTextUnderlayIn      : boolean = False;
-                                                                const   textSizeIn              : double = 9.0;
-                                                                const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
-                                                                const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top;
-                                                                const   scaleTypeIn             : EScaleType = EScaleType.scCanvas;
-                                                                const   textColourIn            : TColor = clWindowText;
-                                                                const   textStylesIn            : TFontStyles = [];
-                                                                const   textFontNameIn          : string = ''                           );
+                procedure TGenericXYEntityCanvasAbstract.printXYText(   const   textStringIn            : string;
+                                                                        const   textHandlePointIn       : TGeomPoint;
+                                                                        const   axisConverterIn         : TDrawingAxisConverter;
+                                                                        const   drawTextUnderlayIn      : boolean = False;
+                                                                        const   textSizeIn              : double = 9.0;
+                                                                        const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
+                                                                        const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top;
+                                                                        const   scaleTypeIn             : EScaleType = EScaleType.scCanvas;
+                                                                        const   textColourIn            : TColor = clWindowText;
+                                                                        const   textStylesIn            : TFontStyles = [];
+                                                                        const   textFontNameIn          : string = ''                           );
                     var
                         textSizeInteger : integer;
                         textSizeLT      : double;
@@ -315,13 +317,13 @@ implementation
 
                         printLTTextF(   textSizeInteger,
                                         textStringIn,
-                                        textFontNameIn,
                                         textColourIn,
                                         textStylesIn,
                                         handlePointLT,
                                         drawTextUnderlayIn,
                                         horizontalAlignmentIn,
-                                        verticalAlignmentIn     );
+                                        verticalAlignmentIn,
+                                        textFontNameIn          );
                     end;
 
 end.

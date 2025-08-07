@@ -10,48 +10,48 @@ interface
     type
         TDirect2DDrawingEntityFactory = class
             private
-                var
+                class var
                     D2DGeometryFactory : ID2D1Factory;
+                //entity factory create and destroy
+                    class procedure initialiseEntityFactory(); static;
                 //create generic path geometry
-                    function createGenericPathGeometry( const figureBeginIn         : D2D1_FIGURE_BEGIN;
-                                                        const figureEndIn           : D2D1_FIGURE_END;
-                                                        const arrDrawingPointsIn    : TArray<TPointF>   ) : ID2D1PathGeometry;
+                    class function createGenericPathGeometry(   const figureBeginIn         : D2D1_FIGURE_BEGIN;
+                                                                const figureEndIn           : D2D1_FIGURE_END;
+                                                                const arrDrawingPointsIn    : TArray<TPointF>   ) : ID2D1PathGeometry; static;
             public
-                //constructor
-                    constructor create();
-                //destructor
-                    destructor destroy(); override;
                 //create arc geometry
-                    function createArcPathGeometry( const   filledIn                        : boolean;
-                                                    const   startAngleIn, endAngleIn,
-                                                            arcHorRadiusIn, arcVertRadiusIn : double;
-                                                    const   centrePointIn                   : TPointF ) : ID2D1PathGeometry;
+                    class function createArcPathGeometry(   const   filledIn                        : boolean;
+                                                            const   startAngleIn, endAngleIn,
+                                                                    arcHorRadiusIn, arcVertRadiusIn : double;
+                                                            const   centrePointIn                   : TPointF ) : ID2D1PathGeometry; static;
                 //create ellipse geometry
-                    function createEllipseGeometry( const   ellipseWidthIn,
-                                                            ellipseHeightIn         : double;
-                                                    const   horizontalAlignmentIn   : THorzRectAlign;
-                                                    const   verticalAlignmentIn     : TVertRectAlign;
-                                                    const   handlePointIn           : TPointF       ) : TD2D1Ellipse;
+                    class function createEllipseGeometry(   const   ellipseWidthIn,
+                                                                    ellipseHeightIn         : double;
+                                                            const   horizontalAlignmentIn   : THorzRectAlign;
+                                                            const   verticalAlignmentIn     : TVertRectAlign;
+                                                            const   handlePointIn           : TPointF       ) : TD2D1Ellipse; static;
                 //generic path geometry
                     //create closed geometry
-                        function createClosedPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
+                        class function createClosedPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry; static;
                     //create open geometry
-                        function createOpenPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
+                        class function createOpenPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry; static;
                 //create rectangle geometry
-                    function createRectangleGeometry(   const   widthIn, heightIn,
-                                                                cornerRadiusHorIn,
-                                                                cornerRadiusVertIn      : double;
-                                                        const   horizontalAlignmentIn   : THorzRectAlign;
-                                                        const   verticalAlignmentIn     : TVertRectAlign;
-                                                        const   handlePointIn           : TPointF           ) : TD2D1RoundedRect;
-                //calculate text drawing point
-                    function calculateTextDrawingPoint( const textExtentIn              : TSize;
-                                                        const horizontalAlignmentIn     : THorzRectAlign;
-                                                        const verticalAlignmentIn       : TVertRectAlign;
-                                                        const textHandlePointIn         : TPointF           ) : TPoint;
+                    class function createRectangleGeometry( const   widthIn, heightIn,
+                                                                    cornerRadiusHorIn,
+                                                                    cornerRadiusVertIn      : double;
+                                                            const   horizontalAlignmentIn   : THorzRectAlign;
+                                                            const   verticalAlignmentIn     : TVertRectAlign;
+                                                            const   handlePointIn           : TPointF           ) : TD2D1RoundedRect; static;
     end;
 
 implementation
+
+    //private
+        //entity factory
+            class procedure TDirect2DDrawingEntityFactory.initialiseEntityFactory();
+                begin
+                    D2DGeometryFactory := D2DFactory( D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_MULTI_THREADED );
+                end;
 
     //public
         //constructor
@@ -265,9 +265,9 @@ implementation
 
     //GEOMETRY--------------------------------------------------------------------------------------------------------
         //create generic path geometry
-            function TDirect2DDrawingEntityFactory.createGenericPathGeometry(   const figureBeginIn         : D2D1_FIGURE_BEGIN;
-                                                                                const figureEndIn           : D2D1_FIGURE_END;
-                                                                                const arrDrawingPointsIn    : TArray<TPointF>       ) : ID2D1PathGeometry;
+            class function TDirect2DDrawingEntityFactory.createGenericPathGeometry( const figureBeginIn         : D2D1_FIGURE_BEGIN;
+                                                                                    const figureEndIn           : D2D1_FIGURE_END;
+                                                                                    const arrDrawingPointsIn    : TArray<TPointF>       ) : ID2D1PathGeometry;
                 var
                     i, arrLen       : integer;
                     geometrySink    : ID2D1GeometrySink;
@@ -302,7 +302,7 @@ implementation
                 end;
 
         //create closed geometry
-            function TDirect2DDrawingEntityFactory.createClosedPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
+            class function TDirect2DDrawingEntityFactory.createClosedPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
                 begin
                     result := createGenericPathGeometry(
                                                             D2D1_FIGURE_BEGIN.D2D1_FIGURE_BEGIN_FILLED,
@@ -312,7 +312,7 @@ implementation
                 end;
 
         //create open geometry
-            function TDirect2DDrawingEntityFactory.createOpenPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
+            class function TDirect2DDrawingEntityFactory.createOpenPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
                 begin
                     result := createGenericPathGeometry(
                                                             D2D1_FIGURE_BEGIN.D2D1_FIGURE_BEGIN_HOLLOW,
@@ -322,12 +322,12 @@ implementation
                 end;
 
     //RECTANGLE-------------------------------------------------------------------------------------------------------
-        function TDirect2DDrawingEntityFactory.createRectangleGeometry( const   widthIn, heightIn,
-                                                                                cornerRadiusHorIn,
-                                                                                cornerRadiusVertIn      : double;
-                                                                        const   horizontalAlignmentIn   : THorzRectAlign;
-                                                                        const   verticalAlignmentIn     : TVertRectAlign;
-                                                                        const   handlePointIn           : TPointF           ) : TD2D1RoundedRect;
+        class function TDirect2DDrawingEntityFactory.createRectangleGeometry(   const   widthIn, heightIn,
+                                                                                        cornerRadiusHorIn,
+                                                                                        cornerRadiusVertIn      : double;
+                                                                                const   horizontalAlignmentIn   : THorzRectAlign;
+                                                                                const   verticalAlignmentIn     : TVertRectAlign;
+                                                                                const   handlePointIn           : TPointF           ) : TD2D1RoundedRect;
             var
                 roundRectOut : TD2D1RoundedRect;
             begin
@@ -380,57 +380,8 @@ implementation
                 result := roundRectOut;
             end;
 
-    //TEXT------------------------------------------------------------------------------------------------------------
-        //text alignment
-            procedure calculateTextAlignmentTranslation(const textExtentIn              : TSize;
-                                                        const horizontalAlignmentIn     : THorzRectAlign;
-                                                        const verticalAlignmentIn       : TVertRectAlign;
-                                                        out horizontalShiftOut,
-                                                            verticalShiftOut            : double        );
-                begin
-                    //horizontal - translation
-                        case ( horizontalAlignmentIn ) of
-                            THorzRectAlign.Left:
-                                horizontalShiftOut := 0;
+initialization
 
-                            THorzRectAlign.Center:
-                                horizontalShiftOut := textExtentIn.Width / 2;
-
-                            THorzRectAlign.Right:
-                                horizontalShiftOut := textExtentIn.Width;
-                        end;
-
-                    //vertical - translation
-                        case ( verticalAlignmentIn ) of
-                            TVertRectAlign.Bottom:
-                                verticalShiftOut := textExtentIn.Height;
-
-                            TVertRectAlign.Center:
-                                verticalShiftOut := textExtentIn.Height / 2;
-
-                            TVertRectAlign.Top:
-                                verticalShiftOut := 0;
-                        end;
-                end;
-
-        //text top left point for drawing
-            function TDirect2DDrawingEntityFactory.calculateTextDrawingPoint(   const textExtentIn              : TSize;
-                                                                                const horizontalAlignmentIn     : THorzRectAlign;
-                                                                                const verticalAlignmentIn       : TVertRectAlign;
-                                                                                const textHandlePointIn         : TPointF           ) : TPoint;
-                var
-                    horShift, vertShift : double;
-                    pointOut            : TPoint;
-                begin
-                    calculateTextAlignmentTranslation(  textExtentIn,
-                                                        horizontalAlignmentIn,
-                                                        verticalAlignmentIn,
-                                                        horShift, vertShift     );
-
-                    pointOut.x := round( textHandlePointIn.x - horShift );
-                    pointOut.y := round( textHandlePointIn.y - vertShift );
-
-                    result := pointOut;
-                end;
+    TDirect2DDrawingEntityFactory.initialiseEntityFactory();
 
 end.

@@ -127,9 +127,6 @@
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawerLayersClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicEntityListBaseClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\LayerGraphicEntityMapClass.pas"/>
-        <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DLTEntityCanvasClass.pas"/>
-        <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DDrawingEntityFactoryClass.pas"/>
-        <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DXYEntityCanvasClass.pas"/>
         <DCCReference Include="Source\GraphicEntityClasses\GraphicEntityFoundationalClasses\GraphicEntityGeometryClasses\GraphicGeometryClass.pas"/>
         <DCCReference Include="Source\GraphicEntityClasses\GraphicEntityFoundationalClasses\GraphicEntityGeometryClasses\GraphicLineClass.pas"/>
         <DCCReference Include="Source\GraphicEntityClasses\GraphicEntityFoundationalClasses\GraphicEntityGeometryClasses\GraphicPolygonClass.pas"/>
@@ -152,8 +149,14 @@
         <DCCReference Include="Source\GraphicEntityClasses\GraphicEntityBaseClass.pas"/>
         <DCCReference Include="Source\GraphicEntityClasses\GraphicEntityTypes.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawerTypes.pas"/>
-        <DCCReference Include="Source\CustomDirect2DCanvas\Direct2DCustomCanvasClass.pas"/>
         <DCCReference Include="Source\BitmapHelperClass.pas"/>
+        <DCCReference Include="Source\CustomDrawingCanvas\CustomDirect2DCanvas\Direct2DCustomCanvasClass.pas"/>
+        <DCCReference Include="Source\CustomDrawingCanvas\CustomDirect2DCanvas\Direct2DDrawingEntityFactoryClass.pas"/>
+        <DCCReference Include="Source\CustomDrawingCanvas\CustomDirect2DCanvas\Direct2DLTEntityCanvasClass.pas"/>
+        <DCCReference Include="Source\CustomDrawingCanvas\CustomDirect2DCanvas\Direct2DXYEntityCanvasClass.pas"/>
+        <DCCReference Include="Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericCustomCanvasAbstractClass.pas"/>
+        <DCCReference Include="Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericLTEntityCanvasAbstractClass.pas"/>
+        <DCCReference Include="Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericXYEntityCanvasAbstractClass.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

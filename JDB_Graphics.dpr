@@ -20,9 +20,6 @@ uses
   GraphicDrawerLayersClass in 'Source\GraphicDrawer\GraphicDrawerLayersClass.pas',
   GraphicEntityListBaseClass in 'Source\GraphicDrawer\GraphicEntityListBaseClass.pas',
   LayerGraphicEntityMapClass in 'Source\GraphicDrawer\LayerGraphicEntityMapClass.pas',
-  Direct2DLTEntityCanvasClass in 'Source\CustomDirect2DCanvas\Direct2DLTEntityCanvasClass.pas',
-  Direct2DDrawingEntityFactoryClass in 'Source\CustomDirect2DCanvas\Direct2DDrawingEntityFactoryClass.pas',
-  Direct2DXYEntityCanvasClass in 'Source\CustomDirect2DCanvas\Direct2DXYEntityCanvasClass.pas',
   GraphicGeometryClass in 'Source\GraphicEntityClasses\GraphicEntityFoundationalClasses\GraphicEntityGeometryClasses\GraphicGeometryClass.pas',
   GraphicLineClass in 'Source\GraphicEntityClasses\GraphicEntityFoundationalClasses\GraphicEntityGeometryClasses\GraphicLineClass.pas',
   GraphicPolygonClass in 'Source\GraphicEntityClasses\GraphicEntityFoundationalClasses\GraphicEntityGeometryClasses\GraphicPolygonClass.pas',
@@ -45,8 +42,14 @@ uses
   GraphicEntityBaseClass in 'Source\GraphicEntityClasses\GraphicEntityBaseClass.pas',
   GraphicEntityTypes in 'Source\GraphicEntityClasses\GraphicEntityTypes.pas',
   GraphicDrawerTypes in 'Source\GraphicDrawer\GraphicDrawerTypes.pas',
-  Direct2DCustomCanvasClass in 'Source\CustomDirect2DCanvas\Direct2DCustomCanvasClass.pas',
-  BitmapHelperClass in 'Source\BitmapHelperClass.pas';
+  BitmapHelperClass in 'Source\BitmapHelperClass.pas',
+  Direct2DCustomCanvasClass in 'Source\CustomDrawingCanvas\CustomDirect2DCanvas\Direct2DCustomCanvasClass.pas',
+  Direct2DDrawingEntityFactoryClass in 'Source\CustomDrawingCanvas\CustomDirect2DCanvas\Direct2DDrawingEntityFactoryClass.pas',
+  Direct2DLTEntityCanvasClass in 'Source\CustomDrawingCanvas\CustomDirect2DCanvas\Direct2DLTEntityCanvasClass.pas',
+  Direct2DXYEntityCanvasClass in 'Source\CustomDrawingCanvas\CustomDirect2DCanvas\Direct2DXYEntityCanvasClass.pas',
+  GenericCustomCanvasAbstractClass in 'Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericCustomCanvasAbstractClass.pas',
+  GenericLTEntityCanvasAbstractClass in 'Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericLTEntityCanvasAbstractClass.pas',
+  GenericXYEntityCanvasAbstractClass in 'Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericXYEntityCanvasAbstractClass.pas';
 
 { keep comment here to protect the following conditional from being removed by the IDE when adding a unit }
 {$IFNDEF TESTINSIGHT}

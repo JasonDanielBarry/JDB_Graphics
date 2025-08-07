@@ -10,14 +10,6 @@ interface
 
     type
         TDirect2DCustomCanvas = class( TDirect2DCanvas )
-            private
-                const
-                    EMPTY_STRING : string = '';
-                //background colour
-                    class function determineBackgroundColour() : Tcolor; static;
-            protected
-                var
-                    localBackgroundColour : TColor; //used for member functions of the class while it is instatiated - DO NOT WRITE TO
             public
                 //constructor
                     constructor create(const bitmapIn : TBitmap);
@@ -34,22 +26,9 @@ interface
                                                     const colourIn  : TColor;
                                                     const stylesIn  : TFontStyles = [];
                                                     const nameIn    : string = ''       );
-                //measure text entent
-                    class function measureTextExtent(   const textStringIn      : string;
-                                                        const textSizeIn        : integer = 9;
-                                                        const textFontStylesIn  : TFontStyles = [];
-                                                        const textNameIn        : string = 'Segoe UI'   ) : TSize; static;
-                class property BackgroundColour : TColor read determineBackgroundColour;
         end;
 
 implementation
-
-    //private
-        //background colour
-            class function TDirect2DCustomCanvas.determineBackgroundColour() : Tcolor;
-                begin
-                    result := TStyleManager.ActiveStyle.GetStyleColor( TStyleColor.scGenericBackground );
-                end;
 
     //constructor
         constructor TDirect2DCustomCanvas.create(const bitmapIn : TBitmap);
@@ -59,8 +38,6 @@ implementation
                 bitmapRect := Rect( 0, 0, bitmapIn.Width, bitmapIn.Height );
 
                 inherited create( bitmapIn.Canvas, bitmapRect );
-
-                localBackgroundColour := determineBackgroundColour();
 
                 RenderTarget.SetAntialiasMode( TD2D1AntiAliasMode.D2D1_ANTIALIAS_MODE_PER_PRIMITIVE );
 
@@ -118,55 +95,8 @@ implementation
                 Font.Color  := TStyleManager.ActiveStyle.GetSystemColor( colourIn );
                 Font.Style  := stylesIn;
 
-                if ( nameIn <> EMPTY_STRING ) then
+                if ( nameIn <> '' ) then
                     Font.Name := nameIn;
-            end;
-
-    //measure text entent
-        class function TDirect2DCustomCanvas.measureTextExtent( const textStringIn      : string;
-                                                                const textSizeIn        : integer = 9;
-                                                                const textFontStylesIn  : TFontStyles = [];
-                                                                const textNameIn        : string = 'Segoe UI' ) : TSize;
-            var
-                i, arrLen       : integer;
-                textExtentOut   : TSize;
-                tempBitmap      : TBitmap;
-                stringArray     : TArray<string>;
-            begin
-                //create a temp bitmap to use the canvas
-                    tempBitmap := TBitmap.Create( 100, 100 );
-
-                    tempBitmap.Canvas.font.Size := textSizeIn;
-                    tempBitmap.Canvas.font.Style := textFontStylesIn;
-
-                    if ( textNameIn <> EMPTY_STRING ) then
-                        tempBitmap.Canvas.font.Name := textNameIn;
-
-                //split the string using line breaks as delimiter
-                    stringArray := textStringIn.Split( [sLineBreak] );
-                    arrLen      := length( stringArray );
-
-                //calculate the extent (size) of the text
-                    if ( 1 < arrLen ) then
-                        begin
-                            textExtentOut.Width     := 0;
-                            textExtentOut.Height    := 0;
-
-                            for i := 0 to (arrLen - 1) do
-                                begin
-                                    var tempSize : TSize := tempBitmap.Canvas.TextExtent( stringArray[i] );
-
-                                    textExtentOut.Width     := max( tempSize.Width, textExtentOut.Width );
-                                    textExtentOut.Height    := textExtentOut.Height + tempSize.Height;
-                                end;
-                        end
-                    else
-                        textExtentOut := tempBitmap.Canvas.TextExtent( textStringIn );
-
-                //free bitmap memory
-                    FreeAndNil( tempBitmap );
-
-                result := textExtentOut;
             end;
 
 end.
