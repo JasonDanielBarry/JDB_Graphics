@@ -9,16 +9,16 @@
         <Projects Include="JDB_Graphics.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="TestJDBD2DCanvas.dproj">
+        <Projects Include="..\JDB_TestProjects\TestJDBD2DCanvas.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="GraphicDrawerVCL.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="TestGraphic2D.dproj">
+        <Projects Include="..\JDB_TestProjects\TestGraphic2D.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="TestGraphXY.dproj">
+        <Projects Include="..\JDB_TestProjects\TestGraphXY.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -48,13 +48,13 @@
         <MSBuild Projects="JDB_Graphics.dproj" Targets="Make"/>
     </Target>
     <Target Name="TestJDBD2DCanvas">
-        <MSBuild Projects="TestJDBD2DCanvas.dproj"/>
+        <MSBuild Projects="..\JDB_TestProjects\TestJDBD2DCanvas.dproj"/>
     </Target>
     <Target Name="TestJDBD2DCanvas:Clean">
-        <MSBuild Projects="TestJDBD2DCanvas.dproj" Targets="Clean"/>
+        <MSBuild Projects="..\JDB_TestProjects\TestJDBD2DCanvas.dproj" Targets="Clean"/>
     </Target>
     <Target Name="TestJDBD2DCanvas:Make">
-        <MSBuild Projects="TestJDBD2DCanvas.dproj" Targets="Make"/>
+        <MSBuild Projects="..\JDB_TestProjects\TestJDBD2DCanvas.dproj" Targets="Make"/>
     </Target>
     <Target Name="GraphicDrawerVCL">
         <MSBuild Projects="GraphicDrawerVCL.dproj"/>
@@ -66,22 +66,22 @@
         <MSBuild Projects="GraphicDrawerVCL.dproj" Targets="Make"/>
     </Target>
     <Target Name="TestGraphic2D">
-        <MSBuild Projects="TestGraphic2D.dproj"/>
+        <MSBuild Projects="..\JDB_TestProjects\TestGraphic2D.dproj"/>
     </Target>
     <Target Name="TestGraphic2D:Clean">
-        <MSBuild Projects="TestGraphic2D.dproj" Targets="Clean"/>
+        <MSBuild Projects="..\JDB_TestProjects\TestGraphic2D.dproj" Targets="Clean"/>
     </Target>
     <Target Name="TestGraphic2D:Make">
-        <MSBuild Projects="TestGraphic2D.dproj" Targets="Make"/>
+        <MSBuild Projects="..\JDB_TestProjects\TestGraphic2D.dproj" Targets="Make"/>
     </Target>
     <Target Name="TestGraphXY">
-        <MSBuild Projects="TestGraphXY.dproj"/>
+        <MSBuild Projects="..\JDB_TestProjects\TestGraphXY.dproj"/>
     </Target>
     <Target Name="TestGraphXY:Clean">
-        <MSBuild Projects="TestGraphXY.dproj" Targets="Clean"/>
+        <MSBuild Projects="..\JDB_TestProjects\TestGraphXY.dproj" Targets="Clean"/>
     </Target>
     <Target Name="TestGraphXY:Make">
-        <MSBuild Projects="TestGraphXY.dproj" Targets="Make"/>
+        <MSBuild Projects="..\JDB_TestProjects\TestGraphXY.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
         <CallTarget Targets="JDB_Mathematics;JDB_Graphics;TestJDBD2DCanvas;GraphicDrawerVCL;TestGraphic2D;TestGraphXY"/>
