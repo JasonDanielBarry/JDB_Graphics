@@ -75,8 +75,6 @@ implementation
                 begin
                     inherited create();
 
-                    TDirect2DXYEntityCanvas.initialiseEntityFactory();
-
                     currentGraphicBufferBMP             := TBitmap.Create();
                     currentGraphicBufferBMP.PixelFormat := TPixelFormat.pf32bit;
 
@@ -86,7 +84,6 @@ implementation
         //destructor
             destructor TGraphicDrawerDirect2D.destroy();
                 begin
-                    TDirect2DXYEntityCanvas.finaliseEntityFactory();
                     FreeAndNil( currentGraphicBufferBMP );
 
                     inherited destroy();

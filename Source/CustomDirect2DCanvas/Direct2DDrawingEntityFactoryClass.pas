@@ -35,10 +35,8 @@ interface
                 //generic path geometry
                     //create closed geometry
                         function createClosedPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
-
                     //create open geometry
                         function createOpenPathGeometry(const arrDrawingPointsIn : TArray<TPointF>) : ID2D1PathGeometry;
-
                 //create rectangle geometry
                     function createRectangleGeometry(   const   widthIn, heightIn,
                                                                 cornerRadiusHorIn,
@@ -46,7 +44,6 @@ interface
                                                         const   horizontalAlignmentIn   : THorzRectAlign;
                                                         const   verticalAlignmentIn     : TVertRectAlign;
                                                         const   handlePointIn           : TPointF           ) : TD2D1RoundedRect;
-
                 //calculate text drawing point
                     function calculateTextDrawingPoint( const textExtentIn              : TSize;
                                                         const horizontalAlignmentIn     : THorzRectAlign;
@@ -54,7 +51,6 @@ interface
                                                         const textHandlePointIn         : TPointF           ) : TPoint;
     end;
 
-                
 implementation
 
     //public
@@ -156,7 +152,6 @@ implementation
                     pathGeometryOut         : ID2D1PathGeometry;
                     startPoint, endPoint    : TPointF;
                     arcSegment              : TD2D1ArcSegment;
-
                 begin
                     //normalise start and end angles
                         normStartAngle  := normaliseAngle( startAngleIn );

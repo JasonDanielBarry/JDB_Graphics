@@ -26,8 +26,9 @@ interface
             private
                 class var
                     D2DEntityFactory : TDirect2DDrawingEntityFactory;
-                var
-                    entityFactoryBelongsToClass : boolean;
+                //entity factory create and destroy
+                    class procedure initialiseEntityFactory(); static;
+                    class procedure finaliseEntityFactory(); static;
             protected
                 //draw text
                     procedure printLTTextF( const   textSizeIn              : integer;
@@ -40,13 +41,6 @@ interface
                                             const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
                                             const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top   ); overload;
             public
-                //constructor
-                    constructor create(const bitmapIn : TBitmap);
-                //destructor
-                    destructor destroy(); override;
-                //entity factory
-                    class procedure initialiseEntityFactory(); static;
-                    class procedure finaliseEntityFactory(); static;
                 //canvas rotation
                     procedure rotateCanvasLT(   const rotationAngleIn           : double;
                                                 const rotationReferencePointIn  : TPointF   );
@@ -97,6 +91,18 @@ interface
 
 implementation
 
+    //private
+        //entity factory
+            class procedure TDirect2DLTEntityCanvas.initialiseEntityFactory();
+                begin
+                    D2DEntityFactory := TDirect2DDrawingEntityFactory.create();
+                end;
+
+            class procedure TDirect2DLTEntityCanvas.finaliseEntityFactory();
+                begin
+                    FreeAndNil( D2DEntityFactory );
+                end;
+
     //protected
         //draw text
             procedure TDirect2DLTEntityCanvas.printLTTextF( const   textSizeIn              : integer;
@@ -120,41 +126,6 @@ implementation
 
 
     //public
-        //constructor
-            constructor TDirect2DLTEntityCanvas.create(const bitmapIn : TBitmap);
-                begin
-                    inherited create( bitmapIn );
-
-                    if ( Assigned( D2DEntityFactory ) )then
-                        begin
-                            entityFactoryBelongsToClass := False;
-                            exit();
-                        end;
-
-                    entityFactoryBelongsToClass := True;
-                    initialiseEntityFactory();
-                end;
-
-        //destructor
-            destructor TDirect2DLTEntityCanvas.destroy();
-                begin
-                    if ( entityFactoryBelongsToClass ) then
-                        finaliseEntityFactory();
-
-                    inherited destroy();
-                end;
-
-        //entity factory
-            class procedure TDirect2DLTEntityCanvas.initialiseEntityFactory();
-                begin
-                    D2DEntityFactory := TDirect2DDrawingEntityFactory.create();
-                end;
-
-            class procedure TDirect2DLTEntityCanvas.finaliseEntityFactory();
-                begin
-                    FreeAndNil( D2DEntityFactory );
-                end;
-
         //canvas rotation
             procedure TDirect2DLTEntityCanvas.rotateCanvasLT(   const rotationAngleIn           : double;
                                                                 const rotationReferencePointIn  : TPointF   );
@@ -366,5 +337,13 @@ implementation
 
                         TextOut( drawingPoint.x, drawingPoint.y, textStringIn );
                     end;
+
+initialization
+
+    TDirect2DLTEntityCanvas.initialiseEntityFactory();
+
+finalization
+
+    TDirect2DLTEntityCanvas.finaliseEntityFactory();
 
 end.
