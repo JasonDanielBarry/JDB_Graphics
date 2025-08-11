@@ -3,7 +3,8 @@ unit GenericLTEntityDrawingMethods;
 interface
 
     uses
-        system.math, system.types
+        system.SysUtils, system.math, system.types,
+        vcl.Graphics
         ;
 
     //ARC----------------------------------------------------------------------------------------------
@@ -11,28 +12,42 @@ interface
             function normaliseAngle(const angleIn : double) : double;
 
         //calculate an arc's start and end points from the centre and start and end angles
-            procedure calculateArcStartAndEndPoints(const   startAngleIn, endAngleIn,
-                                                            arcHorRadiusIn, arcVertRadiusIn : double;
-                                                    const   centrePointIn                   : TPointF;
-                                                    out startPointOut, endPointOut          : TPointF);
+            procedure calculateArcStartAndEndLTPoints(  const   startAngleIn, endAngleIn,
+                                                                arcHorRadiusIn, arcVertRadiusIn : double;
+                                                        const   centrePointIn                   : TPointF;
+                                                        out startPointOut, endPointOut          : TPointF   );
 
     //ELLIPSE------------------------------------------------------------------------------------------
         //calculate ellipse centre point
-            procedure calculateEllipseCentreCoordinates(const widthIn, heightIn     : double;
-                                                        const horizontalAlignmentIn : THorzRectAlign;
-                                                        const verticalAlignmentIn   : TVertRectAlign;
-                                                        const handlePointIn         : TPointF;
-                                                        out ellipseCentreXOut,
-                                                            ellipseCentreYOut       : double        );
+            function calculateEllipseCentreLTPoint( const widthIn, heightIn     : double;
+                                                    const horizontalAlignmentIn : THorzRectAlign;
+                                                    const verticalAlignmentIn   : TVertRectAlign;
+                                                    const handlePointIn         : TPointF       ) : TPointF;
 
     //RECTANGLE----------------------------------------------------------------------------------------
         //calculate rectangle bounds
-            procedure calculateRectangleBounds( const widthIn, heightIn         : double;
-                                                const horizontalAlignmentIn     : THorzRectAlign;
-                                                const verticalAlignmentIn       : TVertRectAlign;
-                                                const handlePointIn             : TPointF;
-                                                out leftBoundOut, rightBoundOut,
-                                                    topBoundOut, bottomBoundOUt : double        );
+            procedure calculateRectangleLTBounds(   const widthIn, heightIn         : double;
+                                                    const horizontalAlignmentIn     : THorzRectAlign;
+                                                    const verticalAlignmentIn       : TVertRectAlign;
+                                                    const handlePointIn             : TPointF;
+                                                    out leftBoundOut, rightBoundOut,
+                                                        topBoundOut, bottomBoundOUt : double            );
+
+    //TEXT---------------------------------------------------------------------------------------------
+        //measure text size on canvas
+            function measureTextLTExtent(   const textStringIn      : string;
+                                            const textSizeIn        : integer = 9;
+                                            const textFontStylesIn  : TFontStyles = [];
+                                            const textNameIn        : string = 'Segoe UI'   ) : TSize;
+
+        //text top left point for drawing
+            function calculateTextLTDrawingPoint(   const   textSizeIn              : integer;
+                                                    const   textStringIn,
+                                                            textNameIn              : string;
+                                                    const   textFontStylesIn        : TFontStyles;
+                                                    const   horizontalAlignmentIn   : THorzRectAlign;
+                                                    const   verticalAlignmentIn     : TVertRectAlign;
+                                                    const   textHandlePointIn       : TPointF           ) : TPointF; overload;
 
 implementation
 
@@ -62,10 +77,10 @@ implementation
                 end;
 
         //calculate an arc's start and end points from the centre and start and end angles
-            procedure calculateArcStartAndEndPoints(const   startAngleIn, endAngleIn,
-                                                            arcHorRadiusIn, arcVertRadiusIn : double;
-                                                    const   centrePointIn                   : TPointF;
-                                                    out startPointOut, endPointOut          : TPointF);
+            procedure calculateArcStartAndEndLTPoints(  const   startAngleIn, endAngleIn,
+                                                                arcHorRadiusIn, arcVertRadiusIn : double;
+                                                        const   centrePointIn                   : TPointF;
+                                                        out startPointOut, endPointOut          : TPointF   );
                 begin
                     //find start point
                         startPointOut := calculateEllipsePoint( startAngleIn, arcHorRadiusIn, -arcVertRadiusIn, centrePointIn );
@@ -76,46 +91,46 @@ implementation
 
     //ELLIPSE-------------------------------------------------------------------------------------------------------------------
         //create ellipse geometry
-            procedure calculateEllipseCentreCoordinates(const widthIn, heightIn     : double;
-                                                        const horizontalAlignmentIn : THorzRectAlign;
-                                                        const verticalAlignmentIn   : TVertRectAlign;
-                                                        const handlePointIn         : TPointF;
-                                                        out ellipseCentreXOut,
-                                                            ellipseCentreYOut       : double        );
+            function calculateEllipseCentreLTPoint( const widthIn, heightIn     : double;
+                                                    const horizontalAlignmentIn : THorzRectAlign;
+                                                    const verticalAlignmentIn   : TVertRectAlign;
+                                                    const handlePointIn         : TPointF       ) : TPointF;
+                var
+                    pointOut : TPointF;
                 begin
                     //horizontal alignment
                         case ( horizontalAlignmentIn ) of
                             THorzRectAlign.Left: //centre to the right of handle point
-                                ellipseCentreXOut := handlePointIn.X + widthIn / 2;
+                                pointOut.X := handlePointIn.X + widthIn / 2;
 
                             THorzRectAlign.Center:
-                                ellipseCentreXOut := handlePointIn.X;
+                                pointOut.X := handlePointIn.X;
 
                             THorzRectAlign.Right: //centre to the left of handle point
-                                ellipseCentreXOut := handlePointIn.X - widthIn / 2;
+                                pointOut.X := handlePointIn.X - widthIn / 2;
                         end;
 
                     //vertical alignment
                         case ( verticalAlignmentIn ) of
                             TVertRectAlign.Bottom: //centre above handle point in LT coordinate system
-                                ellipseCentreYOut := handlePointIn.y - heightIn / 2;
+                                pointOut.Y := handlePointIn.y - heightIn / 2;
 
                             TVertRectAlign.Center:
-                                ellipseCentreYOut := handlePointIn.y;
+                                pointOut.Y := handlePointIn.y;
 
                             TVertRectAlign.Top: //centre below handle point in LT coordinate system
-                                ellipseCentreYOut := handlePointIn.y + heightIn / 2;
+                                pointOut.Y := handlePointIn.y + heightIn / 2;
                         end;
                 end;
 
     //RECTANGLE-----------------------------------------------------------------------------------------------------------------
         //calculate rectangle bounds
-            procedure calculateRectangleBounds( const widthIn, heightIn         : double;
-                                                const horizontalAlignmentIn     : THorzRectAlign;
-                                                const verticalAlignmentIn       : TVertRectAlign;
-                                                const handlePointIn             : TPointF;
-                                                out leftBoundOut, rightBoundOut,
-                                                    topBoundOut, bottomBoundOUt : double        );
+            procedure calculateRectangleLTBounds(   const widthIn, heightIn         : double;
+                                                    const horizontalAlignmentIn     : THorzRectAlign;
+                                                    const verticalAlignmentIn       : TVertRectAlign;
+                                                    const handlePointIn             : TPointF;
+                                                    out leftBoundOut, rightBoundOut,
+                                                        topBoundOut, bottomBoundOUt : double        );
                 begin
                     //horizontal alignment
                         case ( horizontalAlignmentIn ) of
@@ -138,7 +153,7 @@ implementation
                                 end;
                         end;
 
-                    //vertical alignment
+                    //vertical alignment - on the drawing canvas: top value < bottom value
                         case ( verticalAlignmentIn ) of
                             TVertRectAlign.Bottom:
                                 begin
@@ -148,9 +163,8 @@ implementation
 
                             TVertRectAlign.Center:
                                 begin
-                                    //on the drawing canvas: top value < bottom value
-                                        bottomBoundOUt  := handlePointIn.Y + heightIn / 2;
-                                        topBoundOut     := handlePointIn.Y - heightIn / 2;
+                                    bottomBoundOUt  := handlePointIn.Y + heightIn / 2;
+                                    topBoundOut     := handlePointIn.Y - heightIn / 2;
                                 end;
 
                             TVertRectAlign.Top:
@@ -160,5 +174,131 @@ implementation
                                 end;
                         end;
                 end;
+
+    //TEXT----------------------------------------------------------------------------------------------------------------------
+        var textSizeMeasuringBitmap : TBitmap;
+
+        //measure text size on canvas
+            function measureTextLTExtent(   const textStringIn      : string;
+                                            const textSizeIn        : integer = 9;
+                                            const textFontStylesIn  : TFontStyles = [];
+                                            const textNameIn        : string = 'Segoe UI' ) : TSize;
+                    var
+                        i, arrLen       : integer;
+                        tempSize,
+                        textExtentOut   : TSize;
+                        stringArray     : TArray<string>;
+                    begin
+                        //assign settings to bitmap
+                            textSizeMeasuringBitmap.Canvas.font.Size    := textSizeIn;
+                            textSizeMeasuringBitmap.Canvas.font.Style   := textFontStylesIn;
+                            textSizeMeasuringBitmap.Canvas.font.Name    := textNameIn;
+
+                        //split the string using line breaks as delimiter
+                            stringArray := textStringIn.Split( [sLineBreak] );
+                            arrLen      := length( stringArray );
+
+                        //calculate the extent (size) of the text
+                            if ( 1 < arrLen ) then
+                                begin
+                                    textExtentOut.Width     := 0;
+                                    textExtentOut.Height    := 0;
+
+                                    for i := 0 to (arrLen - 1) do
+                                        begin
+                                            tempSize := textSizeMeasuringBitmap.Canvas.TextExtent( stringArray[i] );
+
+                                            textExtentOut.Width     := max( tempSize.Width, textExtentOut.Width );
+                                            textExtentOut.Height    := textExtentOut.Height + tempSize.Height;
+                                        end;
+                                end
+                            else
+                                textExtentOut := textSizeMeasuringBitmap.Canvas.TextExtent( textStringIn );
+
+                        result := textExtentOut;
+                    end;
+
+        //text top left point for drawing
+            procedure calculateTextAlignmentTranslation(const textExtentIn              : TSize;
+                                                        const horizontalAlignmentIn     : THorzRectAlign;
+                                                        const verticalAlignmentIn       : TVertRectAlign;
+                                                        out horizontalShiftOut,
+                                                            verticalShiftOut            : double        );
+                begin
+                    //horizontal - translation
+                        case ( horizontalAlignmentIn ) of
+                            THorzRectAlign.Left:
+                                horizontalShiftOut := 0;
+
+                            THorzRectAlign.Center:
+                                horizontalShiftOut := textExtentIn.Width / 2;
+
+                            THorzRectAlign.Right:
+                                horizontalShiftOut := textExtentIn.Width;
+                        end;
+
+                    //vertical - translation
+                        case ( verticalAlignmentIn ) of
+                            TVertRectAlign.Top:
+                                verticalShiftOut := 0;
+
+                            TVertRectAlign.Center:
+                                verticalShiftOut := textExtentIn.Height / 2;
+
+                            TVertRectAlign.Bottom:
+                                verticalShiftOut := textExtentIn.Height;
+                        end;
+                end;
+
+            function calculateTextLTDrawingPoint(   const textExtentIn              : TSize;
+                                                    const horizontalAlignmentIn     : THorzRectAlign;
+                                                    const verticalAlignmentIn       : TVertRectAlign;
+                                                    const textHandlePointIn         : TPointF           ) : TPointF; overload;
+                var
+                    horShift, vertShift : double;
+                    pointOut            : TPointF;
+                begin
+                    calculateTextAlignmentTranslation(  textExtentIn,
+                                                        horizontalAlignmentIn,
+                                                        verticalAlignmentIn,
+                                                        horShift, vertShift     );
+
+                    pointOut.x := textHandlePointIn.x - horShift;
+                    pointOut.y := textHandlePointIn.y - vertShift;
+
+                    result := pointOut;
+                end;
+
+            function calculateTextLTDrawingPoint(   const   textSizeIn              : integer;
+                                                    const   textStringIn,
+                                                            textNameIn              : string;
+                                                    const   textFontStylesIn        : TFontStyles;
+                                                    const   horizontalAlignmentIn   : THorzRectAlign;
+                                                    const   verticalAlignmentIn     : TVertRectAlign;
+                                                    const   textHandlePointIn       : TPointF           ) : TPointF;
+                var
+                    handlePointIsDrawingPoint   : boolean;
+                    textExtent                  : TSize;
+                begin
+                    //check if drawing point must be calculated - True if alignment is NOT top left
+                        handlePointIsDrawingPoint := ( horizontalAlignmentIn = THorzRectAlign.Left ) AND ( verticalAlignmentIn = TVertRectAlign.Top );
+
+                        if ( handlePointIsDrawingPoint ) then
+                            exit( textHandlePointIn );
+
+                    //calculate the text size
+                        textExtent := measureTextLTExtent( textStringIn, textSizeIn, textFontStylesIn, textNameIn );
+
+                    //calculate and return drawing point
+                        result := calculateTextLTDrawingPoint( textExtent, horizontalAlignmentIn, verticalAlignmentIn, textHandlePointIn );
+                end;
+
+initialization
+
+    textSizeMeasuringBitmap := TBitmap.Create( 100, 100 ); //these dimensions are not important
+
+finalization
+
+    FreeAndNil( textSizeMeasuringBitmap );
 
 end.

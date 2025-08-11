@@ -3,10 +3,10 @@ unit Direct2DXYEntityCanvasClass;
 interface
 
     uses
-        system.types,
+        system.SysUtils, system.types,
         vcl.Graphics,
         Direct2DLTEntityCanvasClass,
-        GenericXYEntityCanvasAbstractClass
+        GenericXYEntityCanvasClass
 
         ;
 
@@ -15,25 +15,120 @@ interface
             private
                 var
                     direct2DLTEntityCanvas : TDirect2DLTEntityCanvas;
+            protected
+                //ellipse
+                    procedure drawLTEllipseF_abst(  const   filledIn, outlinedIn    : boolean;
+                                                    const   ellipseWidthIn,
+                                                            ellipseHeightIn         : double;
+                                                    const   centrePointIn           : TPointF   ); override;
+                //rectangle
+                    procedure drawLTRectangleF_abst(const   filledIn, outlinedIn        : boolean;
+                                                    const   leftBoundIn, rightBoundIn,
+                                                            topBoundIn, bottomBoundIn,
+                                                            cornerRadiusHorIn,
+                                                            cornerRadiusVertIn          : double ); override;
                 //text
-                    procedure printLTTextF( const textStringIn          : string;
-                                            const textDrawingPointIn    : TPointF ); override;
+                    procedure printLTTextF_abst(const textStringIn          : string;
+                                                const textDrawingPointIn    : TPointF); override;
 
             public
                 //begine drawing
                     procedure beginDrawing(const bitmapIn : TBitmap);
                 //end drawing
                     procedure endDrawing();
+                //canvas rotation
+                    procedure rotateCanvasLT(   const rotationAngleIn           : double;
+                                                const rotationReferencePointIn  : TPointF   ); override;
+                    procedure resetCanvasRotation();  override;
+                //arc
+                    procedure drawLTArcF(   const   filledIn, outlinedIn            : boolean;
+                                            const   startAngleIn, endAngleIn,
+                                                    arcHorRadiusIn, arcVertRadiusIn : double;
+                                            const   centrePointIn                   : TPointF   ); override;
+                //polyline
+                    procedure drawLTPolylineF(const arrDrawingPointsIn : TArray<TPointF>); override;
+                //polygon
+                    procedure drawLTPolygonF(   const filledIn, outlinedIn  : boolean;
+                                                const arrDrawingPointsIn    : TArray<TPointF>   ); override;
         end;
 
 implementation
 
-    //private
-        //text
-            procedure TDirect2DXYEntityCanvas.printLTTextF( const textStringIn          : string;
-                                                            const textDrawingPointIn    : TPointF );
+    //protected
+        //ellipse
+            procedure TDirect2DXYEntityCanvas.drawLTEllipseF_abst(  const   filledIn, outlinedIn    : boolean;
+                                                                    const   ellipseWidthIn,
+                                                                            ellipseHeightIn         : double;
+                                                                    const   centrePointIn           : TPointF   );
                 begin
-                    direct2DLTEntityCanvas.printLTTextF
+
+                end;
+
+        //rectangle
+            procedure drawLTRectangleF_abst(const   filledIn, outlinedIn        : boolean;
+                                            const   leftBoundIn, rightBoundIn,
+                                                    topBoundIn, bottomBoundIn,
+                                                    cornerRadiusHorIn,
+                                                    cornerRadiusVertIn          : double );
+                begin
+
+                end;
+
+        //text
+            procedure TDirect2DXYEntityCanvas.printLTTextF_abst(const textStringIn          : string;
+                                                                const textDrawingPointIn    : TPointF);
+                begin
+                    direct2DLTEntityCanvas.printLTTextF( textStringIn, textDrawingPointIn );
+                end;
+
+    //public
+        //begin drawing
+            procedure TDirect2DXYEntityCanvas.beginDrawing(const bitmapIn : TBitmap);
+                begin
+                    direct2DLTEntityCanvas := TDirect2DLTEntityCanvas.create( bitmapIn );
+                end;
+
+        //end drawing
+            procedure TDirect2DXYEntityCanvas.endDrawing();
+                begin
+                    FreeAndNil( direct2DLTEntityCanvas );
+                end;
+
+        //canvas rotation
+            procedure TDirect2DXYEntityCanvas.rotateCanvasLT(   const rotationAngleIn           : double;
+                                                                const rotationReferencePointIn  : TPointF   );
+                begin
+                    direct2DLTEntityCanvas.rotateCanvasLT( rotationAngleIn, rotationReferencePointIn );
+                end;
+
+            procedure TDirect2DXYEntityCanvas.resetCanvasRotation();
+                begin
+                    direct2DLTEntityCanvas.resetCanvasRotation();
+                end;
+
+        //arc
+            procedure TDirect2DXYEntityCanvas.drawLTArcF(   const   filledIn, outlinedIn            : boolean;
+                                                            const   startAngleIn, endAngleIn,
+                                                                    arcHorRadiusIn, arcVertRadiusIn : double;
+                                                            const   centrePointIn                   : TPointF   );
+                begin
+                    direct2DLTEntityCanvas.drawLTArcF(  filledIn, outlinedIn,
+                                                        startAngleIn, endAngleIn,
+                                                        arcHorRadiusIn, arcVertRadiusIn,
+                                                        centrePointIn                   );
+                end;
+
+        //polyline
+            procedure TDirect2DXYEntityCanvas.drawLTPolylineF(const arrDrawingPointsIn : TArray<TPointF>);
+                begin
+                    direct2DLTEntityCanvas.drawLTPolylineF( arrDrawingPointsIn );
+                end;
+
+        //polygon
+            procedure TDirect2DXYEntityCanvas.drawLTPolygonF(   const filledIn, outlinedIn  : boolean;
+                                                                const arrDrawingPointsIn    : TArray<TPointF>   );
+                begin
+                    direct2DLTEntityCanvas.drawLTPolygonF( filledIn, outlinedIn, arrDrawingPointsIn );
                 end;
 
 end.

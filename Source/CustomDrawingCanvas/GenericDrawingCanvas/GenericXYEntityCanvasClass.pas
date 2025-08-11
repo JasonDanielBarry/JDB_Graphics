@@ -8,7 +8,7 @@ interface
         vcl.Graphics,
         GeometryTypes,
         DrawingAxisConversionClass,
-        GenericLTEntityCanvasAbstractClass
+        GenericLTEntityCanvasClass
         ;
 
     type
@@ -19,7 +19,7 @@ interface
         TGenericXYEntityCanvas = class( TGenericLTEntityCanvas )
             private
                 //convert the height, width and handle point of entites from XY to LT based on drawing scale option
-                    class procedure convertWidthHeightAndHandlePoint(   const   widthXYIn, heightXYIn   : double;
+                    class procedure convert_Width_Height_HandlePoint(   const   widthXYIn, heightXYIn   : double;
                                                                         const   handlePointXYIn         : TGeomPoint;
                                                                         const   scaleTypeIn             : EScaleType;
                                                                         const   axisConverterIn         : TDrawingAxisConverter;
@@ -93,7 +93,7 @@ implementation
 
     //private
         //convert the height, width and handle point of entites based on drawing scale option
-            class procedure TGenericXYEntityCanvas.convertWidthHeightAndHandlePoint(const   widthXYIn, heightXYIn   : double;
+            class procedure TGenericXYEntityCanvas.convert_Width_Height_HandlePoint(const   widthXYIn, heightXYIn   : double;
                                                                                     const   handlePointXYIn         : TGeomPoint;
                                                                                     const   scaleTypeIn             : EScaleType;
                                                                                     const   axisConverterIn         : TDrawingAxisConverter;
@@ -142,7 +142,7 @@ implementation
                         horRadiusLT, VertRadiusLT   : double;
                         centrePointLT               : TPointF;
                     begin
-                        convertWidthHeightAndHandlePoint(   arcXRadiusInIn, arcYRadiusIn,
+                        convert_Width_Height_HandlePoint(   arcXRadiusInIn, arcYRadiusIn,
                                                             centrePointIn,
                                                             scaleTypeIn,
                                                             axisConverterIn,
@@ -168,7 +168,7 @@ implementation
                         widthLT, heightLT   : double;
                         handlePointLT       : TPointF;
                     begin
-                        convertWidthHeightAndHandlePoint(   ellipseWidthIn, ellipseHeightIn,
+                        convert_Width_Height_HandlePoint(   ellipseWidthIn, ellipseHeightIn,
                                                             handlePointIn,
                                                             scaleTypeIn,
                                                             axisConverterIn,
@@ -193,7 +193,7 @@ implementation
 
                         arrDrawingPoints := axisConverterIn.arrXY_to_arrLT( arrLinePointsIn );
 
-                        drawLTLineF( arrDrawingPoints );
+                        drawLTPolylineF( arrDrawingPoints ); //a polyline with 2 points is a plain line - this has no effect on drawing performance
                     end;
 
             //polyline
@@ -246,14 +246,12 @@ implementation
                             cornerRadiusHor     := axisConverterIn.dX_To_dL( cornerRadiusXIn );
                             cornerRadiusVert    := abs( axisConverterIn.dY_To_dT( cornerRadiusYIn ) );
 
-                            convertWidthHeightAndHandlePoint(   rectWidthIn, rectHeightIn,
+                            convert_Width_Height_HandlePoint(   rectWidthIn, rectHeightIn,
                                                                 handlePointIn,
                                                                 scaleTypeIn,
                                                                 axisConverterIn,
                                                                 widthLT, heightLT,
                                                                 handlePointLT               );
-
-
 
                         drawLTRectangleF(   filledIn, outlinedIn,
                                             widthLT, heightLT,

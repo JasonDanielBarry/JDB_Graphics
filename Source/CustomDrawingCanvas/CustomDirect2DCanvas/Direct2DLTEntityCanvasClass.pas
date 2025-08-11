@@ -28,34 +28,21 @@ interface
                         procedure drawLTEllipseF(   const   filledIn, outlinedIn    : boolean;
                                                     const   ellipseWidthIn,
                                                             ellipseHeightIn         : double;
-                                                    const   handlePointIn           : TPointF;
-                                                    const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
-                                                    const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    );
-                    //line
-                        procedure drawLTLineF(const arrDrawingPointsIn : TArray<TPointF>); overload;
-                        procedure drawLTLineF(const startPointIn, endPointIn : TPointF); overload;
+                                                    const   centrePointIn           : TPointF   );
                     //polyline
                         procedure drawLTPolylineF(const arrDrawingPointsIn : TArray<TPointF>);
                     //polygon
                         procedure drawLTPolygonF(   const filledIn, outlinedIn  : boolean;
                                                     const arrDrawingPointsIn    : TArray<TPointF> );
                     //rectangle
-                        procedure drawLTRectangleF( const   filledIn, outlinedIn    : boolean;
-                                                    const   widthIn, heightIn,
+                        procedure drawLTRectangleF( const   filledIn, outlinedIn        : boolean;
+                                                    const   leftBoundIn, rightBoundIn,
+                                                            topBoundIn, bottomBoundIn,
                                                             cornerRadiusHorIn,
-                                                            cornerRadiusVertIn      : double;
-                                                    const   handlePointIn           : TPointF;
-                                                    const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
-                                                    const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    ); overload;
-                        procedure drawLTRectangleF( const   filledIn, outlinedIn    : boolean;
-                                                    const   widthIn, heightIn,
-                                                            cornerRadiusIn          : double;
-                                                    const   handlePointIn           : TPointF;
-                                                    const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
-                                                    const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    ); overload;
+                                                            cornerRadiusVertIn          : double    );
                     //text
                         procedure printLTTextF( const textStringIn          : string;
-                                                const textHandlePointIn     : TPointF   );
+                                                const textDrawingPointIn    : TPointF   );
         end;
 
 implementation
@@ -91,9 +78,6 @@ implementation
                     var
                         arcPathGeometry : ID2D1PathGeometry;
                     begin
-                        if NOT( filledIn OR outlinedIn ) then
-                            exit();
-
                         arcPathGeometry := TDirect2DDrawingEntityFactory.createArcPathGeometry( filledIn,
                                                                                                 startAngleIn, endAngleIn,
                                                                                                 arcHorRadiusIn, arcVertRadiusIn,
@@ -112,19 +96,13 @@ implementation
                 procedure TDirect2DLTEntityCanvas.drawLTEllipseF(   const   filledIn, outlinedIn    : boolean;
                                                                     const   ellipseWidthIn,
                                                                             ellipseHeightIn         : double;
-                                                                    const   handlePointIn           : TPointF;
-                                                                    const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
-                                                                    const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    );
+                                                                    const   centrePointIn           : TPointF   );
                     var
                         drawingEllipse : TD2D1Ellipse;
                     begin
-                        if NOT( filledIn OR outlinedIn ) then
-                            exit();
-
                         //create drawing ellipse
                             drawingEllipse := TDirect2DDrawingEntityFactory.createEllipseGeometry(  ellipseWidthIn, ellipseHeightIn,
-                                                                                                    horizontalAlignmentIn, verticalAlignmentIn,
-                                                                                                    handlePointIn                               );
+                                                                                                    centrePointIn                   );
 
                         //draw fill
                             if ( filledIn ) then
@@ -133,28 +111,6 @@ implementation
                         //draw line
                             if ( outlinedIn ) then
                                 DrawEllipse( drawingEllipse );
-                    end;
-
-            //line
-                procedure TDirect2DLTEntityCanvas.drawLTLineF(const arrDrawingPointsIn : TArray<TPointF>);
-                    var
-                        lineGeometry : ID2D1PathGeometry;
-                    begin
-                        lineGeometry := TDirect2DDrawingEntityFactory.createOpenPathGeometry( arrDrawingPointsIn );
-
-                        DrawGeometry( lineGeometry );
-                    end;
-
-                procedure TDirect2DLTEntityCanvas.drawLTLineF(const startPointIn, endPointIn : TPointF);
-                    var
-                        drawingPoints : TArray<TPointF>;
-                    begin
-                        SetLength( drawingPoints, 2 );
-
-                        drawingPoints[0] := startPointIn;
-                        drawingPoints[1] := endPointIn;
-
-                        drawLTLineF( drawingPoints );
                     end;
 
             //polyline
@@ -186,25 +142,21 @@ implementation
                     end;
 
             //rectangle
-                procedure TDirect2DLTEntityCanvas.drawLTRectangleF( const   filledIn, outlinedIn    : boolean;
-                                                                    const   widthIn, heightIn,
+                procedure TDirect2DLTEntityCanvas.drawLTRectangleF( const   filledIn, outlinedIn        : boolean;
+                                                                    const   leftBoundIn, rightBoundIn,
+                                                                            topBoundIn, bottomBoundIn,
                                                                             cornerRadiusHorIn,
-                                                                            cornerRadiusVertIn      : double;
-                                                                    const   handlePointIn           : TPointF;
-                                                                    const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
-                                                                    const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center );
+                                                                            cornerRadiusVertIn          : double    );
                     var
                         drawingRect : TD2D1RoundedRect;
                     begin
                         if NOT( filledIn OR outlinedIn ) then
                             exit();
 
-                        drawingRect := TDirect2DDrawingEntityFactory.createRectangleGeometry(   widthIn, heightIn,
+                        drawingRect := TDirect2DDrawingEntityFactory.createRectangleGeometry(   leftBoundIn, rightBoundIn,
+                                                                                                topBoundIn, bottomBoundIn,
                                                                                                 cornerRadiusHorIn,
-                                                                                                cornerRadiusVertIn,
-                                                                                                horizontalAlignmentIn,
-                                                                                                verticalAlignmentIn,
-                                                                                                handlePointIn           );
+                                                                                                cornerRadiusVertIn          );
 
                         if ( filledIn ) then
                             FillRoundedRectangle( drawingRect );
@@ -213,43 +165,16 @@ implementation
                             DrawRoundedRectangle( drawingRect );
                     end;
 
-                procedure TDirect2DLTEntityCanvas.drawLTRectangleF( const   filledIn, outlinedIn    : boolean;
-                                                                    const   widthIn, heightIn,
-                                                                            cornerRadiusIn          : double;
-                                                                    const   handlePointIn           : TPointF;
-                                                                    const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
-                                                                    const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    );
-                    begin
-                        drawLTRectangleF(   filledIn, outlinedIn,
-                                            widthIn, heightIn,
-                                            cornerRadiusIn, cornerRadiusIn,
-                                            handlePointIn,
-                                            horizontalAlignmentIn,
-                                            verticalAlignmentIn             );
-                    end;
-
             //text
                 procedure TDirect2DLTEntityCanvas.printLTTextF( const textStringIn          : string;
-                                                                const textHandlePointIn     : TPointF   );
+                                                                const textDrawingPointIn    : TPointF );
                     var
-                        mustCalculateDrawingPoint   : boolean;
-                        textExtent                  : TSize;
-                        drawingPoint                : TPoint;
+                        xPos, yPos : integer;
                     begin
+                        xPos := round( textDrawingPointIn.X );
+                        yPos := round( textDrawingPointIn.Y );
 
-
-                        
-
-                        //adjust canvas for underlay box
-                            if ( drawTextUnderlayIn ) then
-                                begin
-                                    Brush.Color := localBackgroundColour;
-                                    Brush.Style := TBrushStyle.bsSolid;
-                                end
-                            else
-                                Brush.Style := TBrushStyle.bsClear;
-
-                        TextOut( drawingPoint.x, drawingPoint.y, textStringIn );
+                        TextOut( xPos, xPos, textStringIn );
                     end;
 
 end.

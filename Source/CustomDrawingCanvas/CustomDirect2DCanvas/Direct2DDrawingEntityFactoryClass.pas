@@ -38,8 +38,7 @@ interface
                     class function createRectangleGeometry( const   leftBoundIn, rightBoundIn,
                                                                     topBoundIn, bottomBoundIn,
                                                                     cornerRadiusHorIn,
-                                                                    cornerRadiusVertIn          : double;
-                                                            const   handlePointIn               : TPointF   ) : TD2D1RoundedRect; static;
+                                                                    cornerRadiusVertIn          : double ) : TD2D1RoundedRect; static;
     end;
 
 implementation
@@ -109,10 +108,10 @@ implementation
                                 exit();
 
                         //get start and end points
-                            calculateArcStartAndEndPoints(  normStartAngle, normEndAngle,
-                                                            arcHorRadiusIn, arcVertRadiusIn,
-                                                            centrePointIn,
-                                                            startPoint, endPoint            );
+                            calculateArcStartAndEndLTPoints(    normStartAngle, normEndAngle,
+                                                                arcHorRadiusIn, arcVertRadiusIn,
+                                                                centrePointIn,
+                                                                startPoint, endPoint                );
 
                         //create arc segment
                             arcSegment := createD2DArcSegment( normStartAngle, normEndAngle, arcHorRadiusIn, arcVertRadiusIn, endPoint );
@@ -232,8 +231,7 @@ implementation
             class function TDirect2DDrawingEntityFactory.createRectangleGeometry(   const   leftBoundIn, rightBoundIn,
                                                                                             topBoundIn, bottomBoundIn,
                                                                                             cornerRadiusHorIn,
-                                                                                            cornerRadiusVertIn          : double;
-                                                                                    const   handlePointIn               : TPointF   ) : TD2D1RoundedRect;
+                                                                                            cornerRadiusVertIn          : double    ) : TD2D1RoundedRect;
                 var
                     roundRectOut : TD2D1RoundedRect;
                 begin

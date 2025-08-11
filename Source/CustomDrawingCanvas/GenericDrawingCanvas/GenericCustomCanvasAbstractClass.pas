@@ -10,7 +10,6 @@ interface
     type
         TGenericCustomAbstractCanvas = class
             private
-                class var textSizeMeasuringBitmap : TBitmap;
                 //background colour
                     class function determineBackgroundColour() : Tcolor; static;
             protected
@@ -29,11 +28,6 @@ interface
                                                     const underlaidIn   : boolean = False;
                                                     const stylesIn      : TFontStyles = [];
                                                     const nameIn        : string = ''       ); virtual; abstract;
-                //measure text entent
-                    class function measureTextExtent(   const textStringIn      : string;
-                                                        const textSizeIn        : integer = 9;
-                                                        const textFontStylesIn  : TFontStyles = [];
-                                                        const textNameIn        : string = 'Segoe UI'   ) : TSize; static;
                 class property BackgroundColour : TColor read determineBackgroundColour;
         end;
 
@@ -45,58 +39,5 @@ implementation
                 begin
                     result := TStyleManager.ActiveStyle.GetStyleColor( TStyleColor.scGenericBackground );
                 end;
-
-    //public
-        //measure text entent
-            class function TGenericCustomAbstractCanvas.measureTextExtent(  const textStringIn      : string;
-                                                                            const textSizeIn        : integer = 9;
-                                                                            const textFontStylesIn  : TFontStyles = [];
-                                                                            const textNameIn        : string = 'Segoe UI'   ) : TSize;
-                const
-                    EMPTY_STRING : string = '';
-                var
-                    i, arrLen       : integer;
-                    tempSize,
-                    textExtentOut   : TSize;
-                    stringArray     : TArray<string>;
-                begin
-                    //assign settings to bitmap
-                        textSizeMeasuringBitmap.Canvas.font.Size := textSizeIn;
-                        textSizeMeasuringBitmap.Canvas.font.Style := textFontStylesIn;
-
-                        if ( textNameIn <> '' ) then
-                            textSizeMeasuringBitmap.Canvas.font.Name := textNameIn;
-
-                    //split the string using line breaks as delimiter
-                        stringArray := textStringIn.Split( [sLineBreak] );
-                        arrLen      := length( stringArray );
-
-                    //calculate the extent (size) of the text
-                        if ( 1 < arrLen ) then
-                            begin
-                                textExtentOut.Width     := 0;
-                                textExtentOut.Height    := 0;
-
-                                for i := 0 to (arrLen - 1) do
-                                    begin
-                                        tempSize := textSizeMeasuringBitmap.Canvas.TextExtent( stringArray[i] );
-
-                                        textExtentOut.Width     := max( tempSize.Width, textExtentOut.Width );
-                                        textExtentOut.Height    := textExtentOut.Height + tempSize.Height;
-                                    end;
-                            end
-                        else
-                            textExtentOut := textSizeMeasuringBitmap.Canvas.TextExtent( textStringIn );
-
-                    result := textExtentOut;
-                end;
-
-initialization
-
-    TGenericCustomAbstractCanvas.textSizeMeasuringBitmap := TBitmap.Create(100, 100); //these dimensions are not important
-
-finalization
-
-    FreeAndNil( TGenericCustomAbstractCanvas.textSizeMeasuringBitmap );
 
 end.

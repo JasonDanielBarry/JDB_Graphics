@@ -3,7 +3,7 @@ unit GenericLTEntityCanvasAbstractClass;
 {
 The fundamental drawing entities from which all 2D graphics can be created are
     1. Arcs
-    2. Ellipses (equal width and height yields a circle
+    2. Ellipses (equal width and height yields a circle)
     3. Lines
     4. Polylines
     5. Polygons
@@ -21,52 +21,38 @@ interface
 
     type
         TGenericLTEntityAbstractCanvas = class( TGenericCustomAbstractCanvas )
-            private
-
             protected
+                //ellipse
+                    procedure drawLTEllipseF_abst(  const   filledIn, outlinedIn    : boolean;
+                                                    const   ellipseWidthIn,
+                                                            ellipseHeightIn         : double;
+                                                    const   centrePointIn           : TPointF   ); virtual; abstract;
+                //rectangle
+                    procedure drawLTRectangleF_abst(const   filledIn, outlinedIn        : boolean;
+                                                    const   leftBoundIn, rightBoundIn,
+                                                            topBoundIn, bottomBoundIn,
+                                                            cornerRadiusHorIn,
+                                                            cornerRadiusVertIn          : double ); virtual; abstract;
                 //text
-                    procedure printLTTextF( const textStringIn          : string;
-                                            const textDrawingPointIn    : TPointF ); overload; virtual; abstract;
+                    procedure printLTTextF_abst(const textStringIn          : string;
+                                                const textDrawingPointIn    : TPointF ); virtual; abstract;
             public
-                //-------------------------------------------------------------------------------------------------------------------------------------------
-                    //virtual abstract drawing entity methods
-                        //canvas rotation
-                            procedure rotateCanvasLT(   const rotationAngleIn           : double;
-                                                        const rotationReferencePointIn  : TPointF   ); virtual; abstract;
-                            procedure resetCanvasRotation();  virtual; abstract;
-                        //drawing entities
-                            //arc
-                                procedure drawLTArcF(   const   filledIn, outlinedIn            : boolean;
-                                                        const   startAngleIn, endAngleIn,
-                                                                arcHorRadiusIn, arcVertRadiusIn : double;
-                                                        const   centrePointIn                   : TPointF   ); virtual; abstract;
-                            //ellipse
-                                procedure drawLTEllipseF(   const   filledIn, outlinedIn    : boolean;
-                                                            const   ellipseWidthIn,
-                                                                    ellipseHeightIn         : double;
-                                                            const   handlePointIn           : TPointF;
-                                                            const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
-                                                            const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    ); virtual; abstract;
-                            //line
-                                procedure drawLTLineF(const arrDrawingPointsIn : TArray<TPointF>); virtual; abstract;
-                            //polyline
-                                procedure drawLTPolylineF(const arrDrawingPointsIn : TArray<TPointF>); virtual; abstract;
-                            //polygon
-                                procedure drawLTPolygonF(   const filledIn, outlinedIn  : boolean;
-                                                            const arrDrawingPointsIn    : TArray<TPointF> ); virtual; abstract;
-                            //rectangle
-                                procedure drawLTRectangleF( const   filledIn, outlinedIn    : boolean;
-                                                            const   widthIn, heightIn,
-                                                                    cornerRadiusHorIn,
-                                                                    cornerRadiusVertIn      : double;
-                                                            const   handlePointIn           : TPointF;
-                                                            const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
-                                                            const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    ); virtual; abstract;
+                //canvas rotation
+                    procedure rotateCanvasLT(   const rotationAngleIn           : double;
+                                                const rotationReferencePointIn  : TPointF   ); virtual; abstract;
+                    procedure resetCanvasRotation();  virtual; abstract;
+                //arc
+                    procedure drawLTArcF(   const   filledIn, outlinedIn            : boolean;
+                                            const   startAngleIn, endAngleIn,
+                                                    arcHorRadiusIn, arcVertRadiusIn : double;
+                                            const   centrePointIn                   : TPointF   ); virtual; abstract;
+                //polyline
+                    procedure drawLTPolylineF(const arrDrawingPointsIn : TArray<TPointF>); virtual; abstract;
+                //polygon
+                    procedure drawLTPolygonF(   const filledIn, outlinedIn  : boolean;
+                                                const arrDrawingPointsIn    : TArray<TPointF> ); virtual; abstract;
         end;
 
 implementation
-
-    //public
-        
 
 end.
