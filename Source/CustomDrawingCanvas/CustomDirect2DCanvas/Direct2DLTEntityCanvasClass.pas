@@ -55,10 +55,7 @@ interface
                                                     const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center    ); overload;
                     //text
                         procedure printLTTextF( const textStringIn          : string;
-                                                const textHandlePointIn     : TPointF;
-                                                const drawTextUnderlayIn    : boolean = False;
-                                                const horizontalAlignmentIn : THorzRectAlign = THorzRectAlign.Left;
-                                                const verticalAlignmentIn   : TVertRectAlign = TVertRectAlign.Top   ); overload;
+                                                const textHandlePointIn     : TPointF   );
         end;
 
 implementation
@@ -233,10 +230,7 @@ implementation
 
             //text
                 procedure TDirect2DLTEntityCanvas.printLTTextF( const textStringIn          : string;
-                                                                const textHandlePointIn     : TPointF;
-                                                                const drawTextUnderlayIn    : boolean = False;
-                                                                const horizontalAlignmentIn : THorzRectAlign = THorzRectAlign.Left;
-                                                                const verticalAlignmentIn   : TVertRectAlign = TVertRectAlign.Top   );
+                                                                const textHandlePointIn     : TPointF   );
                     var
                         mustCalculateDrawingPoint   : boolean;
                         textExtent                  : TSize;

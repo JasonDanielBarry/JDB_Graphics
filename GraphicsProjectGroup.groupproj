@@ -9,9 +9,6 @@
         <Projects Include="JDB_Graphics.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\JDB_TestProjects\TestJDBD2DCanvas.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="GraphicDrawerVCL.dproj">
             <Dependencies/>
         </Projects>
@@ -47,15 +44,6 @@
     <Target Name="JDB_Graphics:Make">
         <MSBuild Projects="JDB_Graphics.dproj" Targets="Make"/>
     </Target>
-    <Target Name="TestJDBD2DCanvas">
-        <MSBuild Projects="..\JDB_TestProjects\TestJDBD2DCanvas.dproj"/>
-    </Target>
-    <Target Name="TestJDBD2DCanvas:Clean">
-        <MSBuild Projects="..\JDB_TestProjects\TestJDBD2DCanvas.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="TestJDBD2DCanvas:Make">
-        <MSBuild Projects="..\JDB_TestProjects\TestJDBD2DCanvas.dproj" Targets="Make"/>
-    </Target>
     <Target Name="GraphicDrawerVCL">
         <MSBuild Projects="GraphicDrawerVCL.dproj"/>
     </Target>
@@ -84,13 +72,13 @@
         <MSBuild Projects="..\JDB_TestProjects\TestGraphXY.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="JDB_Mathematics;JDB_Graphics;TestJDBD2DCanvas;GraphicDrawerVCL;TestGraphic2D;TestGraphXY"/>
+        <CallTarget Targets="JDB_Mathematics;JDB_Graphics;GraphicDrawerVCL;TestGraphic2D;TestGraphXY"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="JDB_Mathematics:Clean;JDB_Graphics:Clean;TestJDBD2DCanvas:Clean;GraphicDrawerVCL:Clean;TestGraphic2D:Clean;TestGraphXY:Clean"/>
+        <CallTarget Targets="JDB_Mathematics:Clean;JDB_Graphics:Clean;GraphicDrawerVCL:Clean;TestGraphic2D:Clean;TestGraphXY:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="JDB_Mathematics:Make;JDB_Graphics:Make;TestJDBD2DCanvas:Make;GraphicDrawerVCL:Make;TestGraphic2D:Make;TestGraphXY:Make"/>
+        <CallTarget Targets="JDB_Mathematics:Make;JDB_Graphics:Make;GraphicDrawerVCL:Make;TestGraphic2D:Make;TestGraphXY:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

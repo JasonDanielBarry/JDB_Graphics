@@ -17,8 +17,6 @@ interface
                 var
                     localBackgroundColour : TColor; //used for member functions of the class while it is instatiated - DO NOT WRITE TO
             public
-                //constructor
-                    constructor create(); virtual;
                 //set brush properties
                     procedure setBrushFillProperties(const solidIn : boolean; const colourIn : TColor); virtual; abstract;
                 //set pen properties
@@ -49,12 +47,6 @@ implementation
                 end;
 
     //public
-        //constructor
-            constructor TGenericCustomAbstractCanvas.create();
-                begin
-                    inherited create();
-                end;
-
         //measure text entent
             class function TGenericCustomAbstractCanvas.measureTextExtent(  const textStringIn      : string;
                                                                             const textSizeIn        : integer = 9;

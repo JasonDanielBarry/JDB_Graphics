@@ -153,10 +153,12 @@
         <DCCReference Include="Source\CustomDrawingCanvas\CustomDirect2DCanvas\Direct2DCustomCanvasClass.pas"/>
         <DCCReference Include="Source\CustomDrawingCanvas\CustomDirect2DCanvas\Direct2DDrawingEntityFactoryClass.pas"/>
         <DCCReference Include="Source\CustomDrawingCanvas\CustomDirect2DCanvas\Direct2DLTEntityCanvasClass.pas"/>
-        <DCCReference Include="Source\CustomDrawingCanvas\CustomDirect2DCanvas\Direct2DXYEntityCanvasClass.pas"/>
         <DCCReference Include="Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericCustomCanvasAbstractClass.pas"/>
         <DCCReference Include="Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericLTEntityCanvasAbstractClass.pas"/>
-        <DCCReference Include="Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericXYEntityCanvasAbstractClass.pas"/>
+        <DCCReference Include="Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericXYEntityCanvasClass.pas"/>
+        <DCCReference Include="Source\CustomDrawingCanvas\CustomDirect2DCanvas\Direct2DXYEntityCanvasClass.pas"/>
+        <DCCReference Include="Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericLTEntityCanvasClass.pas"/>
+        <DCCReference Include="Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericLTEntityDrawingMethods.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

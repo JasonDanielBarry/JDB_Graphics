@@ -1,4 +1,4 @@
-unit GenericXYEntityCanvasAbstractClass;
+unit GenericXYEntityCanvasClass;
 
 interface
 
@@ -16,7 +16,7 @@ interface
             EScaleType = (scCanvas = 0, scDrawing);
         {$SCOPEDENUMS OFF}
 
-        TGenericXYEntityCanvasAbstract = class( TGenericLTEntityCanvas )
+        TGenericXYEntityCanvas = class( TGenericLTEntityCanvas )
             private
                 //convert the height, width and handle point of entites from XY to LT based on drawing scale option
                     class procedure convertWidthHeightAndHandlePoint(   const   widthXYIn, heightXYIn   : double;
@@ -93,12 +93,12 @@ implementation
 
     //private
         //convert the height, width and handle point of entites based on drawing scale option
-            class procedure TGenericXYEntityCanvasAbstract.convertWidthHeightAndHandlePoint(   const   widthXYIn, heightXYIn   : double;
-                                                                                        const   handlePointXYIn         : TGeomPoint;
-                                                                                        const   scaleTypeIn             : EScaleType;
-                                                                                        const   axisConverterIn         : TDrawingAxisConverter;
-                                                                                        out widthLTOut, heightLTOut     : double;
-                                                                                        out handlePointLTOut            : TPointF               );
+            class procedure TGenericXYEntityCanvas.convertWidthHeightAndHandlePoint(const   widthXYIn, heightXYIn   : double;
+                                                                                    const   handlePointXYIn         : TGeomPoint;
+                                                                                    const   scaleTypeIn             : EScaleType;
+                                                                                    const   axisConverterIn         : TDrawingAxisConverter;
+                                                                                    out widthLTOut, heightLTOut     : double;
+                                                                                    out handlePointLTOut            : TPointF               );
                 begin
                     case ( scaleTypeIn ) of
                         EScaleType.scCanvas:
@@ -119,9 +119,9 @@ implementation
 
     //public
         //canvas rotation
-            procedure TGenericXYEntityCanvasAbstract.rotateCanvasXY(const rotationAngleIn           : double;
-                                                                    const rotationReferencePointIn  : TGeomPoint;
-                                                                    const axisConverterIn           : TDrawingAxisConverter);
+            procedure TGenericXYEntityCanvas.rotateCanvasXY(const rotationAngleIn           : double;
+                                                            const rotationReferencePointIn  : TGeomPoint;
+                                                            const axisConverterIn           : TDrawingAxisConverter);
                 var
                     rotationReferencePointLT : TPointF;
                 begin
@@ -132,12 +132,12 @@ implementation
 
         //drawing entities
             //arc
-                procedure TGenericXYEntityCanvasAbstract.drawXYArc( const   filledIn, outlinedIn            : boolean;
-                                                                    const   startAngleIn, endAngleIn,
-                                                                            arcXRadiusInIn, arcYRadiusIn    : double;
-                                                                    const   centrePointIn                   : TGeomPoint;
-                                                                    const   axisConverterIn                 : TDrawingAxisConverter;
-                                                                    const   scaleTypeIn                     : EScaleType = EScaleType.scDrawing);
+                procedure TGenericXYEntityCanvas.drawXYArc( const   filledIn, outlinedIn            : boolean;
+                                                            const   startAngleIn, endAngleIn,
+                                                                    arcXRadiusInIn, arcYRadiusIn    : double;
+                                                            const   centrePointIn                   : TGeomPoint;
+                                                            const   axisConverterIn                 : TDrawingAxisConverter;
+                                                            const   scaleTypeIn                     : EScaleType = EScaleType.scDrawing);
                     var
                         horRadiusLT, VertRadiusLT   : double;
                         centrePointLT               : TPointF;
@@ -156,14 +156,14 @@ implementation
                     end;
 
             //ellipse
-                procedure TGenericXYEntityCanvasAbstract.drawXYEllipse( const   filledIn, outlinedIn    : boolean;
-                                                                        const   ellipseWidthIn,
-                                                                                ellipseHeightIn         : double;
-                                                                        const   handlePointIn           : TGeomPoint;
-                                                                        const   axisConverterIn         : TDrawingAxisConverter;
-                                                                        const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
-                                                                        const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center;
-                                                                        const   scaleTypeIn             : EScaleType = EScaleType.scDrawing     );
+                procedure TGenericXYEntityCanvas.drawXYEllipse( const   filledIn, outlinedIn    : boolean;
+                                                                const   ellipseWidthIn,
+                                                                        ellipseHeightIn         : double;
+                                                                const   handlePointIn           : TGeomPoint;
+                                                                const   axisConverterIn         : TDrawingAxisConverter;
+                                                                const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Center;
+                                                                const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Center;
+                                                                const   scaleTypeIn             : EScaleType = EScaleType.scDrawing     );
                     var
                         widthLT, heightLT   : double;
                         handlePointLT       : TPointF;
@@ -183,8 +183,8 @@ implementation
                     end;
 
             //line
-                procedure TGenericXYEntityCanvasAbstract.drawXYLine(const arrLinePointsIn   : TArray<TGeomPoint>;
-                                                                    const axisConverterIn   : TDrawingAxisConverter);
+                procedure TGenericXYEntityCanvas.drawXYLine(const arrLinePointsIn   : TArray<TGeomPoint>;
+                                                            const axisConverterIn   : TDrawingAxisConverter);
                     var
                         arrDrawingPoints : TArray<TPointF>;
                     begin
@@ -197,8 +197,8 @@ implementation
                     end;
 
             //polyline
-                procedure TGenericXYEntityCanvasAbstract.drawXYPolyline(const arrPolylinePointsIn   : TArray<TGeomPoint>;
-                                                                        const axisConverterIn       : TDrawingAxisConverter);
+                procedure TGenericXYEntityCanvas.drawXYPolyline(const arrPolylinePointsIn   : TArray<TGeomPoint>;
+                                                                const axisConverterIn       : TDrawingAxisConverter);
 
                     var
                         arrDrawingPoints : TArray<TPointF>;
@@ -212,9 +212,9 @@ implementation
                     end;
 
             //polygon
-                procedure TGenericXYEntityCanvasAbstract.drawXYPolygon( const filledIn, outlinedIn  : boolean;
-                                                                        const arrPolygonPointsIn    : TArray<TGeomPoint>;
-                                                                        const axisConverterIn       : TDrawingAxisConverter );
+                procedure TGenericXYEntityCanvas.drawXYPolygon( const filledIn, outlinedIn  : boolean;
+                                                                const arrPolygonPointsIn    : TArray<TGeomPoint>;
+                                                                const axisConverterIn       : TDrawingAxisConverter );
                     var
                         arrDrawingPoints : TArray<TPointF>;
                     begin
@@ -227,15 +227,15 @@ implementation
                     end;
 
             //rectangle
-                procedure TGenericXYEntityCanvasAbstract.drawXYRectangle(   const   filledIn, outlinedIn        : boolean;
-                                                                            const   rectWidthIn, rectHeightIn,
-                                                                                    cornerRadiusXIn,
-                                                                                    cornerRadiusYIn             : double;
-                                                                            const   handlePointIn               : TGeomPoint;
-                                                                            const   axisConverterIn             : TDrawingAxisConverter;
-                                                                            const   horizontalAlignmentIn       : THorzRectAlign = THorzRectAlign.Center;
-                                                                            const   verticalAlignmentIn         : TVertRectAlign = TVertRectAlign.Center;
-                                                                            const   scaleTypeIn                 : EScaleType = EScaleType.scDrawing         );
+                procedure TGenericXYEntityCanvas.drawXYRectangle(   const   filledIn, outlinedIn        : boolean;
+                                                                    const   rectWidthIn, rectHeightIn,
+                                                                            cornerRadiusXIn,
+                                                                            cornerRadiusYIn             : double;
+                                                                    const   handlePointIn               : TGeomPoint;
+                                                                    const   axisConverterIn             : TDrawingAxisConverter;
+                                                                    const   horizontalAlignmentIn       : THorzRectAlign = THorzRectAlign.Center;
+                                                                    const   verticalAlignmentIn         : TVertRectAlign = TVertRectAlign.Center;
+                                                                    const   scaleTypeIn                 : EScaleType = EScaleType.scDrawing         );
                     var
                         widthLT, heightLT,
                         cornerRadiusHor,
@@ -263,7 +263,7 @@ implementation
                                             verticalAlignmentIn                 );
                     end;
 
-                procedure TGenericXYEntityCanvasAbstract.drawXYRectangle(  const   filledIn, outlinedIn        : boolean;
+                procedure TGenericXYEntityCanvas.drawXYRectangle(   const   filledIn, outlinedIn        : boolean;
                                                                     const   rectWidthIn, rectHeightIn,
                                                                             cornerRadiusIn              : double;
                                                                     const   handlePointIn               : TGeomPoint;
@@ -283,17 +283,17 @@ implementation
                     end;
 
             //text
-                procedure TGenericXYEntityCanvasAbstract.printXYText(   const   textStringIn            : string;
-                                                                        const   textHandlePointIn       : TGeomPoint;
-                                                                        const   axisConverterIn         : TDrawingAxisConverter;
-                                                                        const   drawTextUnderlayIn      : boolean = False;
-                                                                        const   textSizeIn              : double = 9.0;
-                                                                        const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
-                                                                        const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top;
-                                                                        const   scaleTypeIn             : EScaleType = EScaleType.scCanvas;
-                                                                        const   textColourIn            : TColor = clWindowText;
-                                                                        const   textStylesIn            : TFontStyles = [];
-                                                                        const   textFontNameIn          : string = ''                           );
+                procedure TGenericXYEntityCanvas.printXYText(   const   textStringIn            : string;
+                                                                const   textHandlePointIn       : TGeomPoint;
+                                                                const   axisConverterIn         : TDrawingAxisConverter;
+                                                                const   drawTextUnderlayIn      : boolean = False;
+                                                                const   textSizeIn              : double = 9.0;
+                                                                const   horizontalAlignmentIn   : THorzRectAlign = THorzRectAlign.Left;
+                                                                const   verticalAlignmentIn     : TVertRectAlign = TVertRectAlign.Top;
+                                                                const   scaleTypeIn             : EScaleType = EScaleType.scCanvas;
+                                                                const   textColourIn            : TColor = clWindowText;
+                                                                const   textStylesIn            : TFontStyles = [];
+                                                                const   textFontNameIn          : string = ''                           );
                     var
                         textSizeInteger : integer;
                         textSizeLT      : double;
@@ -317,10 +317,10 @@ implementation
 
                         printLTTextF(   textSizeInteger,
                                         textStringIn,
-                                        textColourIn,
-                                        textStylesIn,
                                         handlePointLT,
                                         drawTextUnderlayIn,
+                                        textColourIn,
+                                        textStylesIn,
                                         horizontalAlignmentIn,
                                         verticalAlignmentIn,
                                         textFontNameIn          );
