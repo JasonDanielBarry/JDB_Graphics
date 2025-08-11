@@ -113,14 +113,16 @@ implementation
                     //vertical alignment
                         case ( verticalAlignmentIn ) of
                             TVertRectAlign.Bottom: //centre above handle point in LT coordinate system
-                                pointOut.Y := handlePointIn.y - heightIn / 2;
+                                pointOut.Y := handlePointIn.Y - heightIn / 2;
 
                             TVertRectAlign.Center:
-                                pointOut.Y := handlePointIn.y;
+                                pointOut.Y := handlePointIn.Y;
 
                             TVertRectAlign.Top: //centre below handle point in LT coordinate system
-                                pointOut.Y := handlePointIn.y + heightIn / 2;
+                                pointOut.Y := handlePointIn.Y + heightIn / 2;
                         end;
+
+                    result := pointOut;
                 end;
 
     //RECTANGLE-----------------------------------------------------------------------------------------------------------------

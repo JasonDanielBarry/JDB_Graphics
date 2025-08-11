@@ -64,7 +64,7 @@ implementation
 
                     centrePoint := calculateEllipseCentreLTPoint( widthIn, heightIn, horizontalAlignmentIn, verticalAlignmentIn, handlePointIn );
 
-                    inherited drawLTEllipseF_abst(filledIn, outlinedIn, widthIn, heightIn, centrePoint );
+                    drawLTEllipseF_abst( filledIn, outlinedIn, widthIn, heightIn, centrePoint );
                 end;
 
         //draw line
@@ -77,7 +77,7 @@ implementation
                     arrDrawingPoints[0] := startPointIn;
                     arrDrawingPoints[1] := endPointIn;
 
-                    inherited drawLTPolylineF( arrDrawingPoints );
+                    drawLTPolylineF( arrDrawingPoints );
                 end;
 
         //draw rectangle
@@ -100,9 +100,9 @@ implementation
                                                 handlePointIn,
                                                 rectLeft, rectRight, rectTop, rectBottom );
 
-                    inherited drawLTRectangleF_abst(    filledIn, outlinedIn,
-                                                        rectLeft, rectRight, rectTop, rectBottom,
-                                                        cornerRadiusHorIn, cornerRadiusVertIn       );
+                    drawLTRectangleF_abst(  filledIn, outlinedIn,
+                                            rectLeft, rectRight, rectTop, rectBottom,
+                                            cornerRadiusHorIn, cornerRadiusVertIn       );
                 end;
 
         //draw text
@@ -128,7 +128,7 @@ implementation
                                                                         verticalAlignmentIn,
                                                                         textHandlePointIn       );
 
-                    inherited printLTTextF_abst( textStringIn, textDrawingPoint );
+                    printLTTextF_abst( textStringIn, textDrawingPoint );
                 end;
 
 

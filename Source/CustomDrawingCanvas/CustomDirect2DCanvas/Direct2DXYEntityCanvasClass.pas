@@ -16,6 +16,12 @@ interface
                 var
                     direct2DLTEntityCanvas : TDirect2DLTEntityCanvas;
             protected
+                //set font properties
+                    procedure setFontTextProperties(const sizeIn        : integer;
+                                                    const colourIn      : TColor;
+                                                    const underlaidIn   : boolean = False;
+                                                    const stylesIn      : TFontStyles = [];
+                                                    const nameIn        : string = ''       ); override;
                 //ellipse
                     procedure drawLTEllipseF_abst(  const   filledIn, outlinedIn    : boolean;
                                                     const   ellipseWidthIn,
@@ -42,12 +48,6 @@ interface
                     procedure setPenLineProperties( const widthIn   : integer;
                                                     const colourIn  : TColor;
                                                     const styleIn   : TPenStyle = TPenStyle.psSolid ); override;
-                //set font properties
-                    procedure setFontTextProperties(const sizeIn        : integer;
-                                                    const colourIn      : TColor;
-                                                    const underlaidIn   : boolean = False;
-                                                    const stylesIn      : TFontStyles = [];
-                                                    const nameIn        : string = ''       ); override;
                 //canvas rotation
                     procedure rotateCanvasLT(   const rotationAngleIn           : double;
                                                 const rotationReferencePointIn  : TPointF   ); override;
@@ -67,23 +67,41 @@ interface
 implementation
 
     //protected
+        //set font properties
+            procedure TDirect2DXYEntityCanvas.setFontTextProperties(const sizeIn        : integer;
+                                                                    const colourIn      : TColor;
+                                                                    const underlaidIn   : boolean = False;
+                                                                    const stylesIn      : TFontStyles = [];
+                                                                    const nameIn        : string = ''       );
+                begin
+                    inherited setFontTextProperties( sizeIn, colourIn, underlaidIn, stylesIn, nameIn );
+
+                    direct2DLTEntityCanvas.setFontTextProperties( sizeIn, nameIn, colourIn, stylesIn );
+                end;
+
         //ellipse
             procedure TDirect2DXYEntityCanvas.drawLTEllipseF_abst(  const   filledIn, outlinedIn    : boolean;
                                                                     const   ellipseWidthIn,
                                                                             ellipseHeightIn         : double;
                                                                     const   centrePointIn           : TPointF   );
                 begin
-
+                    direct2DLTEntityCanvas.drawLTEllipseF(  filledIn, outlinedIn,
+                                                            ellipseWidthIn, ellipseHeightIn,
+                                                            centrePointIn                   );
                 end;
 
         //rectangle
-            procedure drawLTRectangleF_abst(const   filledIn, outlinedIn        : boolean;
-                                            const   leftBoundIn, rightBoundIn,
-                                                    topBoundIn, bottomBoundIn,
-                                                    cornerRadiusHorIn,
-                                                    cornerRadiusVertIn          : double );
+            procedure TDirect2DXYEntityCanvas.drawLTRectangleF_abst(const   filledIn, outlinedIn        : boolean;
+                                                                    const   leftBoundIn, rightBoundIn,
+                                                                            topBoundIn, bottomBoundIn,
+                                                                            cornerRadiusHorIn,
+                                                                            cornerRadiusVertIn          : double );
                 begin
-
+                    direct2DLTEntityCanvas.drawLTRectangleF(    filledIn, outlinedIn,
+                                                                leftBoundIn, rightBoundIn,
+                                                                topBoundIn, bottomBoundIn,
+                                                                cornerRadiusHorIn,
+                                                                cornerRadiusVertIn          );
                 end;
 
         //text
@@ -118,18 +136,6 @@ implementation
                                                                     const styleIn   : TPenStyle = TPenStyle.psSolid );
                 begin
                     direct2DLTEntityCanvas.setPenLineProperties( widthIn, colourIn, styleIn );
-                end;
-
-        //set font properties
-            procedure TDirect2DXYEntityCanvas.setFontTextProperties(const sizeIn        : integer;
-                                                                    const colourIn      : TColor;
-                                                                    const underlaidIn   : boolean = False;
-                                                                    const stylesIn      : TFontStyles = [];
-                                                                    const nameIn        : string = ''       );
-                begin
-                    inherited setFontTextProperties( sizeIn, colourIn, underlaidIn, stylesIn, nameIn );
-
-                    direct2DLTEntityCanvas.setFontTextProperties( sizeIn, nameIn, colourIn, stylesIn );
                 end;
 
         //canvas rotation

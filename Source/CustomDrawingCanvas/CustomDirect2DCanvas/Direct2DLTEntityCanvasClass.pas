@@ -174,7 +174,7 @@ implementation
                         xPos := round( textDrawingPointIn.X );
                         yPos := round( textDrawingPointIn.Y );
 
-                        TextOut( xPos, xPos, textStringIn );
+                        TextOut( xPos, yPos, textStringIn );
                     end;
 
 end.
