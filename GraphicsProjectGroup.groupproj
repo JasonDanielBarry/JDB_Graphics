@@ -9,6 +9,9 @@
         <Projects Include="JDB_Graphics.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\JDB_TestProjects\TestGenericDrawingCanvas.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="GraphicDrawerVCL.dproj">
             <Dependencies/>
         </Projects>
@@ -44,6 +47,15 @@
     <Target Name="JDB_Graphics:Make">
         <MSBuild Projects="JDB_Graphics.dproj" Targets="Make"/>
     </Target>
+    <Target Name="TestGenericDrawingCanvas">
+        <MSBuild Projects="..\JDB_TestProjects\TestGenericDrawingCanvas.dproj"/>
+    </Target>
+    <Target Name="TestGenericDrawingCanvas:Clean">
+        <MSBuild Projects="..\JDB_TestProjects\TestGenericDrawingCanvas.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TestGenericDrawingCanvas:Make">
+        <MSBuild Projects="..\JDB_TestProjects\TestGenericDrawingCanvas.dproj" Targets="Make"/>
+    </Target>
     <Target Name="GraphicDrawerVCL">
         <MSBuild Projects="GraphicDrawerVCL.dproj"/>
     </Target>
@@ -72,13 +84,13 @@
         <MSBuild Projects="..\JDB_TestProjects\TestGraphXY.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="JDB_Mathematics;JDB_Graphics;GraphicDrawerVCL;TestGraphic2D;TestGraphXY"/>
+        <CallTarget Targets="JDB_Mathematics;JDB_Graphics;TestGenericDrawingCanvas;GraphicDrawerVCL;TestGraphic2D;TestGraphXY"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="JDB_Mathematics:Clean;JDB_Graphics:Clean;GraphicDrawerVCL:Clean;TestGraphic2D:Clean;TestGraphXY:Clean"/>
+        <CallTarget Targets="JDB_Mathematics:Clean;JDB_Graphics:Clean;TestGenericDrawingCanvas:Clean;GraphicDrawerVCL:Clean;TestGraphic2D:Clean;TestGraphXY:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="JDB_Mathematics:Make;JDB_Graphics:Make;GraphicDrawerVCL:Make;TestGraphic2D:Make;TestGraphXY:Make"/>
+        <CallTarget Targets="JDB_Mathematics:Make;JDB_Graphics:Make;TestGenericDrawingCanvas:Make;GraphicDrawerVCL:Make;TestGraphic2D:Make;TestGraphXY:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

@@ -20,12 +20,12 @@ interface
                 //set pen properties
                     procedure setPenLineProperties( const widthIn   : integer;
                                                     const colourIn  : TColor;
-                                                    const styleIn   : TPenStyle = TPenStyle.psSolid );
+                                                    const styleIn   : TPenStyle );
                 //set font properties
-                    procedure setFontTextProperties(const sizeIn    : integer;
-                                                    const colourIn  : TColor;
-                                                    const stylesIn  : TFontStyles = [];
-                                                    const nameIn    : string = ''       );
+                    procedure setFontTextProperties(const sizeIn        : integer;
+                                                    const nameIn        : string;
+                                                    const colourIn      : TColor;
+                                                    const stylesIn      : TFontStyles);
         end;
 
 implementation
@@ -72,7 +72,7 @@ implementation
     //set pen properties
         procedure TDirect2DCustomCanvas.setPenLineProperties(   const widthIn   : integer;
                                                                 const colourIn  : TColor;
-                                                                const styleIn   : TPenStyle = TPenStyle.psSolid );
+                                                                const styleIn   : TPenStyle );
             begin
                 if ( widthIn < 1 ) then
                     begin
@@ -86,17 +86,15 @@ implementation
             end;
 
     //set font properties
-        procedure TDirect2DCustomCanvas.setFontTextProperties(  const sizeIn    : integer;
-                                                                const colourIn  : TColor;
-                                                                const stylesIn  : TFontStyles = [];
-                                                                const nameIn    : string = ''       );
+        procedure TDirect2DCustomCanvas.setFontTextProperties(  const sizeIn        : integer;
+                                                                const nameIn        : string;
+                                                                const colourIn      : TColor;
+                                                                const stylesIn      : TFontStyles   );
             begin
                 Font.Size   := sizeIn;
+                Font.Name   := nameIn;
                 Font.Color  := TStyleManager.ActiveStyle.GetSystemColor( colourIn );
                 Font.Style  := stylesIn;
-
-                if ( nameIn <> '' ) then
-                    Font.Name := nameIn;
             end;
 
 end.

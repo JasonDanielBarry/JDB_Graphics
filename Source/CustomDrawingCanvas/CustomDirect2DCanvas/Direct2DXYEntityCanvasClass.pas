@@ -36,6 +36,18 @@ interface
                     procedure beginDrawing(const bitmapIn : TBitmap);
                 //end drawing
                     procedure endDrawing();
+                //set brush properties
+                    procedure setBrushFillProperties(const solidIn : boolean; const colourIn : TColor); override;
+                //set pen properties
+                    procedure setPenLineProperties( const widthIn   : integer;
+                                                    const colourIn  : TColor;
+                                                    const styleIn   : TPenStyle = TPenStyle.psSolid ); override;
+                //set font properties
+                    procedure setFontTextProperties(const sizeIn        : integer;
+                                                    const colourIn      : TColor;
+                                                    const underlaidIn   : boolean = False;
+                                                    const stylesIn      : TFontStyles = [];
+                                                    const nameIn        : string = ''       ); override;
                 //canvas rotation
                     procedure rotateCanvasLT(   const rotationAngleIn           : double;
                                                 const rotationReferencePointIn  : TPointF   ); override;
@@ -92,6 +104,32 @@ implementation
             procedure TDirect2DXYEntityCanvas.endDrawing();
                 begin
                     FreeAndNil( direct2DLTEntityCanvas );
+                end;
+
+        //set brush properties
+            procedure TDirect2DXYEntityCanvas.setBrushFillProperties(const solidIn : boolean; const colourIn : TColor);
+                begin
+                    direct2DLTEntityCanvas.setBrushFillProperties( solidIn, colourIn );
+                end;
+
+        //set pen properties
+            procedure TDirect2DXYEntityCanvas.setPenLineProperties( const widthIn   : integer;
+                                                                    const colourIn  : TColor;
+                                                                    const styleIn   : TPenStyle = TPenStyle.psSolid );
+                begin
+                    direct2DLTEntityCanvas.setPenLineProperties( widthIn, colourIn, styleIn );
+                end;
+
+        //set font properties
+            procedure TDirect2DXYEntityCanvas.setFontTextProperties(const sizeIn        : integer;
+                                                                    const colourIn      : TColor;
+                                                                    const underlaidIn   : boolean = False;
+                                                                    const stylesIn      : TFontStyles = [];
+                                                                    const nameIn        : string = ''       );
+                begin
+                    inherited setFontTextProperties( sizeIn, colourIn, underlaidIn, stylesIn, nameIn );
+
+                    direct2DLTEntityCanvas.setFontTextProperties( sizeIn, nameIn, colourIn, stylesIn );
                 end;
 
         //canvas rotation

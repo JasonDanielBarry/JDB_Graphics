@@ -12,9 +12,6 @@ interface
             private
                 //background colour
                     class function determineBackgroundColour() : Tcolor; static;
-            protected
-                var
-                    localBackgroundColour : TColor; //used for member functions of the class while it is instatiated - DO NOT WRITE TO
             public
                 //set brush properties
                     procedure setBrushFillProperties(const solidIn : boolean; const colourIn : TColor); virtual; abstract;
@@ -27,7 +24,7 @@ interface
                                                     const colourIn      : TColor;
                                                     const underlaidIn   : boolean = False;
                                                     const stylesIn      : TFontStyles = [];
-                                                    const nameIn        : string = ''       ); virtual; abstract;
+                                                    const nameIn        : string = ''       ); virtual;
                 class property BackgroundColour : TColor read determineBackgroundColour;
         end;
 
@@ -39,5 +36,19 @@ implementation
                 begin
                     result := TStyleManager.ActiveStyle.GetStyleColor( TStyleColor.scGenericBackground );
                 end;
+
+    //public
+        //set font properties
+            procedure TGenericCustomAbstractCanvas.setFontTextProperties(   const sizeIn        : integer;
+                                                                            const colourIn      : TColor;
+                                                                            const underlaidIn   : boolean = False;
+                                                                            const stylesIn      : TFontStyles = [];
+                                                                            const nameIn        : string = ''       );
+                begin
+                    if ( underlaidIn ) then
+                        setBrushFillProperties( True, BackgroundColour );
+                end;
+
+
 
 end.
