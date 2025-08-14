@@ -173,7 +173,7 @@ implementation
             //create generic path geometry
                 class function TDirect2DDrawingEntityFactory.createGenericPathGeometry( const figureBeginIn         : D2D1_FIGURE_BEGIN;
                                                                                         const figureEndIn           : D2D1_FIGURE_END;
-                                                                                        const arrDrawingPointsIn    : TArray<TPointF>       ) : ID2D1PathGeometry;
+                                                                                        const arrDrawingPointsIn    : TArray<TPointF>   ) : ID2D1PathGeometry;
                     var
                         i, arrLen       : integer;
                         geometrySink    : ID2D1GeometrySink;
@@ -185,11 +185,11 @@ implementation
                         //open path geometry
                             pathGeometryOut.Open( geometrySink );
 
-                        //create geometry sink
+                        //start geometry sink at first point
                             geometrySink.BeginFigure( D2D1PointF( arrDrawingPointsIn[0].x, arrDrawingPointsIn[0].y ), figureBeginIn );
 
                         //add lines
-                            arrLen := length(arrDrawingPointsIn);
+                            arrLen := length( arrDrawingPointsIn );
 
                             //single line
                                 if ( arrLen < 3 ) then

@@ -4,7 +4,7 @@ interface
 
     uses
         Winapi.D2D1,
-        System.SysUtils, system.Math, system.Types, System.UITypes,
+        System.SysUtils, system.Types,
         Vcl.Direct2D, Vcl.Graphics, vcl.Themes,
         BitmapHelperClass,
         GenericCustomCanvasAbstractClass
@@ -37,18 +37,18 @@ implementation
             var
                 bitmapRectangle : TRect;
             begin
-                bitmapRectangle := bitmapIn.getRectangle();
+                //set up bitmap
+                    bitmapRectangle := bitmapIn.getRectangle();
+                    bitmapIn.Canvas.Brush.Color := TGenericCustomAbstractCanvas.BackgroundColour;
+                    bitmapIn.Canvas.FillRect( bitmapRectangle );
 
-                bitmapIn.Canvas.Brush.Color := TGenericCustomAbstractCanvas.BackgroundColour;
-                bitmapIn.Canvas.FillRect( bitmapRectangle );
+                //set up D2D canvas
+                    inherited create( bitmapIn.Canvas, bitmapRectangle );
 
-                inherited create( bitmapIn.Canvas, bitmapRectangle );
+                    RenderTarget.SetAntialiasMode( TD2D1AntiAliasMode.D2D1_ANTIALIAS_MODE_PER_PRIMITIVE );
+                    RenderTarget.SetTextAntialiasMode( TD2D1TextAntiAliasMode.D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE );
 
-                RenderTarget.SetAntialiasMode( TD2D1AntiAliasMode.D2D1_ANTIALIAS_MODE_PER_PRIMITIVE );
-
-                RenderTarget.SetTextAntialiasMode( TD2D1TextAntiAliasMode.D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE );
-
-                BeginDraw();
+                    BeginDraw();
             end;
 
     //destructor

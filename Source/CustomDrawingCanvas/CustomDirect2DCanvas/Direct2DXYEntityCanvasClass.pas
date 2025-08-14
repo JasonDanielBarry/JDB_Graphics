@@ -15,7 +15,6 @@ interface
             private
                 var
                     direct2DLTEntityCanvas : TDirect2DLTEntityCanvas;
-            protected
                 //set font properties
                     procedure setFontTextProperties(const sizeIn        : integer;
                                                     const colourIn      : TColor;
@@ -66,7 +65,7 @@ interface
 
 implementation
 
-    //protected
+    //private
         //set font properties
             procedure TDirect2DXYEntityCanvas.setFontTextProperties(const sizeIn        : integer;
                                                                     const colourIn      : TColor;

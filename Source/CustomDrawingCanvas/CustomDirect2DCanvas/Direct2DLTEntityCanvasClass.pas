@@ -56,8 +56,8 @@ implementation
                 begin
                     //angle is in degrees
                     //get transformation matrix:
-                        //positive angles = anti-clockwise rotation of the canvas
-                        //which results in clockwise rotation of the drawing entities
+                        //positive angles = anti-clockwise rotation of the canvas -> which results in clockwise rotation of the drawing entities
+                        //thus negative angle is used so that positive rotationAngleIn results in anti-clockwise drawing entity rotation
                             transformMatrix := TD2DMatrix3x2F.Rotation( -rotationAngleIn, rotationReferencePointIn.X, rotationReferencePointIn.Y );
 
                     //rotate canvas

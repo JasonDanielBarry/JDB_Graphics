@@ -45,10 +45,15 @@ implementation
                                                                             const underlaidIn   : boolean = False;
                                                                             const stylesIn      : TFontStyles = [];
                                                                             const nameIn        : string = ''       );
+                var
+                    localBackgroundColour : TColor;
                 begin
                     if ( underlaidIn ) then
-                        setBrushFillProperties( True, BackgroundColour )
+                        begin
+                            localBackgroundColour := determineBackgroundColour();
 
+                            setBrushFillProperties( True, localBackgroundColour )
+                        end
                     else
                         setBrushFillProperties( False, clNone );
                 end;
