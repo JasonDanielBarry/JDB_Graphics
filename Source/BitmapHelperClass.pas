@@ -3,7 +3,7 @@ unit BitmapHelperClass;
 interface
 
     uses
-        system.SysUtils,
+        system.SysUtils, system.Types,
         Vcl.Graphics, Vcl.Imaging.jpeg, Vcl.Imaging.pngimage
         ;
 
@@ -12,6 +12,7 @@ interface
             public
                 procedure saveToJPegFile(const fileNameIn : string);
                 procedure saveToPngFile(const fileNameIn : string);
+                function getRectangle() : TRect;
         end;
 
 implementation
@@ -43,5 +44,11 @@ implementation
 
             FreeAndNil( tempPNG );
         end;
+
+    function TBitmapHelper.getRectangle() : TRect;
+        begin
+            result := Rect( 0, 0, self.Width, self.Height );
+        end;
+
 
 end.

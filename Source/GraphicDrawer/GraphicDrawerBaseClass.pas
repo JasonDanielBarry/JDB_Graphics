@@ -17,9 +17,6 @@ interface
     type
         TGraphicDrawerBase = class
             protected
-                var
-                    graphicBackgroundColour : Tcolor;
-            protected
                 const
                     WM_USER_REDRAW_GRAPHIC = WM_USER + 1;
                 var
@@ -57,10 +54,6 @@ implementation
                         //set the drawing space ratio
                             if ( drawingSpaceRatioEnabled ) then
                                 axisConverter.setDrawingSpaceRatio( drawingSpaceRatio );
-
-                        //clear the canvas
-                            D2DCanvasInOut.setBrushFillProperties( True, graphicBackgroundColour );
-                            D2DCanvasInOut.FillRect( Rect(0, 0, canvasWidthIn, canvasHeightIn) );
                     end;
 
     //public
@@ -93,8 +86,6 @@ implementation
             procedure TGraphicDrawerBase.updateBackgroundColour(const callingControlIn : TWinControl);
                 begin
                     //set the background colour to match the style
-                        graphicBackgroundColour := TDirect2DXYEntityCanvas.BackgroundColour;
-
                         if NOT( Assigned( callingControlIn ) ) then
                             exit();
 

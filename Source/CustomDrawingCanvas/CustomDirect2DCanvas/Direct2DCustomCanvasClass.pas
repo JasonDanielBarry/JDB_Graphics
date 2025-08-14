@@ -5,7 +5,9 @@ interface
     uses
         Winapi.D2D1,
         System.SysUtils, system.Math, system.Types, System.UITypes,
-        Vcl.Direct2D, Vcl.Graphics, vcl.Themes
+        Vcl.Direct2D, Vcl.Graphics, vcl.Themes,
+        BitmapHelperClass,
+        GenericCustomCanvasAbstractClass
         ;
 
     type
@@ -33,11 +35,14 @@ implementation
     //constructor
         constructor TDirect2DCustomCanvas.create(const bitmapIn : TBitmap);
             var
-                bitmapRect : TRect;
+                bitmapRectangle : TRect;
             begin
-                bitmapRect := Rect( 0, 0, bitmapIn.Width, bitmapIn.Height );
+                bitmapRectangle := bitmapIn.getRectangle();
 
-                inherited create( bitmapIn.Canvas, bitmapRect );
+                bitmapIn.Canvas.Brush.Color := TGenericCustomAbstractCanvas.BackgroundColour;
+                bitmapIn.Canvas.FillRect( bitmapRectangle );
+
+                inherited create( bitmapIn.Canvas, bitmapRectangle );
 
                 RenderTarget.SetAntialiasMode( TD2D1AntiAliasMode.D2D1_ANTIALIAS_MODE_PER_PRIMITIVE );
 

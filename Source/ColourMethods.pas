@@ -3,7 +3,9 @@ unit ColourMethods;
 interface
 
     uses
-         Winapi.Windows, system.UIConsts, system.UITypes, Vcl.GraphUtil
+         Winapi.Windows,
+         system.UIConsts, system.UITypes,
+         Vcl.GraphUtil
          ;
 
     //make colours from RGBA combinations
