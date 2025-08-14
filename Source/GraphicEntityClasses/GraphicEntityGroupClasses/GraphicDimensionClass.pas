@@ -7,7 +7,7 @@ interface
         vcl.Graphics,
         GeometryTypes,
         GeometryBaseClass, GeomLineClass,
-        Direct2DXYEntityCanvasClass,
+        GenericXYEntityCanvasClass,
         GraphicLineClass, GraphicTextClass,
         GraphicEntityGroupClass
         ;

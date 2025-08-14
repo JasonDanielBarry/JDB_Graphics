@@ -11,7 +11,7 @@ interface
             GeometryTypes,
             GeomBox,
             GeometryBaseClass,
-            Direct2DXYEntityCanvasClass,
+            GenericXYEntityCanvasClass,
             GraphicEntityTypes,
             GraphicShapeClass
             ;
@@ -24,7 +24,7 @@ interface
                     arcXRadius, arcYRadius : double;
                 //draw to canvas
                     procedure drawShapeToCanvas(const axisConverterIn   : TDrawingAxisConverter;
-                                                var canvasInOut         : TDirect2DXYEntityCanvas); override;
+                                                var canvasInOut         : TGenericXYEntityCanvas); override;
             public
                 //constructor
                     constructor create( const   filledIn        : boolean;
@@ -49,7 +49,7 @@ implementation
     //private
         //draw to canvas
             procedure TGraphicArc.drawShapeToCanvas(const axisConverterIn   : TDrawingAxisConverter;
-                                                    var canvasInOut         : TDirect2DXYEntityCanvas);
+                                                    var canvasInOut         : TGenericXYEntityCanvas);
                 begin
                     canvasInOut.drawXYArc(  filled, outlined,
                                             startAngle, endAngle,

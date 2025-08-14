@@ -9,7 +9,7 @@ interface
         GeomBox,
         DrawingAxisConversionClass,
         GraphicShapeClass,
-        Direct2DXYEntityCanvasClass
+        GenericXYEntityCanvasClass
         ;
 
     type
@@ -19,7 +19,7 @@ interface
                     ellipseWidth, ellipseHeight : double;
                 //draw to canvas
                     procedure drawShapeToCanvas(const axisConverterIn   : TDrawingAxisConverter;
-                                                var canvasInOut         : TDirect2DXYEntityCanvas); override;
+                                                var canvasInOut         : TGenericXYEntityCanvas); override;
             public
                 //constructor
                     constructor create( const   filledIn                : boolean;
@@ -44,7 +44,7 @@ implementation
 
         //draw to canvas
             procedure TGraphicEllipse.drawShapeToCanvas(const axisConverterIn   : TDrawingAxisConverter;
-                                                        var canvasInOut         : TDirect2DXYEntityCanvas);
+                                                        var canvasInOut         : TGenericXYEntityCanvas);
                 begin
                     canvasInOut.drawXYEllipse(  filled, outlined,
                                                 ellipseWidth, ellipseHeight,

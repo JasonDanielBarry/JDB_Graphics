@@ -6,7 +6,7 @@ interface
         system.UITypes, system.Math, System.Classes, System.Types,
         vcl.Graphics, vcl.Themes,
         DrawingAxisConversionClass,
-        Direct2DXYEntityCanvasClass,
+        GenericXYEntityCanvasClass,
         GraphicEntityBaseClass
         ;
 
@@ -32,7 +32,7 @@ interface
                     destructor destroy(); override;
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DXYEntityCanvas ); override;
+                                            var canvasInOut         : TGenericXYEntityCanvas ); override;
         end;
 
 implementation
@@ -63,7 +63,7 @@ implementation
 
         //draw to canvas
             procedure TFoundationalGraphicEntity.drawToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
-                                                                var canvasInOut         : TDirect2DXYEntityCanvas   );
+                                                                var canvasInOut         : TGenericXYEntityCanvas );
                 begin
                     //fill properties
                         canvasInOut.setBrushFillProperties( filled, fillColour );

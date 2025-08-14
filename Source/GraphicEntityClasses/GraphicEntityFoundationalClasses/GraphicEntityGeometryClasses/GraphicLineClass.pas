@@ -10,7 +10,7 @@ interface
             DrawingAxisConversionClass,
             GeomLineClass,
             GraphicGeometryClass,
-            Direct2DXYEntityCanvasClass
+            GenericXYEntityCanvasClass
             ;
 
     type
@@ -28,7 +28,7 @@ interface
                     procedure setEndPoint(const xIn, yIn : double);
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DXYEntityCanvas ); override;
+                                            var canvasInOut         : TGenericXYEntityCanvas ); override;
         end;
 
 implementation
@@ -67,7 +67,7 @@ implementation
 
         //draw to canvas
             procedure TGraphicLine.drawToCanvas(const axisConverterIn   : TDrawingAxisConverter;
-                                                var canvasInOut         : TDirect2DXYEntityCanvas);
+                                                var canvasInOut         : TGenericXYEntityCanvas);
                 begin
                     inherited drawToCanvas( axisConverterIn, canvasInOut );
 

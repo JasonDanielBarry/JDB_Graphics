@@ -8,7 +8,7 @@ interface
         GeometryTypes, GeomBox,
         DrawingAxisConversionClass,
         GraphicEntityFoundationalClass,
-        Direct2DXYEntityCanvasClass
+        GenericXYEntityCanvasClass
         ;
 
     type
@@ -27,7 +27,7 @@ interface
                     function calculateShapeBoundingBox(const shapeWidthIn, shapeHeightIn : double) : TGeomBox;
                 //draw shape to canvas
                     procedure drawShapeToCanvas(const axisConverterIn   : TDrawingAxisConverter;
-                                                var canvasInOut         : TDirect2DXYEntityCanvas); virtual; abstract;
+                                                var canvasInOut         : TGenericXYEntityCanvas); virtual; abstract;
             public
                 //constructor
                     constructor create( const   filledIn                : boolean;
@@ -49,69 +49,86 @@ interface
                     procedure setHandlePoint(const xIn, yIn : double);
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DXYEntityCanvas ); override;
+                                            var canvasInOut         : TGenericXYEntityCanvas ); override;
         end;
 
 implementation
 
     //protected
         //calculate bounding box
+            function calculateUnrotatedShapeBoundingBox(const shapeWidthIn, shapeHeightIn   : double;
+                                                        const horAlignmentIn                : THorzRectAlign;
+                                                        const vertAlignmentIn               : TVertRectAlign;
+                                                        const handlePointXYIn               : TGeomPoint    ) : TGeomBox;
+                var
+                    boxCentreX, boxCentreY  : double;
+                    shapeBoxOut             : TGeomBox;
+                begin
+                    //determine the horizontal centre of the box
+                        case (horAlignmentIn) of
+                            THorzRectAlign.Left:
+                                boxCentreX := handlePointXYIn.X + shapeWidthIn / 2;
+
+                            THorzRectAlign.Center:
+                                boxCentreX := handlePointXYIn.X;
+
+                            THorzRectAlign.Right:
+                                boxCentreX := handlePointXYIn.X - shapeWidthIn / 2;
+                        end;
+
+                    //determine the vertical centre of the box
+                        case (vertAlignmentIn) of
+                            TVertRectAlign.Bottom:
+                                boxCentreY := handlePointXYIn.y + shapeHeightIn / 2;
+
+                            TVertRectAlign.Center:
+                                boxCentreY := handlePointXYIn.y;
+
+                            TVertRectAlign.Top:
+                                boxCentreY := handlePointXYIn.y - shapeHeightIn / 2;
+                        end;
+
+                    //dimension the box
+                        shapeBoxOut := TGeomBox.newBox( shapeWidthIn, shapeHeightIn );
+
+                    //shift the box to the centre point
+                        shapeBoxOut.setCentrePoint( boxCentreX, boxCentreY );
+
+                    result := shapeBoxOut;
+                end;
+
             function TGraphicShape.calculateShapeBoundingBox(const shapeWidthIn, shapeHeightIn : double) : TGeomBox;
                 var
-                    mustCalculateBoundingBox        : boolean;
-                    boxCentreX, boxCentreY          : double;
-                    shapeBoxPoints, rotatedPoints   : TArray<TGeomPoint>;
-                    shapeBox, boundingBoxOut        : TGeomBox;
+                    shapeHasZeroDimensions,
+                    shapeIsCanvasScale,
+                    mustNotCalculateBoundingBox             : boolean;
+                    unrotatedShapeBoxPoints, rotatedPoints  : TArray<TGeomPoint>;
+                    unrotatedShapeBox, boundingBoxOut       : TGeomBox;
                 begin
                     //determine if bounding box calculation is necessary
                     //if the dimensions entered are 0 or if canvas scale is selected then the graphic box is a dot at the handle point
-                        mustCalculateBoundingBox := NOT(
-                                                            ( IsZero( shapeWidthIn ) AND IsZero( shapeHeightIn ) )
-                                                            OR
-                                                            ( scaleType = EScaleType.scCanvas )
-                                                       );
+                        shapeHasZeroDimensions := ( IsZero( shapeWidthIn ) AND IsZero( shapeHeightIn ) );
 
+                        shapeIsCanvasScale := ( scaleType = EScaleType.scCanvas );
 
-                        if NOT( mustCalculateBoundingBox ) then
+                        mustNotCalculateBoundingBox := ( shapeHasZeroDimensions OR shapeIsCanvasScale );
+
+                        if ( mustNotCalculateBoundingBox ) then
                             begin
                                 result := TGeomBox.determineBoundingBox( [ handlePointXY, handlePointXY ] );
                                 exit();
                             end;
 
-                    //dimension the box
-                        shapeBox := TGeomBox.newBox( shapeWidthIn, shapeHeightIn );
-
-                    //determine the horizontal centre of the box
-                        case (horizontalAlignment) of
-                            THorzRectAlign.Left:
-                                boxCentreX := handlePointXY.X + shapeWidthIn / 2;
-
-                            THorzRectAlign.Center:
-                                boxCentreX := handlePointXY.X;
-
-                            THorzRectAlign.Right:
-                                boxCentreX := handlePointXY.X - shapeWidthIn / 2;
-                        end;
-
-                    //determine the vertical centre of the box
-                        case (verticalAlignment) of
-                            TVertRectAlign.Bottom:
-                                boxCentreY := handlePointXY.y + shapeHeightIn / 2;
-
-                            TVertRectAlign.Center:
-                                boxCentreY := handlePointXY.y;
-
-                            TVertRectAlign.Top:
-                                boxCentreY := handlePointXY.y - shapeHeightIn / 2;
-                        end;
-
-                    //shift the box to the centre point
-                        shapeBox.setCentrePoint( boxCentreX, boxCentreY );
+                    //calculate the unrotated shape bounding box
+                        unrotatedShapeBox := calculateUnrotatedShapeBoundingBox( shapeWidthIn, shapeHeightIn,
+                                                                        horizontalAlignment,
+                                                                        verticalAlignment,
+                                                                        handlePointXY               );
 
                     //apply the rotation
-                        shapeBoxPoints := shapeBox.getCornerPoints2D();
+                        unrotatedShapeBoxPoints := unrotatedShapeBox.getCornerPoints2D();
 
-                        TGeomPoint.copyPoints( shapeBoxPoints, rotatedPoints );
+                        TGeomPoint.copyPoints( unrotatedShapeBoxPoints, rotatedPoints );
 
                         TGeomPoint.rotateArrPoints( rotationAngle, handlePointXY, rotatedPoints );
 
@@ -177,7 +194,7 @@ implementation
 
         //draw to canvas
             procedure TGraphicShape.drawToCanvas(   const axisConverterIn   : TDrawingAxisConverter;
-                                                    var canvasInOut         : TDirect2DXYEntityCanvas   );
+                                                    var canvasInOut         : TGenericXYEntityCanvas   );
                 var
                     canvasWasRotated : boolean;
                 begin

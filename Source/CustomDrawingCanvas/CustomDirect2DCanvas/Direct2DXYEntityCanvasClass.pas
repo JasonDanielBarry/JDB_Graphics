@@ -3,6 +3,7 @@ unit Direct2DXYEntityCanvasClass;
 interface
 
     uses
+        Winapi.D2D1,
         system.SysUtils, system.types,
         vcl.Graphics,
         Direct2DLTEntityCanvasClass,
@@ -37,10 +38,13 @@ interface
                                                 const textDrawingPointIn    : TPointF); override;
 
             public
-                //begine drawing
+                //begin drawing
                     procedure beginDrawing(const bitmapIn : TBitmap);
                 //end drawing
                     procedure endDrawing();
+                //anti-aliasing
+                    procedure disableAntiAliasing(); override;
+                    procedure enableAntiAliasing(); override;
                 //set brush properties
                     procedure setBrushFillProperties(const solidIn : boolean; const colourIn : TColor); override;
                 //set pen properties
@@ -121,6 +125,17 @@ implementation
             procedure TDirect2DXYEntityCanvas.endDrawing();
                 begin
                     FreeAndNil( direct2DLTEntityCanvas );
+                end;
+
+        //anti-aliasing
+            procedure TDirect2DXYEntityCanvas.disableAntiAliasing();
+                begin
+                    direct2DLTEntityCanvas.RenderTarget.SetAntialiasMode( TD2D1AntiAliasMode.D2D1_ANTIALIAS_MODE_ALIASED );
+                end;
+
+            procedure TDirect2DXYEntityCanvas.enableAntiAliasing();
+                begin
+                    direct2DLTEntityCanvas.RenderTarget.SetAntialiasMode( TD2D1AntiAliasMode.D2D1_ANTIALIAS_MODE_PER_PRIMITIVE );
                 end;
 
         //set brush properties

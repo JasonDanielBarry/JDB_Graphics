@@ -6,7 +6,7 @@ interface
         system.SysUtils,
         GeomBox,
         DrawingAxisConversionClass,
-        Direct2DXYEntityCanvasClass,
+        GenericXYEntityCanvasClass,
         GraphicEntityBaseClass
         ;
 
@@ -26,7 +26,7 @@ interface
                     procedure clearGraphicEntityGroup(const freeGraphicEntitysIn : boolean = True);
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DXYEntityCanvas ); override;
+                                            var canvasInOut         : TGenericXYEntityCanvas ); override;
                 //bounding box
                     function determineBoundingBox() : TGeomBox; override;
         end;
@@ -94,7 +94,7 @@ implementation
 
         //draw to canvas
             procedure TGraphicEntityGroup.drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                                        var canvasInOut         : TDirect2DXYEntityCanvas );
+                                                        var canvasInOut         : TGenericXYEntityCanvas );
                 begin
                     TGraphicEntity.drawAllToCanvas(
                                                         arrGraphicEntitysGroup,

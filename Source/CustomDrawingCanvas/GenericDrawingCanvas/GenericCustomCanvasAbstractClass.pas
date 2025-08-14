@@ -19,13 +19,15 @@ interface
                                                     const stylesIn      : TFontStyles = [];
                                                     const nameIn        : string = ''       ); virtual;
             public
+                //anti-aliasing (if available)
+                    procedure disableAntiAliasing(); virtual;
+                    procedure enableAntiAliasing(); virtual;
                 //set brush properties
                     procedure setBrushFillProperties(const solidIn : boolean; const colourIn : TColor); virtual; abstract;
                 //set pen properties
                     procedure setPenLineProperties( const widthIn   : integer;
                                                     const colourIn  : TColor;
                                                     const styleIn   : TPenStyle = TPenStyle.psSolid ); virtual; abstract;
-
                 class property BackgroundColour : TColor read determineBackgroundColour;
         end;
 
@@ -56,6 +58,18 @@ implementation
                         end
                     else
                         setBrushFillProperties( False, clNone );
+                end;
+
+    //public
+        //anti-aliasing (if available)
+            procedure TGenericCustomAbstractCanvas.disableAntiAliasing();
+                begin
+                    //do nothing
+                end;
+
+            procedure TGenericCustomAbstractCanvas.enableAntiAliasing();
+                begin
+                    //do nothing
                 end;
 
 end.

@@ -6,7 +6,7 @@ interface
         system.UITypes, system.Math, System.Classes, System.Types,
         vcl.Graphics,
         GeomBox,
-        Direct2DXYEntityCanvasClass,
+        GenericXYEntityCanvasClass,
         DrawingAxisConversionClass
         ;
 
@@ -19,10 +19,10 @@ interface
                     destructor destroy(); override;
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DXYEntityCanvas       ); virtual; abstract;
+                                            var canvasInOut         : TGenericXYEntityCanvas ); virtual; abstract;
                     class procedure drawAllToCanvas(const arrGraphicEntitiesIn  : TArray<TGraphicEntity>;
                                                     const axisConverterIn       : TDrawingAxisConverter;
-                                                    var canvasInOut             : TDirect2DXYEntityCanvas); static;
+                                                    var canvasInOut             : TGenericXYEntityCanvas); static;
                 //bounding box
                     function determineBoundingBox() : TGeomBox; overload; virtual; abstract;
                     class function determineBoundingBox(const arrGraphicEntitiesIn : TArray<TGraphicEntity>) : TGeomBox; overload; static;
@@ -44,9 +44,9 @@ implementation
                 end;
 
         //draw to canvas
-            class procedure TGraphicEntity.drawAllToCanvas( const arrGraphicEntitiesIn   : TArray<TGraphicEntity>;
+            class procedure TGraphicEntity.drawAllToCanvas( const arrGraphicEntitiesIn  : TArray<TGraphicEntity>;
                                                             const axisConverterIn       : TDrawingAxisConverter;
-                                                            var canvasInOut             : TDirect2DXYEntityCanvas   );
+                                                            var canvasInOut             : TGenericXYEntityCanvas    );
                 var
                     i, arrLen : integer;
                 begin

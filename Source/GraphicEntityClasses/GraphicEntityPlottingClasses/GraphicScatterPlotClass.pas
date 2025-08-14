@@ -8,7 +8,7 @@ interface
             vcl.Graphics,
         //custom
             DrawingAxisConversionClass,
-            Direct2DXYEntityCanvasClass,
+            GenericXYEntityCanvasClass,
             GeometryTypes, GeomBox,
             GraphicEllipseClass,
             GraphicEntityGroupClass;

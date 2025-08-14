@@ -8,8 +8,8 @@ interface
         InterpolatorClass,
         LinearAlgebraTypes, LAVectorMethods,
         GeometryTypes, GeomBox,
-        Direct2DXYEntityCanvasClass,
         DrawingAxisConversionClass,
+        GenericXYEntityCanvasClass,
         GraphicEntityBaseClass,
         GraphicTextClass,
         GraphicEllipseClass;
@@ -49,7 +49,7 @@ interface
                     destructor destroy(); override;
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DXYEntityCanvas ); override;
+                                            var canvasInOut         : TGenericXYEntityCanvas ); override;
                 //bounding box
                     function determineBoundingBox() : TGeomBox; override;
         end;
@@ -241,7 +241,7 @@ implementation
 
         //draw to canvas
             procedure TGraphicMousePointTracker.drawToCanvas(   const axisConverterIn   : TDrawingAxisConverter;
-                                                                var canvasInOut         : TDirect2DXYEntityCanvas   );
+                                                                var canvasInOut         : TGenericXYEntityCanvas    );
                 var
                     coordText       : string;
                     mousePointXY,

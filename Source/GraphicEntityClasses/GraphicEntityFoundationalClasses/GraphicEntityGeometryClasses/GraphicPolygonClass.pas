@@ -10,7 +10,7 @@ interface
             DrawingAxisConversionClass,
             GeomPolygonClass,
             GraphicGeometryClass,
-            Direct2DXYEntityCanvasClass
+            GenericXYEntityCanvasClass
             ;
 
     type
@@ -27,7 +27,7 @@ interface
                     destructor destroy(); override;
                 //draw to canvas
                     procedure drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                            var canvasInOut         : TDirect2DXYEntityCanvas ); override;
+                                            var canvasInOut         : TGenericXYEntityCanvas ); override;
         end;
 
 implementation
@@ -57,7 +57,7 @@ implementation
 
         //draw to canvas
             procedure TGraphicPolygon.drawToCanvas( const axisConverterIn   : TDrawingAxisConverter;
-                                                    var canvasInOut         : TDirect2DXYEntityCanvas );
+                                                    var canvasInOut         : TGenericXYEntityCanvas );
                 begin
                     inherited drawToCanvas( axisConverterIn, canvasInOut );
 

@@ -8,8 +8,9 @@ interface
         GeometryTypes,
         GeomBox,
         DrawingAxisConversionClass,
+        GenericLTEntityDrawingMethods,
         GraphicShapeClass,
-        Direct2DXYEntityCanvasClass
+        GenericXYEntityCanvasClass
         ;
 
     type
@@ -23,7 +24,7 @@ interface
                     textFontStyles  : TFontStyles;
                 //draw to canvas
                     procedure drawShapeToCanvas(const axisConverterIn   : TDrawingAxisConverter;
-                                                var canvasInOut         : TDirect2DXYEntityCanvas); override;
+                                                var canvasInOut         : TGenericXYEntityCanvas); override;
             public
                 class var
                     fontName : TFontName;
@@ -51,7 +52,7 @@ implementation
     //private
         //draw to canvas
             procedure TGraphicText.drawShapeToCanvas(   const axisConverterIn   : TDrawingAxisConverter;
-                                                        var canvasInOut         : TDirect2DXYEntityCanvas   );
+                                                        var canvasInOut         : TGenericXYEntityCanvas );
                 begin
                     //draw text to canvas
                         canvasInOut.printXYText(    textString,
@@ -122,7 +123,7 @@ implementation
 
                         EScaleType.scDrawing:
                             begin
-                                var textExtent : TSize := TDirect2DXYEntityCanvas.measureTextExtent( textString, round( textSize ), textFontStyles );
+                                var textExtent : TSize := measureTextLTExtent( textString, round( textSize ), textFontStyles );
 
                                 boundingBoxOut := calculateShapeBoundingBox( textExtent.Width, textExtent.Height );
                             end;

@@ -9,7 +9,7 @@ interface
         GeomBox,
         DrawingAxisConversionClass,
         GraphicShapeClass,
-        Direct2DXYEntityCanvasClass
+        GenericXYEntityCanvasClass
         ;
 
     type
@@ -20,7 +20,7 @@ interface
                     rectangleWidth, rectangleHeight : double;
                 //draw to canvas
                     procedure drawShapeToCanvas(const axisConverterIn   : TDrawingAxisConverter;
-                                                var canvasInOut         : TDirect2DXYEntityCanvas); override;
+                                                var canvasInOut         : TGenericXYEntityCanvas); override;
             public
                 //constructor
                     constructor create( const   filledIn                : boolean;
@@ -47,7 +47,7 @@ implementation
     //private
         //draw to canvas
             procedure TGraphicRectangle.drawShapeToCanvas(  const axisConverterIn   : TDrawingAxisConverter;
-                                                            var canvasInOut         : TDirect2DXYEntityCanvas   );
+                                                            var canvasInOut         : TGenericXYEntityCanvas );
                 begin
                     canvasInOut.drawXYRectangle(    filled, outlined,
                                                     rectangleWidth, rectangleHeight,
