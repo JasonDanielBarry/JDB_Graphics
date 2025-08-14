@@ -4,14 +4,14 @@ interface
 
     uses
         //Delphi
-            system.SysUtils, system.UITypes, system.Generics.Collections,
+            system.SysUtils, system.Generics.Collections,
             Vcl.Controls,
         //custom
             GeomBox,
-            Direct2DXYEntityCanvasClass,
+            DrawingAxisConversionClass,
+            GenericXYEntityCanvasClass,
             GraphicEntityListBaseClass,
             LayerGraphicEntityMapClass,
-            DrawingAxisConversionClass,
             GraphicGridClass,
             GraphicDrawerBaseClass,
             GraphicGridSettingsRecord
@@ -29,7 +29,7 @@ interface
             protected
                 //draw all geometry
                     procedure drawAll(  const canvasWidthIn, canvasHeightIn : integer;
-                                        var D2DCanvasInOut                  : TDirect2DXYEntityCanvas);
+                                        var canvasInOut                     : TGenericXYEntityCanvas    );
             public
                 //constructor
                     constructor create(); override;
@@ -64,21 +64,21 @@ implementation
         //drawing procedures
             //draw all geometry
                 procedure TGraphicDrawerLayers.drawAll( const canvasWidthIn, canvasHeightIn : integer;
-                                                        var D2DCanvasInOut                  : TDirect2DXYEntityCanvas );
+                                                        var canvasInOut                     : TGenericXYEntityCanvas );
                     begin
                         inherited drawAll(  canvasWidthIn, canvasHeightIn,
-                                            D2DCanvasInOut                  );
+                                            canvasInOut                     );
 
                         //draw the grid
                             if ( gridEnabled ) then
-                                graphicGrid.drawToCanvas( axisConverter, D2DCanvasInOut );
+                                graphicGrid.drawToCanvas( axisConverter, canvasInOut );
 
                         //draw graphic objects
-                            layerGraphicEntityMap.drawActiveGraphicEntitysToCanvas( axisConverter, D2DCanvasInOut );
+                            layerGraphicEntityMap.drawActiveGraphicEntitysToCanvas( axisConverter, canvasInOut );
 
                         //draw the grid axis labels
                             if ( gridEnabled ) then
-                                graphicGrid.drawAxisLabels( axisConverter, D2DCanvasInOut );
+                                graphicGrid.drawAxisLabels( axisConverter, canvasInOut );
                     end;
 
     //public

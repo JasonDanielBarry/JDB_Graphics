@@ -123,7 +123,7 @@
         <DCCReference Include="Source\ColourMethods.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawerAxisConversionInterfaceClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawerBaseClass.pas"/>
-        <DCCReference Include="Source\GraphicDrawer\GraphicDrawerDirect2DClass.pas"/>
+        <DCCReference Include="Source\GraphicDrawer\GraphicDrawerClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicDrawerLayersClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\GraphicEntityListBaseClass.pas"/>
         <DCCReference Include="Source\GraphicDrawer\LayerGraphicEntityMapClass.pas"/>

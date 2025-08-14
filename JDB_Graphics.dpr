@@ -16,7 +16,7 @@ uses
   ColourMethods in 'Source\ColourMethods.pas',
   GraphicDrawerAxisConversionInterfaceClass in 'Source\GraphicDrawer\GraphicDrawerAxisConversionInterfaceClass.pas',
   GraphicDrawerBaseClass in 'Source\GraphicDrawer\GraphicDrawerBaseClass.pas',
-  GraphicDrawerDirect2DClass in 'Source\GraphicDrawer\GraphicDrawerDirect2DClass.pas',
+  GraphicDrawerClass in 'Source\GraphicDrawer\GraphicDrawerClass.pas',
   GraphicDrawerLayersClass in 'Source\GraphicDrawer\GraphicDrawerLayersClass.pas',
   GraphicEntityListBaseClass in 'Source\GraphicDrawer\GraphicEntityListBaseClass.pas',
   LayerGraphicEntityMapClass in 'Source\GraphicDrawer\LayerGraphicEntityMapClass.pas',

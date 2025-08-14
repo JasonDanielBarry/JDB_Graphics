@@ -3,9 +3,9 @@ unit GraphicEntityListBaseClass;
 interface
 
     uses
-        System.Generics.Collections, System.UITypes,
-        Vcl.Themes, Vcl.Graphics,
-        Direct2DXYEntityCanvasClass,
+        System.Generics.Collections,
+        Vcl.Graphics,
+        GenericCustomCanvasAbstractClass,
         GraphicEntityBaseClass
         ;
 
@@ -48,7 +48,7 @@ implementation
 
                     currentDrawingLayer := 'Default drawing layer';
 
-                    graphicBackgroundColour := TDirect2DXYEntityCanvas.BackgroundColour;
+                    graphicBackgroundColour := TGenericCustomAbstractCanvas.BackgroundColour;
 
                     clear();
                 end;

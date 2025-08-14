@@ -5,13 +5,11 @@ interface
     uses
         //Delphi
             Winapi.Windows, Winapi.Messages,
-            system.SysUtils, System.Math, system.types, system.UITypes, system.Generics.Collections,
-            vcl.Controls, vcl.Graphics, Vcl.Themes,
+            system.SysUtils, system.Generics.Collections,
+            vcl.Controls,
         //custom
-            ColourMethods,
-            GeometryTypes,
             DrawingAxisConversionClass,
-            Direct2DXYEntityCanvasClass
+            GenericXYEntityCanvasClass
             ;
 
     type
@@ -28,7 +26,7 @@ interface
                 //drawing procedures
                     //draw all geometry
                         procedure drawAll(  const canvasWidthIn, canvasHeightIn : integer;
-                                            var D2DCanvasInOut                  : TDirect2DXYEntityCanvas   );
+                                            var canvasInOut                     : TGenericXYEntityCanvas    );
             public
                 //constructor
                     constructor create(); virtual;
@@ -46,7 +44,7 @@ implementation
         //drawing procedures
             //draw all geometry
                 procedure TGraphicDrawerBase.drawAll(   const canvasWidthIn, canvasHeightIn : integer;
-                                                        var D2DCanvasInOut                  : TDirect2DXYEntityCanvas);
+                                                        var canvasInOut                     : TGenericXYEntityCanvas    );
                     begin
                         //set axis converter canvas dimensions
                             axisConverter.setCanvasDimensions( canvasWidthIn, canvasHeightIn );

@@ -8,7 +8,7 @@ interface
         //custom
             GeomBox,
             DrawingAxisConversionClass,
-            Direct2DXYEntityCanvasClass,
+            GenericXYEntityCanvasClass,
             GraphicEntityBaseClass,
             GraphicEntityGroupClass,
             GraphicEntityListBaseClass
@@ -38,7 +38,7 @@ interface
                     function determineActiveBoundingBox() : TGeomBox;
                 //draw active graphic objects
                     procedure drawActiveGraphicEntitysToCanvas( const axisConverter : TDrawingAxisConverter;
-                                                                var D2DCanvasInOut  : TDirect2DXYEntityCanvas   );
+                                                                var canvasInOut     : TGenericXYEntityCanvas );
         end;
 
 implementation
@@ -148,9 +148,9 @@ implementation
 
         //draw active graphic objects
             procedure TLayerGraphicEntityMap.drawActiveGraphicEntitysToCanvas(  const axisConverter : TDrawingAxisConverter;
-                                                                                var D2DCanvasInOut  : TDirect2DXYEntityCanvas   );
+                                                                                var canvasInOut     : TGenericXYEntityCanvas   );
                 begin
-                    activeGraphicEntities.drawToCanvas( axisConverter, D2DCanvasInOut );
+                    activeGraphicEntities.drawToCanvas( axisConverter, canvasInOut );
                 end;
 
 end.

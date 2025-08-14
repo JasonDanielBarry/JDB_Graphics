@@ -4,7 +4,7 @@ interface
 
     uses
         Winapi.Messages,
-        system.SysUtils, system.Math, system.Types,
+        system.Math,
         GeometryTypes,
         GeomBox,
         DrawingAxisConversionClass,
