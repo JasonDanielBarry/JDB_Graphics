@@ -3,6 +3,7 @@
 ..\JDB_Mathematics\Source\Geometry
 ..\JDB_Mathematics\Source\LinearAlgebra
 ..\JDB_Mathematics\Source\LinearAlgebra\Matrices
+
 ..\JDB_Graphics\Source
 ..\JDB_Graphics\Source\CustomDrawingCanvas
 ..\JDB_Graphics\Source\CustomDrawingCanvas\CustomDirect2DCanvas
