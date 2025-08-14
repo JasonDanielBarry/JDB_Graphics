@@ -9,15 +9,15 @@ interface
         GraphicTextClass,
         GraphicGridSettingsRecord,
         GraphicEntityListBaseClass,
-        GraphicDrawerDirect2DClass
+        GraphicDrawerClass
         ;
 
     type
         TPaintBox = class(Vcl.ExtCtrls.TPaintBox)
             private
                 var
-                    mustRedrawGraphic   : boolean;
-                    D2DGraphicDrawer    : TGraphicDrawerDirect2D;
+                    mustRedrawGraphic       : boolean;
+                    genericGraphicDrawer    : TGraphicDrawer;
                 //events
                     procedure PaintBoxDrawer2DPaint(Sender: TObject);
                 //mouse cursor
@@ -31,7 +31,7 @@ interface
                 //process windows messages
                     procedure processWindowsMessages(var messageInOut : TMessage; out graphicWasRedrawnOut : boolean);
                 //access graphic drawer
-                    property GraphicDrawer : TGraphicDrawerDirect2D read D2DGraphicDrawer;
+                    property GraphicDrawer : TGraphicDrawer read genericGraphicDrawer;
         end;
 
 implementation
@@ -41,7 +41,7 @@ implementation
             procedure TPaintBox.PaintBoxDrawer2DPaint(Sender: TObject);
                 begin
                     //draw buffer to paintbox
-                        self.Canvas.Draw( 0, 0, D2DGraphicDrawer.GraphicBuffer );
+                        self.Canvas.Draw( 0, 0, genericGraphicDrawer.GraphicBuffer );
 
                     mustRedrawGraphic := False;
                 end;
@@ -50,11 +50,11 @@ implementation
             procedure TPaintBox.setMouseCursor(const messageIn : TMessage);
                 begin
                     //if the graphic drawer is nil then nothing can happen
-                        if NOT( Assigned( D2DGraphicDrawer ) ) then
+                        if NOT( Assigned( genericGraphicDrawer ) ) then
                             exit();
 
                     //set the cursor based on the user input
-                        if NOT(D2DGraphicDrawer.getMouseControlActive() ) then
+                        if NOT( genericGraphicDrawer.getMouseControlActive() ) then
                             begin
                                 self.Cursor := crDefault;
                                 exit();
@@ -77,15 +77,16 @@ implementation
                     inherited Create( AOwner );
 
                     //create required classes
-                        D2DGraphicDrawer := TGraphicDrawerDirect2D.create();
+                        genericGraphicDrawer := TGraphicDrawer.create();
 
                     //assign events
                         self.OnPaint        := PaintBoxDrawer2DPaint;
-                        self.OnMouseEnter   := D2DGraphicDrawer.DrawingControlMouseEnter;
-                        self.OnMouseLeave   := D2DGraphicDrawer.DrawingControlMouseLeave;
+                        self.OnMouseEnter   := genericGraphicDrawer.DrawingControlMouseEnter;
+                        self.OnMouseLeave   := genericGraphicDrawer.DrawingControlMouseLeave;
 
                     //for design time to ensure the colour is not black on the form builder
-                        D2DGraphicDrawer.updateBackgroundColour( nil );
+                        genericGraphicDrawer.updateBackgroundColour( nil );
+                    //---------------------------------------------------------------------
 
                     //grid is not visible by default
                         GraphicDrawer.setGridEnabled( False );
@@ -98,7 +99,7 @@ implementation
             destructor TPaintBox.destroy();
                 begin
                     //free classes
-                        FreeAndNil( D2DGraphicDrawer );
+                        FreeAndNil( genericGraphicDrawer );
 
                     inherited destroy();
                 end;
@@ -114,8 +115,8 @@ implementation
                             if ( messageInOut.Msg = WM_MOUSEMOVE ) then
                                 currentMousePositionOnPaintbox := self.ScreenToClient( mouse.CursorPos );
 
-                        //process windows message in D2DGraphicDrawer
-                            D2DGraphicDrawer.processWindowsMessages( self.Width, self.Height, currentMousePositionOnPaintbox, messageInOut, graphicBufferWasUpdated );
+                        //process windows message in genericGraphicDrawer
+                            genericGraphicDrawer.processWindowsMessages( self.Width, self.Height, currentMousePositionOnPaintbox, messageInOut, graphicBufferWasUpdated );
 
                         //This method is only responsible for setting mustRedrawGraphic to True if the buffer in updated
                         //PaintBoxDrawer2DPaint is responsible for setting mustRedrawGraphic to False once redrawing is complete

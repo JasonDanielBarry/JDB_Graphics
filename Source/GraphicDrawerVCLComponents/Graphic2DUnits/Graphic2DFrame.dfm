@@ -213,7 +213,6 @@ object CustomGraphic2D: TCustomGraphic2D
       Action = ActionEditAxes
       Align = alRight
       AllowAllUp = True
-      GroupIndex = 1
       Caption = 'S'
       Flat = True
       ExplicitLeft = 1059
@@ -227,7 +226,6 @@ object CustomGraphic2D: TCustomGraphic2D
       Action = ActionEditLayerTable
       Align = alRight
       AllowAllUp = True
-      GroupIndex = 1
       Caption = 'L'
       Flat = True
       ExplicitLeft = 1059
@@ -454,7 +452,7 @@ object CustomGraphic2D: TCustomGraphic2D
     Anchors = [akTop, akRight]
     BevelInner = bvNone
     BevelOuter = bvNone
-    ItemHeight = 17
+    ItemHeight = 15
     Items.Strings = (
       'Layer1'
       'Layer2'

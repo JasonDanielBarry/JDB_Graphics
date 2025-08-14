@@ -10,7 +10,7 @@ interface
             GeometryTypes,
             GeomLineClass, GeomPolyLineClass, GeomPolygonClass,
             DrawingAxisConversionClass,
-            Direct2DXYEntityCanvasClass,
+            GenericXYEntityCanvasClass,
             GraphicEntityTypes,
             GraphicEntityBaseClass,
             GraphicArcClass, GraphicEllipseClass, GraphicGeometryClass,

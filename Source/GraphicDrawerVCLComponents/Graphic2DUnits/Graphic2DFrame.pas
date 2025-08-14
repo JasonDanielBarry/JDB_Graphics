@@ -6,7 +6,7 @@ interface
         Winapi.Windows, Winapi.Messages,
         Vcl.Direct2D, Winapi.D2D1,
         System.SysUtils, System.Variants, System.Classes, system.Types, system.UITypes,
-        system.UIConsts, system.Threading, system.Math, system.Diagnostics, System.Actions,
+        system.UIConsts, system.Math, system.Diagnostics, System.Actions,
         Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, System.Skia,
         Vcl.Buttons, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.ActnList, Vcl.Menus, Vcl.Themes, Vcl.CheckLst,
         GeometryTypes, GeomBox,

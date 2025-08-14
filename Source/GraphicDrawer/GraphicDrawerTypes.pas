@@ -6,7 +6,7 @@ interface
         GenericLTEntityCanvasClass;
 
     type
-        TPostGraphicDrawEvent = procedure(const AWidth, AHeight : integer; const AD2DCanvas : TGenericLTEntityCanvas) of object;
+        TPostGraphicDrawEvent = procedure(const AWidth, AHeight : integer; const ACanvas : TGenericLTEntityCanvas) of object;
 
 implementation
 
