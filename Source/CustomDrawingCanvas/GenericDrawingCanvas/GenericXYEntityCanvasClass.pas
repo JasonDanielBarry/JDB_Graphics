@@ -32,12 +32,12 @@ interface
                                                 const axisConverterIn           : TDrawingAxisConverter );
                 //drawing entities
                     //arc
-                        procedure drawXYArc(const   filledIn, outlinedIn            : boolean;
+                        procedure drawXYArc(const   filledIn, outlinedIn        : boolean;
                                             const   startAngleIn, endAngleIn,
-                                                    arcXRadiusInIn, arcYRadiusIn    : double;
-                                            const   centrePointIn                   : TGeomPoint;
-                                            const   axisConverterIn                 : TDrawingAxisConverter;
-                                            const   scaleTypeIn                     : EScaleType = EScaleType.scDrawing);
+                                                    arcXRadiusIn, arcYRadiusIn  : double;
+                                            const   centrePointIn               : TGeomPoint;
+                                            const   axisConverterIn             : TDrawingAxisConverter;
+                                            const   scaleTypeIn                 : EScaleType = EScaleType.scDrawing);
                     //ellipse
                         procedure drawXYEllipse(const   filledIn, outlinedIn    : boolean;
                                                 const   ellipseWidthIn,
@@ -132,17 +132,17 @@ implementation
 
         //drawing entities
             //arc
-                procedure TGenericXYEntityCanvas.drawXYArc( const   filledIn, outlinedIn            : boolean;
+                procedure TGenericXYEntityCanvas.drawXYArc( const   filledIn, outlinedIn        : boolean;
                                                             const   startAngleIn, endAngleIn,
-                                                                    arcXRadiusInIn, arcYRadiusIn    : double;
-                                                            const   centrePointIn                   : TGeomPoint;
-                                                            const   axisConverterIn                 : TDrawingAxisConverter;
-                                                            const   scaleTypeIn                     : EScaleType = EScaleType.scDrawing);
+                                                                    arcXRadiusIn, arcYRadiusIn  : double;
+                                                            const   centrePointIn               : TGeomPoint;
+                                                            const   axisConverterIn             : TDrawingAxisConverter;
+                                                            const   scaleTypeIn                 : EScaleType = EScaleType.scDrawing);
                     var
                         horRadiusLT, VertRadiusLT   : double;
                         centrePointLT               : TPointF;
                     begin
-                        convert_Width_Height_HandlePoint(   arcXRadiusInIn, arcYRadiusIn,
+                        convert_Width_Height_HandlePoint(   arcXRadiusIn, arcYRadiusIn,
                                                             centrePointIn,
                                                             scaleTypeIn,
                                                             axisConverterIn,

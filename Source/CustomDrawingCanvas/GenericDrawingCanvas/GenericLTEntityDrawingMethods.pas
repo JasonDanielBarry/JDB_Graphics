@@ -65,10 +65,13 @@ implementation
             function calculateEllipsePoint( const pointAngleIn, ellipseWidthIn, ellipseHeightIn : double;
                                             const ellipseCentrePointIn                          : TPointF ) : TPointF;
                 var
+                    angleRadians,
                     sinComponent, cosComponent  : double;
                     pointOut                    : TPointF;
                 begin
-                    SinCos( DegToRad( pointAngleIn ), sinComponent, cosComponent );
+                    angleRadians := DegToRad( pointAngleIn );
+
+                    SinCos( angleRadians, sinComponent, cosComponent );
 
                     pointOut.x := ellipseCentrePointIn.x + ( cosComponent * ellipseWidthIn );
                     pointOut.y := ellipseCentrePointIn.y + ( sinComponent * ellipseHeightIn );
@@ -82,6 +85,8 @@ implementation
                                                         const   centrePointIn                   : TPointF;
                                                         out startPointOut, endPointOut          : TPointF   );
                 begin
+                    //NOTE: arcVertRadiusIn is negative because drawing canvas top = 0 and increases downwards
+
                     //find start point
                         startPointOut := calculateEllipsePoint( startAngleIn, arcHorRadiusIn, -arcVertRadiusIn, centrePointIn );
 
@@ -144,8 +149,10 @@ implementation
 
                             THorzRectAlign.Center:
                                 begin
-                                    leftBoundOut    := handlePointIn.X - widthIn / 2;
-                                    rightBoundOut   := handlePointIn.X + widthIn / 2;
+                                    var halfWidth : double := widthIn / 2;
+
+                                    leftBoundOut    := handlePointIn.X - halfWidth;
+                                    rightBoundOut   := handlePointIn.X + halfWidth;
                                 end;
 
                             THorzRectAlign.Right:
@@ -165,8 +172,10 @@ implementation
 
                             TVertRectAlign.Center:
                                 begin
-                                    bottomBoundOUt  := handlePointIn.Y + heightIn / 2;
-                                    topBoundOut     := handlePointIn.Y - heightIn / 2;
+                                    var halfHeight : double := heightIn / 2;
+
+                                    bottomBoundOUt  := handlePointIn.Y + halfHeight;
+                                    topBoundOut     := handlePointIn.Y - halfHeight;
                                 end;
 
                             TVertRectAlign.Top:
@@ -257,18 +266,18 @@ implementation
                                                     const verticalAlignmentIn       : TVertRectAlign;
                                                     const textHandlePointIn         : TPointF           ) : TPointF; overload;
                 var
-                    horShift, vertShift : double;
-                    pointOut            : TPointF;
+                    horShift, vertShift     : double;
+                    textLTDrawingPointOut   : TPointF;
                 begin
                     calculateTextAlignmentTranslation(  textExtentIn,
                                                         horizontalAlignmentIn,
                                                         verticalAlignmentIn,
                                                         horShift, vertShift     );
 
-                    pointOut.x := textHandlePointIn.x - horShift;
-                    pointOut.y := textHandlePointIn.y - vertShift;
+                    textLTDrawingPointOut.x := textHandlePointIn.x - horShift;
+                    textLTDrawingPointOut.y := textHandlePointIn.y - vertShift;
 
-                    result := pointOut;
+                    result := textLTDrawingPointOut;
                 end;
 
             function calculateTextLTDrawingPoint(   const   textSizeIn              : integer;

@@ -15,7 +15,6 @@ interface
 
     uses
         system.Types,
-        vcl.Graphics,
         GenericCustomCanvasAbstractClass
         ;
 

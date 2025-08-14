@@ -131,5 +131,4 @@ implementation
                     printLTTextF_abst( textStringIn, textDrawingPoint );
                 end;
 
-
 end.

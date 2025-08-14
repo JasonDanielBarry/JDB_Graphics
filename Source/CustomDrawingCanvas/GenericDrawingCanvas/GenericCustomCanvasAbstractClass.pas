@@ -3,7 +3,6 @@ unit GenericCustomCanvasAbstractClass;
 interface
 
     uses
-        System.SysUtils, system.Math, System.UITypes, system.Types,
         Vcl.Graphics, Vcl.Themes
         ;
 
@@ -53,7 +52,5 @@ implementation
                     else
                         setBrushFillProperties( False, clNone );
                 end;
-
-
 
 end.
