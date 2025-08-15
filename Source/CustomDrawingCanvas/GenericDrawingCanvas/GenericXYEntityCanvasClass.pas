@@ -243,8 +243,19 @@ implementation
                         handlePointLT       : TPointF;
                     begin
                         //convert from XY to LT
-                            cornerRadiusHor     := axisConverterIn.dX_To_dL( cornerRadiusXIn );
-                            cornerRadiusVert    := abs( axisConverterIn.dY_To_dT( cornerRadiusYIn ) );
+                            case ( scaleTypeIn ) of
+                                EScaleType.scCanvas:
+                                    begin
+                                        cornerRadiusHor     := cornerRadiusXIn;
+                                        cornerRadiusVert    := cornerRadiusYIn;
+                                    end;
+
+                                EScaleType.scDrawing:
+                                    begin
+                                        cornerRadiusHor     := axisConverterIn.dX_To_dL( cornerRadiusXIn );
+                                        cornerRadiusVert    := abs( axisConverterIn.dY_To_dT( cornerRadiusYIn ) );
+                                    end;
+                            end;
 
                             convert_Width_Height_HandlePoint(   rectWidthIn, rectHeightIn,
                                                                 handlePointIn,
