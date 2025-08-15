@@ -5,10 +5,8 @@ interface
     uses
         Winapi.Windows, Winapi.Messages,
         System.SysUtils, System.Classes,
-        Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.ExtCtrls, Vcl.Themes,
+        Vcl.Graphics, Vcl.Controls, Vcl.ExtCtrls,
         GraphicTextClass,
-        GraphicGridSettingsRecord,
-        GraphicEntityListBaseClass,
         GraphicDrawerClass
         ;
 
@@ -21,8 +19,7 @@ interface
                 //events
                     procedure PaintBoxDrawer2DPaint(Sender: TObject);
                 //mouse cursor
-                    procedure setMouseCursor(const messageIn : TMessage);           
-                //
+                    procedure setMouseCursor(const messageIn : TMessage);      
             public
                 //constructor
                     constructor create(AOwner : TComponent); override;
@@ -67,8 +64,7 @@ implementation
                             WM_MBUTTONUP:
                                 self.Cursor := crDefault;
                         end;
-                end;    
-        //
+                end;   
 
     //public
         //constructor
@@ -89,7 +85,7 @@ implementation
                     //---------------------------------------------------------------------
 
                     //grid is not visible by default
-                        GraphicDrawer.setGridEnabled( False );
+                        genericGraphicDrawer.setGridEnabled( False );
 
                     //assign font name to graphic text class
                         TGraphicText.fontName := 'Segoe UI';
@@ -116,12 +112,7 @@ implementation
                                 currentMousePositionOnPaintbox := self.ScreenToClient( mouse.CursorPos );
 
                         //process windows message in genericGraphicDrawer
-                            genericGraphicDrawer.processWindowsMessages( self.Width, self.Height, currentMousePositionOnPaintbox, messageInOut, graphicBufferWasUpdated );
-
-                        //This method is only responsible for setting mustRedrawGraphic to True if the buffer in updated
-                        //PaintBoxDrawer2DPaint is responsible for setting mustRedrawGraphic to False once redrawing is complete
-                            if ( graphicBufferWasUpdated ) then
-                                mustRedrawGraphic := True;
+                            genericGraphicDrawer.processWindowsMessages( self.Width, self.Height, currentMousePositionOnPaintbox, messageInOut, mustRedrawGraphic );
 
                         //draw buffer to paintbox
                             if ( mustRedrawGraphic ) then

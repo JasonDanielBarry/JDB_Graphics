@@ -24,7 +24,8 @@ interface
                     onPostGraphicDrawEvent  : TPostGraphicDrawEvent;
                     D2DDrawingCanvas        : TDirect2DXYEntityCanvas;
                 //draw all graphic entities
-                    procedure drawAll(const canvasWidthIn, canvasHeightIn : integer);
+                    //using Direct2D canvas
+                        procedure drawAllUsingDirect2D(const canvasWidthIn, canvasHeightIn : integer);
             public
                 //constructor
                     constructor create(); override;
@@ -39,7 +40,7 @@ interface
                     procedure processWindowsMessages(   const canvasWidthIn, canvasHeightIn : integer;
                                                         const newMousePositionIn            : TPoint;
                                                         const messageIn                     : Tmessage;
-                                                        out graphicBufferWasUpdatedOut      : boolean   );
+                                                        var graphicBufferWasUpdatedInOut    : boolean   );
                 property GraphicBuffer : TBitmap read currentGraphicBufferBMP;
         end;
 
@@ -47,27 +48,28 @@ implementation
 
     //private
         //draw all graphic entities
-            procedure TGraphicDrawer.drawAll(const canvasWidthIn, canvasHeightIn : integer);
-                begin
-                    //size bitmap for drawing
-                        currentGraphicBufferBMP.SetSize( canvasWidthIn, canvasHeightIn );
+            //using Direct2D canvas
+                procedure TGraphicDrawer.drawAllUsingDirect2D(const canvasWidthIn, canvasHeightIn : integer);
+                    begin
+                        //size bitmap for drawing
+                            currentGraphicBufferBMP.SetSize( canvasWidthIn, canvasHeightIn );
 
-                    //begin D2D canvas drawing
-                        D2DDrawingCanvas.beginDrawing( currentGraphicBufferBMP );
+                        //begin D2D canvas drawing
+                            D2DDrawingCanvas.beginDrawing( currentGraphicBufferBMP );
 
-                    //draw to the D2D canvas
-                        inherited drawAll(
-                                            canvasWidthIn,
-                                            canvasHeightIn,
-                                            TGenericXYEntityCanvas( D2DDrawingCanvas )
-                                         );
+                        //draw to the D2D canvas
+                            inherited drawAll(
+                                                canvasWidthIn,
+                                                canvasHeightIn,
+                                                TGenericXYEntityCanvas( D2DDrawingCanvas )
+                                             );
 
-                        if ( Assigned( onPostGraphicDrawEvent ) ) then
-                            onPostGraphicDrawEvent( canvasWidthIn, canvasHeightIn, D2DDrawingCanvas );
+                            if ( Assigned( onPostGraphicDrawEvent ) ) then
+                                onPostGraphicDrawEvent( canvasWidthIn, canvasHeightIn, D2DDrawingCanvas );
 
-                    //end drawing
-                        D2DDrawingCanvas.endDrawing();
-                end;
+                        //end drawing
+                            D2DDrawingCanvas.endDrawing();
+                    end;
 
     //public
         //constructor
@@ -130,26 +132,27 @@ implementation
             procedure TGraphicDrawer.processWindowsMessages(const canvasWidthIn, canvasHeightIn : integer;
                                                             const newMousePositionIn            : TPoint;
                                                             const messageIn                     : Tmessage;
-                                                            out graphicBufferWasUpdatedOut      : boolean);
+                                                            var graphicBufferWasUpdatedInOut    : boolean);
                 var
                     graphicBufferMustBeUpdated : boolean;
                 begin
+                    //NOTE: graphicBufferWasUpdatedInOut is passed BY REFERENCE because its state is share among the calling application and the graphic drawer
+                        //The graphic drawer is responsible for setting graphicBufferWasUpdatedInOut to True,
+                        //The calling application is responsible for setting the variable passed as graphicBufferWasUpdatedInOut to False
+
                     //test if the buffer must be updated based on received windows messages
                         if ( messageIn.Msg = WM_USER_REDRAW_GRAPHIC ) then
                             graphicBufferMustBeUpdated := True
                         else
-                            graphicBufferMustBeUpdated := axisConverter.windowsMessageRequiredRedraw( newMousePositionIn, messageIn );
+                            graphicBufferMustBeUpdated := axisConverter.windowsMessageRequiresRedraw( newMousePositionIn, messageIn );
 
                         if NOT( graphicBufferMustBeUpdated ) then
-                            begin
-                                graphicBufferWasUpdatedOut := False;
-                                exit();
-                            end;
+                            exit();
 
                     //update the graphic buffer
-                        drawAll( canvasWidthIn, canvasHeightIn );
+                        drawAllUsingDirect2D( canvasWidthIn, canvasHeightIn );
 
-                    graphicBufferWasUpdatedOut := True;
+                    graphicBufferWasUpdatedInOut := True;
                 end;
 
 end.
