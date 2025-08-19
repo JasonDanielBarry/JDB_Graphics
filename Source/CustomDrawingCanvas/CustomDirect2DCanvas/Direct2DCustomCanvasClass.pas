@@ -18,16 +18,17 @@ interface
                 //destructor
                     destructor destroy(); override;
                 //set brush properties
-                    procedure setBrushFillProperties(const solidIn : boolean; const colourIn : TColor);
+                    procedure setBrushFillProperties(   const solidIn : boolean;
+                                                        const colourIn : TColor );
                 //set pen properties
                     procedure setPenLineProperties( const widthIn   : integer;
                                                     const colourIn  : TColor;
                                                     const styleIn   : TPenStyle );
                 //set font properties
-                    procedure setFontTextProperties(const sizeIn        : integer;
-                                                    const nameIn        : string;
-                                                    const colourIn      : TColor;
-                                                    const stylesIn      : TFontStyles);
+                    procedure setFontTextProperties(const sizeIn    : integer;
+                                                    const nameIn    : string;
+                                                    const colourIn  : TColor;
+                                                    const stylesIn  : TFontStyles);
         end;
 
 implementation
@@ -60,7 +61,8 @@ implementation
             end;
 
     //set brush properties
-        procedure TDirect2DCustomCanvas.setBrushFillProperties(const solidIn : boolean; const colourIn : TColor);
+        procedure TDirect2DCustomCanvas.setBrushFillProperties( const solidIn : boolean;
+                                                                const colourIn : TColor );
             begin
                 if NOT( solidIn ) then
                     begin
@@ -71,8 +73,6 @@ implementation
                 Brush.Style := TBrushStyle.bsSolid;
                 Brush.Color := TStyleManager.ActiveStyle.GetSystemColor( colourIn );
             end;
-
-
 
     //set pen properties
         procedure TDirect2DCustomCanvas.setPenLineProperties(   const widthIn   : integer;
