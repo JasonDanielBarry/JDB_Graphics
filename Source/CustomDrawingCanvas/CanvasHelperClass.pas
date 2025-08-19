@@ -102,9 +102,13 @@ implementation
                             exit();
                         end;
 
-                    Pen.Width := widthIn;
                     Pen.Color := TStyleManager.ActiveStyle.GetSystemColor( colourIn );
                     Pen.Style := styleIn;
+
+                    if ( styleIn <> TPenStyle.psSolid ) then
+                        Pen.Width := 1
+                    else
+                        Pen.Width := widthIn;
                 end;
 
         //set font properties
@@ -129,7 +133,9 @@ implementation
                     transformInfo       : XFORM;
                 begin
                     //convert from degrees to radians
-                        angleRadians := rotationAngleIn * Pi() / 180;
+                    //negative value used because positive angles rotate the canvas anti-clockwise
+                    //so negative angles rotate drawing entities anti-clockwise
+                        angleRadians := -rotationAngleIn * Pi() / 180;
 
                     //calculate sin and cos components
                         SinCos( angleRadians, sinComp, cosComp );
