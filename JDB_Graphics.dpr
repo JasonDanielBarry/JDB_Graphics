@@ -51,7 +51,9 @@ uses
   GenericXYEntityCanvasClass in 'Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericXYEntityCanvasClass.pas',
   Direct2DXYEntityCanvasClass in 'Source\CustomDrawingCanvas\CustomDirect2DCanvas\Direct2DXYEntityCanvasClass.pas',
   GenericLTEntityCanvasClass in 'Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericLTEntityCanvasClass.pas',
-  GenericLTEntityDrawingMethods in 'Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericLTEntityDrawingMethods.pas';
+  GenericLTEntityDrawingMethods in 'Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericLTEntityDrawingMethods.pas',
+  MetafileCustomCanvasClass in 'Source\CustomDrawingCanvas\CustomMetafileCanvas\MetafileCustomCanvasClass.pas',
+  CanvasHelperClass in 'Source\CustomDrawingCanvas\CanvasHelperClass.pas';
 
 { keep comment here to protect the following conditional from being removed by the IDE when adding a unit }
 {$IFNDEF TESTINSIGHT}
