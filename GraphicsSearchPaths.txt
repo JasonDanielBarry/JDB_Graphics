@@ -7,6 +7,7 @@
 ..\JDB_Graphics\Source
 ..\JDB_Graphics\Source\CustomDrawingCanvas
 ..\JDB_Graphics\Source\CustomDrawingCanvas\CustomDirect2DCanvas
+..\JDB_Graphics\Source\CustomDrawingCanvas\CustomMetafileCanvas
 ..\JDB_Graphics\Source\CustomDrawingCanvas\GenericDrawingCanvas
 ..\JDB_Graphics\Source\GraphicDrawer
 ..\JDB_Graphics\Source\GraphicDrawerVCLComponents

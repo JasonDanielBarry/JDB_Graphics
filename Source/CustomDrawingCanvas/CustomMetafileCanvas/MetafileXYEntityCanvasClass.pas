@@ -1,21 +1,20 @@
-unit Direct2DXYEntityCanvasClass;
+unit MetafileXYEntityCanvasClass;
 
 interface
 
     uses
-        Winapi.D2D1,
         system.SysUtils, system.types,
         vcl.Graphics,
-        Direct2DLTEntityCanvasClass,
+        CanvasHelperClass,
         GenericXYEntityCanvasClass
-
         ;
 
     type
-        TDirect2DXYEntityCanvas = class( TGenericXYEntityCanvas )
+        TMetafileXYEntityCanvas = class( TGenericXYEntityCanvas )
             private
                 var
-                    direct2DLTEntityCanvas : TDirect2DLTEntityCanvas;
+                    metafileLTEntityCanvas  : TMetafileCanvas;
+                    metafile                : TMetafile;
                 //set font properties
                     procedure setFontTextProperties(const sizeIn        : integer;
                                                     const colourIn      : TColor;
@@ -37,13 +36,13 @@ interface
                     procedure printLTTextF_abst(const textStringIn          : string;
                                                 const textDrawingPointIn    : TPointF); override;
             public
-                //begin drawing
-                    procedure beginDrawing(const bitmapIn : TBitmap);
-                //end drawing
+                //constructor
+                    constructor create();
+                //destructor
+                    destructor destroy(); override;
+                //begin and end drawing
+                    procedure beginDrawing(const metafileWidthIn, metafileHeightIn : integer);
                     procedure endDrawing();
-                //anti-aliasing
-                    procedure disableAntiAliasing(); override;
-                    procedure enableAntiAliasing(); override;
                 //set brush properties
                     procedure setBrushFillProperties(const solidIn : boolean; const colourIn : TColor); override;
                 //set pen properties
@@ -64,13 +63,15 @@ interface
                 //polygon
                     procedure drawLTPolygonF(   const filledIn, outlinedIn  : boolean;
                                                 const arrDrawingPointsIn    : TArray<TPointF>   ); override;
+                //save to file
+                    procedure saveToFile(const fileNameIn : string);
         end;
 
 implementation
 
     //private
         //set font properties
-            procedure TDirect2DXYEntityCanvas.setFontTextProperties(const sizeIn        : integer;
+            procedure TMetafileXYEntityCanvas.setFontTextProperties(const sizeIn        : integer;
                                                                     const colourIn      : TColor;
                                                                     const underlaidIn   : boolean = False;
                                                                     const stylesIn      : TFontStyles = [];
@@ -78,28 +79,28 @@ implementation
                 begin
                     inherited setFontTextProperties( sizeIn, colourIn, underlaidIn, stylesIn, nameIn );
 
-                    direct2DLTEntityCanvas.setFontTextProperties( sizeIn, nameIn, colourIn, stylesIn );
+                    metafileLTEntityCanvas.setFontTextProperties( sizeIn, nameIn, colourIn, stylesIn );
                 end;
 
         //ellipse
-            procedure TDirect2DXYEntityCanvas.drawLTEllipseF_abst(  const   filledIn, outlinedIn    : boolean;
+            procedure TMetafileXYEntityCanvas.drawLTEllipseF_abst(  const   filledIn, outlinedIn    : boolean;
                                                                     const   ellipseWidthIn,
                                                                             ellipseHeightIn         : double;
                                                                     const   centrePointIn           : TPointF   );
                 begin
-                    direct2DLTEntityCanvas.drawLTEllipseF(  filledIn, outlinedIn,
+                    metafileLTEntityCanvas.drawLTEllipseF(  filledIn, outlinedIn,
                                                             ellipseWidthIn, ellipseHeightIn,
                                                             centrePointIn                   );
                 end;
 
         //rectangle
-            procedure TDirect2DXYEntityCanvas.drawLTRectangleF_abst(const   filledIn, outlinedIn        : boolean;
+            procedure TMetafileXYEntityCanvas.drawLTRectangleF_abst(const   filledIn, outlinedIn        : boolean;
                                                                     const   leftBoundIn, rightBoundIn,
                                                                             topBoundIn, bottomBoundIn,
                                                                             cornerRadiusHorIn,
                                                                             cornerRadiusVertIn          : double );
                 begin
-                    direct2DLTEntityCanvas.drawLTRectangleF(    filledIn, outlinedIn,
+                    metafileLTEntityCanvas.drawLTRectangleF(    filledIn, outlinedIn,
                                                                 leftBoundIn, rightBoundIn,
                                                                 topBoundIn, bottomBoundIn,
                                                                 cornerRadiusHorIn,
@@ -107,85 +108,99 @@ implementation
                 end;
 
         //text
-            procedure TDirect2DXYEntityCanvas.printLTTextF_abst(const textStringIn          : string;
+            procedure TMetafileXYEntityCanvas.printLTTextF_abst(const textStringIn          : string;
                                                                 const textDrawingPointIn    : TPointF);
                 begin
-                    direct2DLTEntityCanvas.printLTTextF( textStringIn, textDrawingPointIn );
+                    metafileLTEntityCanvas.printLTTextF( textStringIn, textDrawingPointIn );
                 end;
 
     //public
-        //begin drawing
-            procedure TDirect2DXYEntityCanvas.beginDrawing(const bitmapIn : TBitmap);
+        //constructor
+            constructor TMetafileXYEntityCanvas.create();
                 begin
-                    direct2DLTEntityCanvas := TDirect2DLTEntityCanvas.create( bitmapIn );
+                    inherited create();
+
+                    metafile := TMetafile.Create();
+                    metafile.Enhanced := True;
                 end;
 
-        //end drawing
-            procedure TDirect2DXYEntityCanvas.endDrawing();
+        //destructor
+            destructor TMetafileXYEntityCanvas.destroy();
                 begin
-                    FreeAndNil( direct2DLTEntityCanvas );
+                    FreeAndNil( metafile );
+
+                    inherited destroy();
                 end;
 
-        //anti-aliasing
-            procedure TDirect2DXYEntityCanvas.disableAntiAliasing();
+        //set metafile size
+            procedure TMetafileXYEntityCanvas.beginDrawing(const metafileWidthIn, metafileHeightIn : integer);
                 begin
-                    direct2DLTEntityCanvas.RenderTarget.SetAntialiasMode( TD2D1AntiAliasMode.D2D1_ANTIALIAS_MODE_ALIASED );
+                    metafile.SetSize( metafileWidthIn, metafileHeightIn );
+
+                    metafileLTEntityCanvas := TMetafileCanvas.create( metafile, 0 );
+                    metafileLTEntityCanvas.Font.Quality := TFontQuality.fqClearTypeNatural;
                 end;
 
-            procedure TDirect2DXYEntityCanvas.enableAntiAliasing();
+            procedure TMetafileXYEntityCanvas.endDrawing();
                 begin
-                    direct2DLTEntityCanvas.RenderTarget.SetAntialiasMode( TD2D1AntiAliasMode.D2D1_ANTIALIAS_MODE_PER_PRIMITIVE );
+                    FreeAndNil( metafileLTEntityCanvas );
                 end;
 
         //set brush properties
-            procedure TDirect2DXYEntityCanvas.setBrushFillProperties(const solidIn : boolean; const colourIn : TColor);
+            procedure TMetafileXYEntityCanvas.setBrushFillProperties(const solidIn : boolean; const colourIn : TColor);
                 begin
-                    direct2DLTEntityCanvas.setBrushFillProperties( solidIn, colourIn );
+                    metafileLTEntityCanvas.setBrushFillProperties( solidIn, colourIn );
                 end;
 
         //set pen properties
-            procedure TDirect2DXYEntityCanvas.setPenLineProperties( const widthIn   : integer;
+            procedure TMetafileXYEntityCanvas.setPenLineProperties( const widthIn   : integer;
                                                                     const colourIn  : TColor;
                                                                     const styleIn   : TPenStyle = TPenStyle.psSolid );
                 begin
-                    direct2DLTEntityCanvas.setPenLineProperties( widthIn, colourIn, styleIn );
+                    metafileLTEntityCanvas.setPenLineProperties( widthIn, colourIn, styleIn );
                 end;
 
         //canvas rotation
-            procedure TDirect2DXYEntityCanvas.rotateCanvasLT(   const rotationAngleIn           : double;
+            procedure TMetafileXYEntityCanvas.rotateCanvasLT(   const rotationAngleIn           : double;
                                                                 const rotationReferencePointIn  : TPointF   );
                 begin
-                    direct2DLTEntityCanvas.rotateCanvasLT( rotationAngleIn, rotationReferencePointIn );
+                    metafileLTEntityCanvas.rotateCanvasLT( rotationAngleIn, rotationReferencePointIn );
                 end;
 
-            procedure TDirect2DXYEntityCanvas.resetCanvasRotation();
+            procedure TMetafileXYEntityCanvas.resetCanvasRotation();
                 begin
-                    direct2DLTEntityCanvas.resetCanvasRotation();
+                    metafileLTEntityCanvas.resetCanvasRotation();
                 end;
 
         //arc
-            procedure TDirect2DXYEntityCanvas.drawLTArcF(   const   filledIn, outlinedIn            : boolean;
+            procedure TMetafileXYEntityCanvas.drawLTArcF(   const   filledIn, outlinedIn            : boolean;
                                                             const   startAngleIn, endAngleIn,
                                                                     arcHorRadiusIn, arcVertRadiusIn : double;
                                                             const   centrePointIn                   : TPointF   );
                 begin
-                    direct2DLTEntityCanvas.drawLTArcF(  filledIn, outlinedIn,
+                    metafileLTEntityCanvas.drawLTArcF(  filledIn, outlinedIn,
                                                         startAngleIn, endAngleIn,
                                                         arcHorRadiusIn, arcVertRadiusIn,
                                                         centrePointIn                   );
                 end;
 
         //polyline
-            procedure TDirect2DXYEntityCanvas.drawLTPolylineF(const arrDrawingPointsIn : TArray<TPointF>);
+            procedure TMetafileXYEntityCanvas.drawLTPolylineF(const arrDrawingPointsIn : TArray<TPointF>);
                 begin
-                    direct2DLTEntityCanvas.drawLTPolylineF( arrDrawingPointsIn );
+                    metafileLTEntityCanvas.drawLTPolylineF( arrDrawingPointsIn );
                 end;
 
         //polygon
-            procedure TDirect2DXYEntityCanvas.drawLTPolygonF(   const filledIn, outlinedIn  : boolean;
+            procedure TMetafileXYEntityCanvas.drawLTPolygonF(   const filledIn, outlinedIn  : boolean;
                                                                 const arrDrawingPointsIn    : TArray<TPointF>   );
                 begin
-                    direct2DLTEntityCanvas.drawLTPolygonF( filledIn, outlinedIn, arrDrawingPointsIn );
+                    metafileLTEntityCanvas.drawLTPolygonF( filledIn, outlinedIn, arrDrawingPointsIn );
+                end;
+
+        //save to file
+            procedure TMetafileXYEntityCanvas.saveToFile(const fileNameIn : string);
+                begin
+                    metafile.SaveToFile( fileNameIn );
                 end;
 
 end.

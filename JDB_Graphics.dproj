@@ -161,6 +161,8 @@
         <DCCReference Include="Source\CustomDrawingCanvas\GenericDrawingCanvas\GenericLTEntityDrawingMethods.pas"/>
         <DCCReference Include="Source\CustomDrawingCanvas\CustomMetafileCanvas\MetafileCustomCanvasClass.pas"/>
         <DCCReference Include="Source\CustomDrawingCanvas\CanvasHelperClass.pas"/>
+        <DCCReference Include="Source\CustomDrawingCanvas\CustomMetafileCanvas\MetafileLTEntityCanvasClass.pas"/>
+        <DCCReference Include="Source\CustomDrawingCanvas\CustomMetafileCanvas\MetafileXYEntityCanvasClass.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
