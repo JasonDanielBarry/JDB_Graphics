@@ -452,7 +452,7 @@ object CustomGraphic2D: TCustomGraphic2D
     Anchors = [akTop, akRight]
     BevelInner = bvNone
     BevelOuter = bvNone
-    ItemHeight = 15
+    ItemHeight = 17
     Items.Strings = (
       'Layer1'
       'Layer2'
@@ -609,6 +609,10 @@ object CustomGraphic2D: TCustomGraphic2D
         FileMask = '*.bmp'
       end
       item
+        DisplayName = 'Enhanced Metafile'
+        FileMask = '*.emf'
+      end
+      item
         DisplayName = 'JPEG Image'
         FileMask = '*.jpg'
       end
@@ -617,6 +621,7 @@ object CustomGraphic2D: TCustomGraphic2D
         FileMask = '*.png'
       end>
     Options = []
+    Title = 'Save As'
     Left = 224
     Top = 424
   end

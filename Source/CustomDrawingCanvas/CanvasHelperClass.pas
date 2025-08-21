@@ -4,8 +4,9 @@ interface
 
     uses
         Winapi.Windows,
-        system.SysUtils, system.Math, system.Types,
+        system.SysUtils, system.Math, system.Types, System.Classes,
         Vcl.Graphics, vcl.Themes,
+        GenericCustomCanvasAbstractClass,
         GenericLTEntityDrawingMethods
         ;
 
@@ -302,8 +303,35 @@ implementation
             //text
                 procedure TCanvaHelper.printLTTextF(const textStringIn          : string;
                                                     const textDrawingPointIn    : TPointF);
+                    var
+                        textY               : double;
+                        textLine            : string;
+                        textLineSize        : TSize;
+                        cachedBrushStyle    : TBrushStyle;
+                        textLines           : TStringList;
                     begin
-                        self.TextOut( round( textDrawingPointIn.X ), round( textDrawingPointIn.Y ), textStringIn );
+                        cachedBrushStyle := Brush.Style;
+
+                        Brush.style := TBrushStyle.bsClear;
+
+                        textLines := TStringList.Create();
+
+                        textLines.Text := textStringIn;
+
+                        textY := textDrawingPointIn.Y;
+
+                        for textLine in textLines do
+                            begin
+                                self.TextOut( round( textDrawingPointIn.X ), round( textY ), textLine );
+
+                                textLineSize := measureTextLTExtent( textLine, font.Size, font.Style, font.Name );
+
+                                textY := textY + textLineSize.Height;
+                            end;
+
+                        FreeAndNil( textLines );
+
+                        brush.Style := cachedBrushStyle;
                     end;
 
 end.

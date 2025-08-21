@@ -200,6 +200,9 @@ implementation
         //save to file
             procedure TMetafileXYEntityCanvas.saveToFile(const fileNameIn : string);
                 begin
+                    if ( Assigned( metafileLTEntityCanvas ) ) then
+                        endDrawing();
+
                     metafile.SaveToFile( fileNameIn );
                 end;
 

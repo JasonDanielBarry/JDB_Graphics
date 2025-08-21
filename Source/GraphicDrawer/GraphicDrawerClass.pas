@@ -12,6 +12,7 @@ interface
             DrawingAxisConversionClass,
             GenericXYEntityCanvasClass,
             Direct2DXYEntityCanvasClass,
+            MetafileXYEntityCanvasClass,
             GraphicDrawerTypes,
             GraphicDrawerAxisConversionInterfaceClass,
             GeometryBaseClass;
@@ -26,6 +27,9 @@ interface
                 //draw all graphic entities
                     //using Direct2D canvas
                         procedure drawAllUsingDirect2D(const canvasWidthIn, canvasHeightIn : integer);
+                    //draw all entities to metafile and save to EMF
+                        procedure drawAndSaveAllToMetafile( const metafileWidthIn, metafileHeightIn : integer;
+                                                            const fileNameIn                        : string );
             public
                 //constructor
                     constructor create(); override;
@@ -71,6 +75,27 @@ implementation
                             D2DDrawingCanvas.endDrawing();
                     end;
 
+            //draw all entities to metafile and save to EMF
+                procedure TGraphicDrawer.drawAndSaveAllToMetafile(  const metafileWidthIn, metafileHeightIn : integer;
+                                                                    const fileNameIn                        : string );
+                    var
+                        metafileXYCanvas : TMetafileXYEntityCanvas;
+                    begin
+                        metafileXYCanvas := TMetafileXYEntityCanvas.create();
+
+                        metafileXYCanvas.beginDrawing( metafileWidthIn, metafileHeightIn );
+
+                        inherited drawAll(
+                                            metafileWidthIn,
+                                            metafileHeightIn,
+                                            TGenericXYEntityCanvas( metafileXYCanvas )
+                                         );
+
+                        metafileXYCanvas.saveToFile( fileNameIn );
+
+                        FreeAndNil( metafileXYCanvas )
+                    end;
+
     //public
         //constructor
             constructor TGraphicDrawer.create();
@@ -96,9 +121,10 @@ implementation
         //save bitmap to image
             procedure TGraphicDrawer.saveGraphicToFile(const fileNameIn : string);
                 const
-                    BMP_EXT : string    = '.bmp';
-                    JPEG_EXT : string   = '.jpg';
-                    PNG_EXT : string    = '.png';
+                    BMP_EXT     : string = '.bmp';
+                    EMF_EXT     : string = '.emf';
+                    JPEG_EXT    : string = '.jpg';
+                    PNG_EXT     : string = '.png';
                 var
                     fileExtension : string;
                 begin
@@ -109,6 +135,9 @@ implementation
 
                     if ( fileExtension = BMP_EXT ) then
                         currentGraphicBufferBMP.SaveToFile( fileNameIn )
+
+                    else if ( fileExtension = EMF_EXT ) then
+                        drawAndSaveAllToMetafile( currentGraphicBufferBMP.Width, currentGraphicBufferBMP.Height, fileNameIn )
 
                     else if ( fileExtension = JPEG_EXT ) then
                         currentGraphicBufferBMP.saveToJPegFile( fileNameIn )
